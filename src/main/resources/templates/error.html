@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Digital Media Log </title>
+    <link rel="stylesheet" href="/static/stylesheets/layout.css"  th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+
+<body class="app-thing">
+<a id="skip" class="skip sr sr-focusable" href="#content-main">Skip to main content</a>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+                An error has occurred.
+            </main>
+            <!-- close content-main -->
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+
+</div>
+</body>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+
+</body>
+</html>

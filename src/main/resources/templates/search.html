@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr"
+      prefix="content: http://purl.org/rss/1.0/modules/content/ dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns# rdfs: http://www.w3.org/2000/01/rdf-schema# sioc: http://rdfs.org/sioc/ns# sioct: http://rdfs.org/sioc/types# skos: http://www.w3.org/2004/02/skos/core# xsd: http://www.w3.org/2001/XMLSchema#">
+<head xmlns:th="http://www.thymeleaf.org">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+
+    <link rel="canonical" href="/404"/>
+    <title>TODO</title>
+
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body class="html not-front not-logged-in page-node page-node- page-node-3493 node-type-page context-404">
+
+<!--
+<div id="skip-link">
+    <a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+</div>
+-->
+<div class="page clearfix" id="page">
+    <header id="section-header" class="section section-header">
+        <div id="mit-library-branding">
+            <div class="zone-wrapper">
+                <div class="container-12">
+                    <div class="grid-12">
+                        <span><a href="http://www.mit.edu/">MIT</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </header>
+    <section id="section-content" class="section section-content">
+        <div id="zone-preface-wrapper" class="zone-wrapper zone-preface-wrapper clearfix">
+            <div id="zone-preface" class="zone zone-preface clearfix container-12">
+                <div class="grid-12 region region-preface-second" id="region-preface-second">
+                    <a id="subnav-toggle" href="#region-sidebar-first">Navigation</a>
+                    <div class="region-inner region-preface-second-inner">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="zone-content-wrapper" class="zone-wrapper zone-content-wrapper clearfix">
+
+            <div id="zone-content" class="zone zone-content clearfix container-12">
+                <div class="grid-12 region region-content" id="region-content">
+                    <div class="region-inner region-content-inner">
+                        <a id="main-content"></a>
+                        <h1 class="title" id="page-title">dm_log</h1>
+                        <div class="block block-system block-main block-system-main odd block-without-title"
+                             id="block-system-main">
+                            <div class="block-inner clearfix">
+                                <div class="content clearfix">
+                                    <div class="node node-page view-mode-full node-not-promoted node-not-sticky author-1 odd clearfix clearfix">
+
+                                        <div class="ds-main grid-12">
+
+                                            <!--<div class="ds-right grid-4"></div>-->
+
+                                            <div class="ds-bottom grid-12" style="margin-top: 2em;">
+                                                <div class="field field-name-body field-type-text-with-summary field-label-hidden">
+                                                    <div class="field-items">
+                                                        <div class="field-item even" property="content:encoded">
+                                                            <h2>Quick Search</h2>
+                                                            <div class="quicksearch">
+                                                                <form action="#" th:action="@{/results}"
+                                                                      th:object="${item}" method="get">
+                                                                    <select class="palm-search"
+                                                                            th:field="*{keywordOption}">
+                                                                        <option value="ALL of these keywords">Filter
+                                                                        </option>
+
+                                                                    </select>
+                                                                    <input type="text" th:field="*{content}"/>
+                                                                    <div class="quicksearchBtn">
+                                                                        <input type="submit" value="Search"/>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+
+</div>
+</body>
+</html>
