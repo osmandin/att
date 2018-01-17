@@ -1,6 +1,6 @@
-package edu.mit.model;
+package edu.mit.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.Arrays;
 

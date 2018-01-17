@@ -1,9 +1,16 @@
-package edu.mit.model;
+package edu.mit.entity;
+
+import lombok.*;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
-public class User {
+@Data
+@Entity
+@ToString(exclude = {"departmentsForms"})
+@Table(name = "users")
+public class UsersForm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +27,7 @@ public class User {
     @JoinTable(
             name = "map",
             joinColumns = @JoinColumn(name = "userid", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "departmentid", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "departmentid", referencedColumnName = "id")
+    )
     private List<DepartmentsForm> departmentsForms;
 }
