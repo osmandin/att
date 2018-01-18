@@ -26,6 +26,6 @@ public class ApplicationTest {
     @Test
     public void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/results")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("Archives Transfer Tool")));
+                .andExpect(content().string(containsString("Users")));
     }
 }

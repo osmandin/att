@@ -37,7 +37,7 @@ public class QuickSearchResultsController {
                                       @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "page", required = false) Integer page) {
 
-        final ModelAndView modelAndView = new ModelAndView("results");
+        final ModelAndView modelAndView = new ModelAndView("Admin");
         return modelAndView;
     }
 
