@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+
+</head>
+
+<body class="app-thing">
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="javascript/dm_items.js">
+    th:href="@{/js/dm_items.js}"
+</script>
+
+
+<div th:replace="mit/header :: header"/>
+
+<a id="skip" class="skip sr sr-focusable" href="#content-main">Skip to main content</a>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <h3>New</h3>
+                </div>
+
+                <form action="#" th:object="${usersForm}" method="post">
+                    <div class="form-group row">
+                        <label for="id" class="col-sm-2 col-form-label">ID</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="id" placeholder="" th:field= "${usersForm.id}" readonly="readonly"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="username" class="col-sm-2 col-form-label">Username</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="username" placeholder="" th:field="${usersForm.username}"/>
+                        </div>
+                    </div>
+
+                    <!-- CSRF token
+                    <input type="hidden"
+                           th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                           -->
+
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+
+
+            </main>
+            <!-- close content-main -->
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+
+    <div th:replace="mit/site_footer :: footer"/>
+    <div th:replace="mit/institute_footer :: footer"/>
+
+
+</div>
+<!-- close wrap-page -->
+</body>
+
+
+</html>
+

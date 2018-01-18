@@ -30,4 +30,68 @@ public class UsersForm {
             inverseJoinColumns = @JoinColumn(name = "departmentid", referencedColumnName = "id")
     )
     private List<DepartmentsForm> departmentsForms;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public boolean isIsadmin() {
+        return isadmin;
+    }
+
+    public void setIsadmin(boolean isadmin) {
+        this.isadmin = isadmin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public List<DepartmentsForm> getDepartmentsForms() {
+        return departmentsForms;
+    }
+
+    public void setDepartmentsForms(List<DepartmentsForm> departmentsForms) {
+        this.departmentsForms = departmentsForms;
+    }
 }

@@ -51,71 +51,8 @@
                 </div>
 
 
-                <div class="results-table-outer wrapper">
-                    <table class="table">
-                        <tr>
-                            <th>ID</th>
-                            <th>Format</th>
-                            <th>Transfer Status</th>
-                            <th>Parent Component</th>
-                            <th>Parent Resource</th>
-                            <th>Updated</th>
-                        </tr>
-                        <tr th:each="item : ${items}" style="cursor: pointer"
-                            th:onclick="'javascript:rowClicked(\'' + ${item.itemId} + '\');'">
-                            <td th:text="${item.itemId}"></td>
-                            <td th:text="${item.format}"></td>
-                            <td th:text="${item.transferStatus}"></td>
-                            <td th:text="${item.component}"></td>
-                            <td th:text="${item.resource}"></td>
-
-                            <!--
-                            <td th:textitemrson.disposition}"></td>
-                            <td th:textitemrson.transferMethod}"></td>
-                            <td th:textitemrson.transferDate}"></td>
-                            <td th:textitemrson.created}"></td>
-                            -->
-                            <td th:text="${#dates.format(item.updated, 'dd-MMM-yyyy')}"></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="paginate">
-                    <div th:if="${items.getTotalPages() != 0}" class="form-group col-md-11 pagination-centered">
-
-
-                        <div class="form-group col-md-11 pagination-centered">
-
-                            <ul class="pagination">
-                                <li th:class="${items.getNumber() == 0} ? disabled">
-                                    <a class="pageLink"
-                                       th:href="@{/results(pageSize=${selectedPageSize}, page=${items.getNumber()}, content=${search.content})}">&larr;</a>
-                                </li>
-                                <li th:class="${items.getNumber() == (page - 1)} ? 'active pointer-disabled'"
-                                    th:each="page : ${#numbers.sequence(pager.getStartPage(), pager.getEndPage())}">
-                                    <a class="pageLink"
-                                       th:href="@{/results(pageSize=${selectedPageSize}, page=${page}, content=${search.content})}"
-                                       th:text="${page}"></a>
-                                </li>
-                                <li th:class="${items.getNumber() + 1 == items.getTotalPages()} ? disabled">
-                                    <a class="pageLink"
-                                       th:href="@{/results(pageSize=${selectedPageSize}, page=${items.getNumber() + 2}, content=${search.content})}">&rarr;</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <!--
-               <div class="number">
-                    <span th:text="${numberResults}"/> records
-                </div>
-                -->
-
                 <div>
-                    <a href="/adml/add" class="btn btn-primary" role="button">Add New Digital Item</a>
+                    <a href="/att/add" class="btn btn-primary" role="button">Add New User</a>
 
                 </div>
 

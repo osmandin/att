@@ -3,6 +3,7 @@ package edu.mit.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -305,100 +306,41 @@ public class UserAdmin {
     }
 
     // ------------------------------------------------------------------------
-    @RequestMapping(value = "/AddUser", method = RequestMethod.GET)
-    public String AddUser(
-            UsersForm usersForm,
-            ModelMap model,
-            HttpSession session
+    @RequestMapping(value={"/add1"}, method = RequestMethod.GET)
+    public ModelAndView AddUser(
+           final Model usersForm
     ) {
         LOGGER.log(Level.INFO, "AddUser Get");
 
+        /* handle session
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
-        }
+        } */
 
         List<DepartmentsForm> dfs = departmentrepo.findAll();
         //model.addAttribute("departmentsForm", dfs);
 
-        usersForm.setDepartmentsForms(dfs);
+        //usersForm.setDepartmentsForms(dfs);
+        LOGGER.log(Level.INFO, "Returning to page");
 
-        return "AddUser";
+        ModelAndView modelAndView = new ModelAndView("/add");
+        UsersForm usersForm1 = new UsersForm();
+        modelAndView.addObject("usersForm", usersForm1);
+        return modelAndView;
     }
 
-    // ------------------------------------------------------------------------
-    @RequestMapping(value = "/AddUser", method = RequestMethod.POST)
-    public ModelAndView AddUser(
-            UsersForm usersForm,
-            BindingResult result,
-            final RedirectAttributes redirectAttributes,
-            @RequestParam(value = "department_id", required = false) DepartmentsForm[] selectedDepartmentsForms,
-            @RequestParam(value = "department_active", required = false) int[] activedepts,
-            ModelMap model,
-            HttpSession session
-    ) {
-        LOGGER.log(Level.INFO, "AddUser Post");
+    @RequestMapping(value={"/add1"}, method = RequestMethod.POST)
+    public ModelAndView greetingForm(final UsersForm item) {
+        //final List<Item> itemList = new ArrayList<>();
+        //itemList.add(item);
+        //itemService.save(itemList);
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return new ModelAndView("/Home");
-        }
+        LOGGER.log(Level.INFO, "AddUser POST");
 
-        if (result.hasErrors()) {
-            LOGGER.log(Level.INFO, "AddUser Post: has errors");
-            return new ModelAndView("/AddUser");
-        }
+        final ModelAndView modelAndView = new ModelAndView("redirect:/results");
+        return modelAndView;
 
-        List<UsersForm> uf = userrepo.findByUsername(usersForm.getUsername());
-        if (uf != null && uf.size() != 0) {
-            LOGGER.log(Level.INFO, "duplicate user with this username: size={0}", new Object[]{uf.size()});
-
-            List<DepartmentsForm> dfs = departmentrepo.findAll();
-            usersForm.setDepartmentsForms(dfs);
-
-            model.addAttribute("duplicate", 1);
-
-            return new ModelAndView("/AddUser");
-        }
-
-        int userid = usersForm.getId();
-
-        if (selectedDepartmentsForms == null) {
-            LOGGER.log(Level.INFO, "selectedDepartmentsForms is null");
-        } else {
-
-            Map<Integer, Boolean> active = new HashMap<Integer, Boolean>();
-            for (int activedept : activedepts) {
-                active.put(activedept, true);
-            }
-
-            List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
-            int cnt = 0;
-            for (DepartmentsForm df : selectedDepartmentsForms) {
-                newdfs.add(df);
-                cnt++;
-            }
-            if (cnt > 0) {
-                usersForm.setDepartmentsForms(newdfs);
-            }
-        }
-
-        usersForm = userrepo.save(usersForm);
-
-        ModelAndView mav = new ModelAndView();
-        String message = "New User " + usersForm.getId() + " was successfully created.";
-
-        session.setAttribute("userid", Integer.toString(usersForm.getId()));
-
-        LOGGER.log(Level.INFO, "add user: userid={0}", new Object[]{usersForm.getId()});
-
-        mav.setViewName("redirect:/NotifyUser");
-
-        redirectAttributes.addFlashAttribute("message", message);
-
-        redirectAttributes.addFlashAttribute("userid", userid);
-
-        return mav;
     }
 
     // ------------------------------------------------------------------------
