@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
 
     <div th:replace="fragments/header :: header-css"/>
+    <script type="text/javascript" th:src="@{/js/AddUser.js}"></script>
 
 
 </head>
@@ -60,6 +61,25 @@
                     <input type="hidden"
                            th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                            -->
+
+                    <!-- departments logic. Could be replaced with multiple select box -->
+
+                    <fieldset class="repeatable">
+                        <legend>Departments</legend>
+                        <input name="department_counter" type="hidden" value="0" id="department_counter"/>
+                        <div id="department">
+                            <div>
+                                <p></p>
+
+                                <select name="" id="add_department_select" onchange="add_department( this )">
+                                    <option value="">Add a new department:</option>
+                                    <option th:each="department: *{departmentsForms}" th:value="${department.id}"
+                                            th:text="${department.name}"></option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </fieldset>
 
                     <div class="form-group row">
                         <div class="col-sm-10">

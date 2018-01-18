@@ -1,5 +1,6 @@
 package edu.mit.controllers;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -11,16 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-/*
-import submit.email.Email;
-import submit.entity.*;
-import submit.impl.Utils;
-import submit.repository.DepartmentsFormRepository;
-import submit.repository.MapFormRepository;
-import submit.repository.UsersFormRepository;
-import submit.service.DepartmentsFormService;
-import submit.service.UsersFormService;
-*/
 
 import edu.mit.entity.*;
 import edu.mit.repository.*;
@@ -35,14 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
 public class UserAdmin {
-    private final static Logger LOGGER = Logger.getLogger(UserAdmin.class.getCanonicalName());
 
-    @SuppressWarnings("unused")
-    private static final String rcsinfo = "$Id: UserAdmin.java,v 1.17 2016-12-27 22:26:10-04 ericholp Exp $";
+    private final Logger logger = getLogger(this.getClass());
+
 
     @Resource
     private Environment env;
@@ -72,17 +63,26 @@ public class UserAdmin {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "ListUsers Get");
 
-        Utils utils = new Utils();
+        logger.info("ListUsers GET");
+
+       /* Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
-        }
+        }*/
 
         Map<Integer, Map<Integer, Boolean>> adminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
-        List<UsersForm> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
+        // List<UsersForm> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
+        List<UsersForm> adminusersForms = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
+
+        logger.info("Found users:{}", adminusersForms.toString());
+
         for (UsersForm uf : adminusersForms) {
             List<DepartmentsForm> dfs = uf.getDepartmentsForms();
+
+            logger.debug("Found departments for user:{}", dfs);
+
+
             if (dfs != null) {
                 Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
                 for (DepartmentsForm df : dfs) {
@@ -91,7 +91,7 @@ public class UserAdmin {
                     ik.departmentid = df.getId();
 
                     MapForm mf = maprepo.findByKey(ik);
-                    dmap.put(df.getId(), mf.isDepartmentactive());
+                    //dmap.put(df.getId(), mf.isDepartmentactive());
                 }
                 adminactivemap.put(uf.getId(), dmap);
             }
@@ -99,7 +99,7 @@ public class UserAdmin {
         model.addAttribute("adminactivemap", adminactivemap);
         model.addAttribute("adminusersForms", adminusersForms);
 
-        Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
+       /* Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
         List<UsersForm> nonadminusersForms = userrepo.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
         for (UsersForm uf : nonadminusersForms) {
             List<DepartmentsForm> dfs = uf.getDepartmentsForms();
@@ -117,9 +117,9 @@ public class UserAdmin {
             }
         }
         model.addAttribute("nonadminactivemap", nonadminactivemap);
-        model.addAttribute("nonadminusersForms", nonadminusersForms);
+        model.addAttribute("nonadminusersForms", nonadminusersForms);*/
 
-        return "ListUsers";
+       return "ListUsers";
     }
 
     // ------------------------------------------------------------------------    
@@ -129,7 +129,6 @@ public class UserAdmin {
             @RequestParam(value = "userid", required = false) int userid,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "EditUser Get");
 
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
@@ -151,9 +150,11 @@ public class UserAdmin {
                 ik.departmentid = dept.getId();
 
                 MapForm mf = maprepo.findByKey(ik);
+/*
                 if (mf.isDepartmentactive()) {
                     dept.setActive(true);
                 }
+*/
             }
         }
 
@@ -173,7 +174,6 @@ public class UserAdmin {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "EditUser Post");
 
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
@@ -181,7 +181,8 @@ public class UserAdmin {
         }
 
         if (result.hasErrors()) {
-            LOGGER.log(Level.INFO, "EditUser Post: has errors");
+            logger.info("EditUser Post: has errors"
+            );
             return new ModelAndView("/EditUser");
         }
 
@@ -200,7 +201,7 @@ public class UserAdmin {
             int userid = usersForm.getId();
 
             if (selectedDepartmentsForms == null) {
-                LOGGER.log(Level.INFO, "selected department null");
+                logger.info("selecte dpet null");
             } else {
                 List<DepartmentsForm> ds = usersForm.getDepartmentsForms();
                 if (ds == null) {
@@ -228,7 +229,7 @@ public class UserAdmin {
             if (found) {
                 ModelAndView mav = new ModelAndView();
 
-                LOGGER.log(Level.INFO, "EditUser Post: Duplicate usernames are not allowed!!");
+                logger.info("EditUser Post: Duplicate usernames are not allowed!!");
 
                 model.addAttribute("error", "Duplicate usernames are not allowed.");
                 mav.setViewName("/EditUser");
@@ -243,7 +244,7 @@ public class UserAdmin {
             maprepo.save(mfstop);  // needed because all departments not present in template as hidden variables... could do it but this is easier
 
             if (dfs == null) {
-                LOGGER.log(Level.INFO, "DepartmentsForm null");
+                logger.info("DepartmentsForm null");
             } else {
                 for (DepartmentsForm df : dfs) {
 
@@ -254,9 +255,9 @@ public class UserAdmin {
                     MapForm mf = maprepo.findByKey(ik);
 
                     if (mf == null) {
-                        LOGGER.log(Level.INFO, "mapform null");
+                        logger.info("map form null");
                     } else {
-                        mf.setDepartmentactive(df.isActive());
+                        //mf.setDepartmentactive(df.isActive());
                         maprepo.save(mf);
                     }
                 }
@@ -291,9 +292,9 @@ public class UserAdmin {
                     ik.departmentid = dept.getId();
 
                     MapForm mf = maprepo.findByKey(ik);
-                    if (mf.isDepartmentactive()) {
+                    /*if (mf.isDepartmentactive()) {
                         dept.setActive(true);
-                    }
+                    }*/
                 }
             }
 
@@ -305,42 +306,74 @@ public class UserAdmin {
         return mav;
     }
 
-    // ------------------------------------------------------------------------
-    @RequestMapping(value={"/add1"}, method = RequestMethod.GET)
-    public ModelAndView AddUser(
-           final Model usersForm
-    ) {
-        LOGGER.log(Level.INFO, "AddUser Get");
+    /**
+     * Add a user
+     *
+     * @param usersForm
+     * @return
+     */
+    @RequestMapping(value = {"/add"}, method = RequestMethod.GET)
+    public ModelAndView AddUser(final Model usersForm) {
+        logger.info("AddUser GET");
 
-        /* handle session
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        } */
 
+        // populate any form elements here:
         List<DepartmentsForm> dfs = departmentrepo.findAll();
         //model.addAttribute("departmentsForm", dfs);
+        logger.info("Found departments:{}", dfs.toString());
 
-        //usersForm.setDepartmentsForms(dfs);
-        LOGGER.log(Level.INFO, "Returning to page");
+        final UsersForm item = new UsersForm();
+        item.setDepartmentsForms(dfs);
 
-        ModelAndView modelAndView = new ModelAndView("/add");
-        UsersForm usersForm1 = new UsersForm();
-        modelAndView.addObject("usersForm", usersForm1);
-        return modelAndView;
+        final ModelAndView model = new ModelAndView("add");
+        model.addObject("usersForm", item);
+        model.addObject("departmentsForm", dfs);
+        return model;
     }
 
-    @RequestMapping(value={"/add1"}, method = RequestMethod.POST)
-    public ModelAndView greetingForm(final UsersForm item) {
-        //final List<Item> itemList = new ArrayList<>();
-        //itemList.add(item);
-        //itemService.save(itemList);
+    /**
+     * Add a user
+     *
+     * @param item
+     * @return
+     */
+    @RequestMapping(value = {"/add"}, method = RequestMethod.POST)
+    public ModelAndView greetingForm(final UsersForm item,
+                @RequestParam(value = "department_id", required = false) DepartmentsForm[] selectedDepartmentsForms) {
 
-        LOGGER.log(Level.INFO, "AddUser POST");
+        // associated department logic:
 
-        final ModelAndView modelAndView = new ModelAndView("redirect:/results");
+        if (selectedDepartmentsForms == null) {
+            logger.error("No department specified");
+        } else {
+            logger.info("Selected departments:{}", selectedDepartmentsForms);
+            final List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
+            int cnt = 0;
+            for (final DepartmentsForm df : selectedDepartmentsForms) {
+                //df.setActive(true); //TODO revisit is active/inactive logic necessary?
+                newdfs.add(df);
+                cnt++;
+            }
+
+            if (cnt > 0) {
+                item.setDepartmentsForms(newdfs);
+            } else {
+                logger.error("No departments for users");
+            }
+        }
+
+        // save user:
+
+        try {
+            logger.info("Saving item:{}", item.getUsername());
+
+            userservice.create(item);
+        } catch (Exception e) {
+            logger.error("Error saving item:{}", e);
+        }
+
+        final ModelAndView modelAndView = new ModelAndView("redirect:/ListUsers"); //TODO
         return modelAndView;
-
     }
 
     // ------------------------------------------------------------------------
@@ -351,8 +384,7 @@ public class UserAdmin {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "DeleteUser Post");
-
+        logger.info("Post");
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return new ModelAndView("/Home");
@@ -373,7 +405,7 @@ public class UserAdmin {
         redirectAttributes.addFlashAttribute("userdeleted", true);
         redirectAttributes.addFlashAttribute("username", username);
 
-        LOGGER.log(Level.INFO, "delete user: username={0}", new Object[]{username});
+        logger.info("delete user: username={0}", new Object[]{username});
 
         return mav;
     }
@@ -386,7 +418,7 @@ public class UserAdmin {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "DeleteUserDepartment Get");
+        logger.info("DeleteUserDepartment Get");
 
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
@@ -398,7 +430,7 @@ public class UserAdmin {
         UsersForm uf = userrepo.findById(userid);
         List<DepartmentsForm> dfs = uf.getDepartmentsForms();
 
-        LOGGER.log(Level.INFO, "delete departmentsForms id={0}", new Object[]{id});
+        logger.info("delete departmentsForms id={0}", new Object[]{id});
 
         List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
         for (DepartmentsForm df : dfs) {

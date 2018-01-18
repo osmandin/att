@@ -19,7 +19,7 @@ public class MapForm implements Serializable {
     @Column(name = "departmentid", insertable = false, updatable = false)
     private Integer departmentid;
 
-    private boolean departmentactive = false;
+    // private boolean departmentactive = true; //TODO is department active required?
 
     @EmbeddedId
     IdKey key;

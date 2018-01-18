@@ -1,5 +1,7 @@
 package edu.mit;
 
+import edu.mit.entity.DepartmentsForm;
+import edu.mit.repository.DepartmentsFormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +20,30 @@ public class DatabaseInitializer {
     public DatabaseInitializer() {
     }
 
+    @Autowired
+    private DepartmentsFormRepository departmentrepo;
+
     /**
      * Populates the database
      */
     @PostConstruct
     public void populateDatabase() {
 
-        logger.debug("Initialize database here if you want to . . .");
+        logger.info("INIT");
+        logger.debug("(Initialize database here if you want to. . .)");
+
+        //FIXME this is only for testing purposes. remvoe later.
+
+        DepartmentsForm departmentsForm = new DepartmentsForm();
+        departmentsForm.setName("test department");
+
+
+        try {
+            departmentrepo.save(departmentsForm);
+        } catch (Exception e) {
+            logger.error("Error saving test item:{}", e);
+
+        }
 
     }
 

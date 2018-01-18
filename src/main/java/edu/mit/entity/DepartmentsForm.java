@@ -17,8 +17,8 @@ public class DepartmentsForm {
     private int id;
     private String name;
 
-    @Transient
-    private boolean active; // used for usersForm
+    //@Transient
+    //private boolean active = true; // used for usersForm
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "departmentForm")
     private SsasForm ssasForm;

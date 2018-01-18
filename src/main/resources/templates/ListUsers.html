@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"/>-->
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+
+</head>
+<body class="app-thing">
+
+
+<div th:replace="mit/header :: header"/>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<script>
+
+    function rowClicked(value) {
+        location.href = "/att/singleitem?id=" + value;
+    }
+</script>
+
+
+<a id="skip" class="skip sr sr-focusable" href="#content-main">Skip to main content</a>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <h3>Manage Users</h3>
+                </div>
+
+
+                <div class="results-table-outer wrapper">
+                    <table class="table">
+                        <tr>
+                            <th>last name</th>
+                            <th>first name</th>
+                            <th>username</th>
+                            <th>email</th>
+                            <!-- department -->
+                            <th>Department/Unit/Donor</th>
+                            <!-- edit button -->
+                            <th>&nbsp;</th>
+                            <!-- notify button -->
+                            <th>&nbsp;</th>
+                        </tr>
+                        <tr th:each="item : ${adminusersForms}" style="cursor: pointer"
+                            th:onclick="'javascript:rowClicked(\'' + ${item.id} + '\');'">
+                            <td th:text="${item.lastname}"></td>
+                            <td th:text="${item.firstname}"></td>
+                            <td th:text="${item.username}"></td>
+                            <td th:text="${item.email}"></td>
+
+                            <!-- department logic -->
+
+                            <td th:switch="${item.departmentsForms.size()}">
+		                        <span th:case="0"> </span>
+                                <span th:case="*">
+			                        <div th:each="dep : ${item.departmentsForms}">
+			                              <span th:text="${dep.name}">department name</span>
+                                        <!--
+			                                 <div th:switch="${adminactivemap[__${user.id}__][__${dep.id}__]}">
+			                                    <div th:case="true">
+			                                        active
+                                                </div>
+			                                    <div th:case="*">
+			                                        inactive
+			                                    </div>
+                                             </div>-->
+                                    </div>
+                                </span>
+                            </td>
+
+                            <!-- end department logic -->
+
+                            <td><a th:href="@{/EditUser(userid=${item.id})}">edit</a></td>
+                            <td><a th:href="@{/NotifyUser(userid=${item.id})}">notify</a></td>
+
+                        </tr>
+                    </table>
+                </div>
+
+
+                <!-- Add new user button -->
+                <div>
+                    <a href="/att/add" role="button">Add New User</a>
+
+                </div>
+
+
+            </main>
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+</div>
+
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+
+</body>
+</html>
+
+

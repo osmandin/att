@@ -18,4 +18,6 @@ public interface UsersFormRepository extends JpaRepository<UsersForm, Integer> {
     List<UsersForm> findByUsernameAndFirstnameAndLastnameAndEmail(String username, String firstname, String lastname, String email);
 
     List<UsersForm> findByUsername(String username);
+
+    List<UsersForm> findAllByIdAfter(int id);
 }
