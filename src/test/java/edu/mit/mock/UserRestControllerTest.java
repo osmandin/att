@@ -3,6 +3,7 @@ package edu.mit.mock;
 
 import edu.mit.entity.DepartmentsForm;
 import edu.mit.entity.UsersForm;
+import edu.mit.repository.UsersFormRepository;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
@@ -31,14 +33,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
-/**
- * @author Josh Long
- */
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
-public class BookmarkRestControllerTest {
-
+public class UserRestControllerTest {
 
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -54,6 +53,9 @@ public class BookmarkRestControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private UsersFormRepository usersFormRepository;
 
 
     @Autowired
@@ -72,6 +74,15 @@ public class BookmarkRestControllerTest {
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
+        // create a test user object:
+
+        UsersForm usersForm = new UsersForm();
+        usersForm.setUsername(userName);
+        usersForm.setDepartmentsForms(Collections.emptyList());
+        this.usersFormRepository.save(usersForm);
+
+        // samples:
+
        /* this.bookmarkRepository.deleteAllInBatch();
         this.accountRepository.deleteAllInBatch();
 
@@ -80,37 +91,12 @@ public class BookmarkRestControllerTest {
         this.bookmarkList.add(bookmarkRepository.save(new Bookmark(account, "http://bookmark.com/2/" + userName, "A description")));*/
     }
 
-  /*  @Test
-    public void userNotFound() throws Exception {
-        mockMvc.perform(post("/george/bookmarks/")
-                .content(this.json(new Bookmark()))
-                .contentType(contentType))
-                .andExpect(status().isNotFound());
-    }
-*/
-
-    @Ignore
     @Test
-    public void createBookmark() throws Exception {
-
-
-        UsersForm user = new UsersForm();
-        user.setUsername("osman");
-        DepartmentsForm df = new DepartmentsForm();
-        df.setName("test");
-        List<DepartmentsForm> departmentList = new ArrayList<>();
-        departmentList.add(df);
-        user.setDepartmentsForms(departmentList);
-
-        this.mockMvc.perform(post("/add")
-                .contentType(contentType)
-                .content(this.json(user)))
-                .andExpect(status().isCreated());
-
-        //this.mockMvc.perform(get("/ListUsers")).andDo(print()).andExpect(status().isOk())
-          //      .andExpect(content().string(containsString("osman")));
-
+    public void findUsers() throws Exception {
+        mockMvc.perform(get("/users/all"))
+                .andExpect(content().string(containsString(userName)));
     }
+
 
     protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();

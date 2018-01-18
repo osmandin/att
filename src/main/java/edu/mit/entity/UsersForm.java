@@ -1,5 +1,6 @@
 package edu.mit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.ToString;
 
@@ -23,6 +24,7 @@ public class UsersForm {
     private String email;
     private boolean enabled;
 
+    @JsonIgnore // this is done to avoid circular serialization to json when using the api
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "map",
