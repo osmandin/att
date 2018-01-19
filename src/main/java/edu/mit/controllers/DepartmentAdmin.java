@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -44,6 +45,20 @@ public class DepartmentAdmin {
 
     @Resource
     private Environment env;
+
+    // ------------------------------------------------------------------------
+    @RequestMapping(value = "/AddDepartment", method = RequestMethod.GET)
+    public ModelAndView AddDepartment(
+            ModelMap model1) {
+        LOGGER.info( "AddDepartment GET");
+
+        DepartmentsForm item = new DepartmentsForm();
+
+        final ModelAndView model = new ModelAndView("AddDepartment");
+        model.addObject("departmentForm", item);
+        return model;
+    }
+
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/AddDepartment", method = RequestMethod.POST)
