@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -189,7 +191,7 @@ public class DepartmentAdmin {
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditDepartment", method = RequestMethod.POST)
     public String EditDepartment(
-            DepartmentsForm departmentsForm,
+            @RequestBody DepartmentsForm departmentsForm,
             BindingResult result,
             final RedirectAttributes redirectAttributes,
             ModelMap model,
@@ -197,18 +199,35 @@ public class DepartmentAdmin {
     ) {
         LOGGER.info( "EditDepartment Post");
 
+        LOGGER.info("Object:{}", departmentsForm.toString());
+
        /* Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
         }
 */
         departmentsForm = departmentrepo.save(departmentsForm);
+
+
+        LOGGER.info("Saved:{}", departmentrepo.findAll().toString());
+        LOGGER.info("Saved object:{}", departmentsForm);
+
+
         model.addAttribute("departmentsForm", departmentsForm);
         model.addAttribute("departmentid", departmentsForm.getId());
 
         List<UsersForm> users = departmentsForm.getUsersForms();
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentsForm.getId());
+
+        if (ssas == null) {
+            ssas = Collections.emptyList();
+        }
+
+        if (users == null) {
+            users = Collections.emptyList();
+        }
+
         model.addAttribute("ssas", ssas);
 
         if (ssas.size() > 0 || users.size() > 0) {
@@ -217,7 +236,7 @@ public class DepartmentAdmin {
             model.addAttribute("dependencies", "0");
         }
 
-        return "EditDepartment";
+        return "redirect:/ListDepartments";
     }
 
     // ------------------------------------------------------------------------
