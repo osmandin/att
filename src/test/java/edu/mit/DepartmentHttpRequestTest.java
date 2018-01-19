@@ -15,11 +15,13 @@ import org.springframework.util.MultiValueMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Checks whether the department pages exists (e.g., list departments, edit department)
+ * Checks whether the department pages exists (e.g., list departments, edit department, add department)
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DepartmentHttpRequestTest {
+
+    private static final String HTTP_LOCALHOST = "http://localhost:";
 
     @LocalServerPort
     private int port;
@@ -28,8 +30,8 @@ public class DepartmentHttpRequestTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void greetingShouldReturnDefaultMessage() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/att/ListDepartments",
+    public void testListPage() throws Exception {
+        assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/att/ListDepartments",
                 String.class)).contains("Manage Departments");
     }
 
@@ -38,17 +40,16 @@ public class DepartmentHttpRequestTest {
      */
     @Test
     public void testEditPage() throws Exception {
-        //TODO better way to pass param?
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/att/EditDepartment/?departmentid=1",
+        assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/att/EditDepartment/?departmentid=1",
                 String.class)).contains("Update Item");
     }
 
     /**
-     * Test doing a GET
+     * Test doing a GET for adding a department
      */
     @Test
     public void testAddPage() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/att/AddDepartment",
+        assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/att/AddDepartment",
                 String.class)).contains("New");
     }
 
@@ -57,10 +58,11 @@ public class DepartmentHttpRequestTest {
      */
     @Test
     public void testAddDepartment() throws Exception {
-        MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         final String testDepartment = "whackydepartment";
         requestMap.add("name", testDepartment);
-        assertThat(restTemplate.postForObject("http://localhost:" + port + "/att/AddDepartment", requestMap, String.class)).contains(testDepartment);
+        assertThat(restTemplate.postForObject(HTTP_LOCALHOST+ port + "/att/AddDepartment", requestMap, String.class))
+                .contains(testDepartment);
     }
 
 
