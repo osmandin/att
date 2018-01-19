@@ -191,7 +191,7 @@ public class DepartmentAdmin {
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditDepartment", method = RequestMethod.POST)
     public String EditDepartment(
-            @RequestBody DepartmentsForm departmentsForm,
+            DepartmentsForm departmentsForm,
             BindingResult result,
             final RedirectAttributes redirectAttributes,
             ModelMap model,

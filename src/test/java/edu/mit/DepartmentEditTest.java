@@ -5,7 +5,11 @@ import edu.mit.controllers.DepartmentAdmin;
 import edu.mit.entity.DepartmentsForm;
 import edu.mit.repository.DepartmentsFormRepository;
 import edu.mit.repository.SsasFormRepository;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +24,7 @@ import static org.hamcrest.Matchers.hasProperty;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,9 +72,14 @@ public class DepartmentEditTest {
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
         when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
+
+        // see: https://stackoverflow.com/questions/4339207/http-post-with-request-content-type-form-not-working-in-spring-mvc-3/31083802#31083802
+
         mockMvc.perform(post("/EditDepartment?departmentid=1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(dept)))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
+                        new BasicNameValuePair("name", "test123"))
+                ))))
                 .andExpect(status().isOk())
                 .andReturn();
 
