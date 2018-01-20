@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <h3>Manage Submission Agreements</h3>
+                </div>
+
+
+                <div class="results-table-outer wrapper">
+
+                    <table class="table">
+                        <tr>
+                            <th style="min-width:15px">&nbsp;</th>
+                            <th style="min-width:15px">&nbsp;</th>
+                            <th align="center" style="min-width:15px;text-align:center">ID</th>
+                            <th>Department/Unit or Donor</th>
+                            <th>Records Title</th>
+                            <th align="center" style="min-width:80px;text-align:center">Status</th>
+                            <th align="center" style="text-align:center">Enabled</th>
+                        </tr>
+                        <tr th:each="ssa : ${ssasForm}">
+                            <td align="center"><input name="ssa" type="checkbox" th:value="${ssa.id}"
+                                                      th:checked="${false}"/></td>
+                            <td align="center"><a th:href="@{/EditSsa(id=${ssa.id})}">Edit</a></td>
+                            <td align="center" th:text="${ssa.id}"></td>
+                            <td>
+                                <div th:if="${ssa.departmentForm != null}">
+                                    <span th:text="${ssa.departmentForm.name}"></span>
+                                </div>
+                            </td>
+                            <td th:text="${ssa.recordstitle}">ssa recordstitle</td>
+                            <td align="center" th:switch="${ssa.approved}">
+                                <span th:case="true">approved</span>
+                                <span th:case="*">not approved</span>
+                            </td>
+                            <td align="center" th:switch="${ssa.enabled}">
+                                <span th:case="true">yes</span>
+                                <span th:case="*">no</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+
+                <!-- Add new button -->
+                <div>
+                    <a href="/att/CreateSsa" role="button">Add New </a>
+                </div>
+
+
+            </main>
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+</body>
+</html>
