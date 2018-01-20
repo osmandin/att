@@ -195,7 +195,7 @@ public class SsaAdmin {
 
         final List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
         //final List<SsasForm> ssas = ssarepo.findAll();
-        model.addAttribute("ssas", ssas);
+        model.addAttribute("ssasForm", ssas);
 
         LOGGER.log(Level.INFO, "Now returning to the main page");
 
