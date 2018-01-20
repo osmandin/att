@@ -57,6 +57,8 @@ public class SsaHttpRequestTest {
         final MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         final String testDepartment = "1";
         requestMap.add("departmentid", testDepartment);
+        requestMap.add("recordid", "test");
+        //System.out.println("Value:" + restTemplate.postForObject(HTTP_LOCALHOST+ port + POST_ENDPOINT, requestMap, String.class));
         assertThat(restTemplate.postForObject(HTTP_LOCALHOST+ port + POST_ENDPOINT, requestMap, String.class))
                 .contains(testDepartment);
     }

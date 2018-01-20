@@ -105,6 +105,7 @@ public class SsaAdmin {
         model.addAttribute("newssa", "1");
 
         List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+        //List<SsasForm> ssas = ssarepo.findAll(); // TODO
         model.addAttribute("ssasForm", ssas);
 
         return "ListSsas";
@@ -167,7 +168,7 @@ public class SsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "CreateSsa Post");
 
-        LOGGER.log(Level.INFO, "SSA for department:{}", selectedDepartmentsForm);
+        LOGGER.log(Level.INFO, "SSA for department:" + selectedDepartmentsForm);
 
         LOGGER.log(Level.INFO, "SSA:{}", ssasForm);
 
@@ -180,21 +181,27 @@ public class SsaAdmin {
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
         if (ssasForm == null) {
-            LOGGER.log(Level.SEVERE, "Null SSAForm object");
+            LOGGER.log(Level.INFO, "Null SSAForm object");
         }
 
+        session.setAttribute("name", "osman"); //FIXME. change to user logged in
         ssaservice.create(ssasForm, selectedDepartmentsForm, session, request);
+
+        LOGGER.info("Saved object:" + ssarepo.findAll().toString());
 
 
         final ModelAndView mav = new ModelAndView();
         String message = "New SSA " + ssasForm.getRecordid() + " was successfully created.";
 
         final List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+        //final List<SsasForm> ssas = ssarepo.findAll();
         model.addAttribute("ssas", ssas);
 
-        mav.setViewName("redirect:/ListSsas");
+        LOGGER.log(Level.INFO, "Now returning to the main page");
 
-        redirectAttributes.addFlashAttribute("message", message);
+        mav.setViewName("ListSsas");
+
+        //redirectAttributes.addFlashAttribute("message", message);
 
         return mav;
     }
