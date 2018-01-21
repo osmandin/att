@@ -136,11 +136,21 @@ public class SsaAdmin {
         newcrfs.add(crf);
 
         SsasForm ssasForm = new SsasForm();
+
+
+        // OSM added this, not sure about this logic
+        List<SsaFormatTypesForm> newfmttypes = new ArrayList<>();
+        SsaFormatTypesForm ssaFormatTypesForm = new SsaFormatTypesForm();
+        ssaFormatTypesForm.setFormattype("whatever"); //TODO
+        ssaFormatTypesForm.setSsasForm(ssasForm); //NOTE
+        newfmttypes.add(ssaFormatTypesForm);
+
         ssasForm.setRecordstitle(env.getRequiredProperty("defaults.recordstitle"));
         ssasForm.setSsaCopyrightsForms(newcrfs);
         ssasForm.setRetentionschedule(env.getRequiredProperty("defaults.retentionschedule"));
         ssasForm.setDescriptionstandards(env.getRequiredProperty("defaults.archivedescriptionstandards"));
         ssasForm.setCreationdate(todayssqldate);
+        ssasForm.setSsaFormatTypesForms(newfmttypes);
 
         // access restrictions... None... not an entry
 

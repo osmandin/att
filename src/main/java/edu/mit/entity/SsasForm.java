@@ -188,4 +188,30 @@ public class SsasForm {
     public int hashCode(RsasForm rsa) {
         return rsa.getId();
     }
+
+    @Override
+    public String toString() {
+        return "SsasForm{" +
+                "id=" + id +
+                ", departmenthead='" + departmenthead + '\'' +
+                ", recordid='" + recordid + '\'' +
+                ", creationdate='" + creationdate + '\'' +
+                ", recordstitle='" + recordstitle + '\'' +
+                ", effectivedate='" + effectivedate + '\'' +
+                ", expirationdate='" + expirationdate + '\'' +
+                ", retentionalertdate='" + retentionalertdate + '\'' +
+                ", retentionschedule='" + retentionschedule + '\'' +
+                ", otherformattypes='" + otherformattypes + '\'' +
+                ", recorddescription='" + recorddescription + '\'' +
+                ", retentionperiod='" + retentionperiod + '\'' +
+                ", descriptionstandards='" + descriptionstandards + '\'' +
+                ", createdby='" + createdby + '\'' +
+                ", editdate='" + editdate + '\'' +
+                ", enabled=" + enabled +
+                ", approved=" + approved +
+                ", deleted=" + deleted +
+                ", IP='" + IP + '\'' +
+                ", onlinesubmission=" + onlinesubmission +
+                '}';
+    }
 }
