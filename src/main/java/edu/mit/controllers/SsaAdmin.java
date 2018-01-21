@@ -368,7 +368,9 @@ public class SsaAdmin {
 
         LOGGER.log(Level.INFO, "All objects:" + ssarepo.findAll());
 
-        model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
+        if (env.getRequiredProperty("defaults.accessrestriction") != null) {
+            model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
+        }
 
         List<DepartmentsForm> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
         ssasForm.setDropdownDepartmentsForms(df);
@@ -405,7 +407,9 @@ public class SsaAdmin {
         model.addAttribute("emailrecips", "");
         model.addAttribute("invalidaddresses", "0");
 
-        model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
+        if (env.getRequiredProperty("defaults.accessrestriction") != null) {
+            model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
+        }
 
         ssaservice.saveForm(ssasForm, selectedDepartmentsForm);
 
