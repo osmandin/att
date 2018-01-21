@@ -170,8 +170,6 @@ public class SsaAdmin {
 
         LOGGER.log(Level.INFO, "SSA for department:" + selectedDepartmentsForm);
 
-        LOGGER.log(Level.INFO, "SSA:{}", ssasForm);
-
         if (result.hasErrors()) { //osm:?
             LOGGER.log(Level.SEVERE, "createSsaPost: has errors");
             model.addAttribute("action", "CreateSsa");
@@ -185,6 +183,15 @@ public class SsaAdmin {
         }
 
         session.setAttribute("name", "osman"); //FIXME. change to user logged in
+
+        LOGGER.log(Level.INFO, "Saving (pre1):" + selectedDepartmentsForm);
+
+        ssasForm.setSsaCopyrightsForms(Collections.emptyList());
+
+        LOGGER.log(Level.INFO, "Saving (pre2):" + selectedDepartmentsForm);
+
+
+
         ssaservice.create(ssasForm, selectedDepartmentsForm, session, request);
 
         LOGGER.info("Saved object:" + ssarepo.findAll().toString());
