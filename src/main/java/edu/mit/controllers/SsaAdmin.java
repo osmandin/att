@@ -453,7 +453,7 @@ public class SsaAdmin {
         }*/
 
         model.addAttribute("action", "EditSsa");
-        return "EditSsa";
+        return "ListSsas";
     }
 
     // ------------------------------------------------------------------------
