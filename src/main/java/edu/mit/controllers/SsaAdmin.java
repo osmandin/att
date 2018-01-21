@@ -355,7 +355,7 @@ public class SsaAdmin {
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditSsa", method = RequestMethod.GET)
     public String EditSsa(ModelMap model, @RequestParam("id") int ssaid, HttpServletRequest request, HttpSession session) {
-        LOGGER.log(Level.INFO, "EditSsa Get");
+        LOGGER.log(Level.INFO, "EditSsa Get for:" + ssaid);
 
         /*Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
@@ -365,6 +365,8 @@ public class SsaAdmin {
         model.addAttribute("newssa", "0");
 
         SsasForm ssasForm = ssarepo.findById(ssaid);
+
+        LOGGER.log(Level.INFO, "All objects:" + ssarepo.findAll());
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 

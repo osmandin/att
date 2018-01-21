@@ -26,7 +26,7 @@ public class SsaHttpRequestTest {
     private static final String HTTP_LOCALHOST = "http://localhost:";
     static final String POST_ENDPOINT = "/att/CreateSsa";
     static final String LIST_ENDPOINT = "/att/ListSsas";
-    static final String EDIT_ENDPOINT = "/att/EditSSa/";
+    static final String EDIT_ENDPOINT = "/att/EditSsa/";
 
     @LocalServerPort
     private int port;
@@ -53,7 +53,7 @@ public class SsaHttpRequestTest {
      * Test adding a POST (add an entity)
      */
     @Test
-    public void testAddDepartment() throws Exception {
+    public void testAddSSa() throws Exception {
         final MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
         final String testDepartment = "1";
         requestMap.add("departmentid", testDepartment);
@@ -66,11 +66,20 @@ public class SsaHttpRequestTest {
     /**
      * Tests whether edit page is up and running
      */
-    @Ignore
     @Test
     public void testEditPage() throws Exception {
+        final MultiValueMap<String, Object> requestMap = new LinkedMultiValueMap<>();
+        final String testDepartment = "1";
+        requestMap.add("departmentid", testDepartment);
+        requestMap.add("recordid", "test");
+
+        // First create object:
+
+        assertThat(restTemplate.postForObject(HTTP_LOCALHOST+ port + POST_ENDPOINT, requestMap, String.class))
+                .contains(testDepartment);
+
         assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + EDIT_ENDPOINT + "?id=1",
-                String.class)).contains("Update Item");
+                String.class)).contains("Edit Submission Agreement");
     }
 
 
