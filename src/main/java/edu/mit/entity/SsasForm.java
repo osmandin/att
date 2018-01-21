@@ -189,6 +189,7 @@ public class SsasForm {
         return rsa.getId();
     }
 
+    // Done due to: https://stackoverflow.com/questions/23973347/jpa-java-lang-stackoverflowerror-on-adding-tostring-method-in-entity-classes
     @Override
     public String toString() {
         return "SsasForm{" +
