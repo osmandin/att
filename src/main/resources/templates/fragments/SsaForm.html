@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="SsaForm" th:remove="tag">
+
+    <!--
+     <div class="form-group row">
+                        <label for="id" class="col-sm-2 col-form-label">ID</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="id" placeholder="" th:field= "${usersForm.id}" readonly="readonly"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="username" class="col-sm-2 col-form-label">Username</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" id="username" placeholder="" th:field="${usersForm.username}"/>
+                        </div>
+                    </div>
+    -->
+
+
     <form id="form" th:object="${ssasForm}" method="post" th:action="@{/CreateSsa}">
         <div th:switch="*{dropdownDepartmentsForms == null or dropdownDepartmentsForms.size() == 0}">
             <div th:case="true">
@@ -21,9 +39,12 @@
 
             <p></p>
 
-            <div>
-                <label for="rt">Records Title</label>
-                <input type="text" class="wide" th:field="*{recordstitle}"/>
+
+            <div class="form-group row">
+                <label for="recordstitle" class="col-sm-2 col-form-label">Records Title</label>
+                <div class="col-sm-7">
+                    <input class="form-control" id="recordstitle" placeholder="" th:field="*{recordstitle}"/>
+                </div>
             </div>
 
             <p></p>
@@ -36,16 +57,17 @@
                     <legend>Head of Department/Unit for this Submission Agreement</legend>
                     <p>Supply the name of the office or person creating the record and a Record Group.</p>
 
-                    <div id="recordsCreator">
-                        <div>
-                            <div>
-                                <label for="hdu">Head of Department/Unit</label>
-                                <input type="text" class="wide" th:field="*{departmenthead}"/>
-                            </div>
-                            <div>
-                                <label for="ssarcid">Record or Collection Identifier</label>
-                                <input type="text" class="wide" th:field="*{recordid}"/>
-                            </div>
+                    <div id="recordsCreator" class="form-group row">
+                        <label for="hdu" class="col-sm-2 col-form-label">Head of Department/Unit</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="deptartmenthead"
+                                   th:field="*{departmenthead}"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ssarcid" class="col-sm-2 col-form-label">Record or Collection Identifier</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form=control" th:field="*{recordid}"/>
                         </div>
                     </div>
                 </fieldset>
@@ -61,21 +83,39 @@
                             <input type="hidden" name="ssaContactsForms[0].idx" value="0"/>
                             <input th:if="${newssa ne '1'}" type="hidden" name="ssaContactsForms[0].ssasForm.id"
                                    th:value="${ssasForm.id}"/>
-                            <div>
-                                <label for="ssacontactname">Name</label>
-                                <input type="text" class="wide" id="name" name="ssaContactsForms[0].name"/>
+                            <div class="form-group row">
+                                <label for="ssacontactname" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="ssacontactname"
+                                           name="ssaContactsForms[0].name"/>
+                                </div>
+
                             </div>
-                            <div>
-                                <label for="ssacontactphone">Phone Number</label>
-                                <input type="text" class="wide" id="phone" name="ssaContactsForms[0].phone"/>
+                            <div class="form-group row">
+                                <label for="ssacontactphone" class="col-sm-2 col-form-label">Phone Number</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="ssacontactphone"
+                                           name="ssaContactsForms[0].phone"/>
+                                </div>
                             </div>
-                            <div>
-                                <label for="ssacontactemail">Email</label>
-                                <input type="text" class="wide" id="email" name="ssaContactsForms[0].email"/>
+                            <div class="form-group row">
+                                <label for="ssacontactemail" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-7">
+
+                                    <input type="text" class="form-control" id="ssacontactemail"
+                                           name="ssaContactsForms[0].email"/>
+
+                                </div>
                             </div>
-                            <div>
-                                <label for="ssacontactaddress">Campus Address</label>
-                                <input type="text" class="wide" id="address" name="ssaContactsForms[0].address"/>
+                            <div class="form-group row">
+                                <label for="ssacontactaddress" class="col-sm-2 col-form-label">Campus Address</label>
+
+                                <div class="col-sm-7">
+
+                                    <input type="text" class="form-control" id="ssacontactaddress"
+                                           name="ssaContactsForms[0].address"/>
+                                </div>
+
                             </div>
                             <div>
                                 <input type="button" value="-" onclick="removeit( this, 'contact' )"/>
@@ -88,25 +128,46 @@
                             <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].id}"/>
                             <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].idx}"/>
                             <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].ssasForm.id}"/>
-                            <div>
-                                <label for="ssacontactname">Name</label>
-                                <input type="text" class="wide" id="name"
-                                       th:field="*{ssaContactsForms[__${stat.index}__].name}"/>
+                            <div class="form-group row">
+                                <label for="ssacontactname" class="col-sm-2 col-form-label">Name</label>
+
+                                <div class="col-sm-7">
+
+
+                                    <input type="text" class="form-control" id="name"
+                                           th:field="*{ssaContactsForms[__${stat.index}__].name}"/>
+
+                                </div>
                             </div>
-                            <div>
-                                <label for="ssacontactphone">Phone Number</label>
-                                <input type="text" class="wide" id="phone"
-                                       th:field="*{ssaContactsForms[__${stat.index}__].phone}"/>
+                            <div class="form-group row">
+                                <label for="ssacontactphone" class="col-sm-2 col-form-label">Phone Number</label>
+
+                                <div class="col-sm-7">
+
+                                    <input type="text" class="form-control" id="phone"
+                                           th:field="*{ssaContactsForms[__${stat.index}__].phone}"/>
+
+                                </div>
                             </div>
-                            <div>
+                            <div class="form-group row">
                                 <label for="ssacontactemail">Email</label>
-                                <input type="text" class="wide" id="email"
-                                       th:field="*{ssaContactsForms[__${stat.index}__].email}"/>
+
+                                <div class="col-sm-7">
+
+                                    <input type="text" class="form-control" id="email"
+                                           th:field="*{ssaContactsForms[__${stat.index}__].email}"/>
+
+                                </div>
                             </div>
-                            <div>
-                                <label for="ssacontactaddress">Campus Address</label>
-                                <input type="text" class="wide" id="address"
-                                       th:field="*{ssaContactsForms[__${stat.index}__].address}"/>
+                            <div class="form-group row">
+                                <label for="ssacontactaddress" class="col-sm-2 col-form-label">Campus Address</label>
+
+                                <div class="col-sm-7">
+
+                                    <input type="text" class="form-control" id="address"
+                                           th:field="*{ssaContactsForms[__${stat.index}__].address}"/>
+
+                                </div>
                             </div>
                             <div>
                                 <input type="button" value="-" onclick="removeit( this, 'contact'  )"/>
@@ -120,11 +181,15 @@
 
                 <p></p>
 
-                <div>
-                    <label for="acd">Agreement Creation Date</label>
+                <div class="form-group row">
+                    <label for="acd class=" class="col-sm-2 col-form-label">Agreement Creation Date</label>
+
                     <span class="elements" id="acd">
-	      <input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+                                                <div class="col-sm-7">
+
+	      <input type="text" class="form-control" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
                  th:field="*{creationdate}"/>
+                                                </div>
 	    </span>
                 </div>
 
@@ -138,7 +203,10 @@
                         <div class="copyright">
                             <input th:if="${newssa ne '1'}" type="hidden" name="ssaCopyrightsForms[0].ssasForm.id"
                                    th:value="${ssasForm.id}"/>
-                            <input type="text" id="copyright" name="ssaCopyrightsForms[0].copyright"/>
+                            <div class="col-sm-7">
+
+                                <input type="text" id="copyright" name="ssaCopyrightsForms[0].copyright"/>
+                            </div>
                             <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
                         </div>
                     </div>
@@ -150,8 +218,12 @@
                             <input type="hidden" th:field="*{ssaCopyrightsForms[__${stat.index}__].idx}"/>
                             <input th:if="${newssa ne '1'}" type="hidden"
                                    th:field="*{ssaCopyrightsForms[__${stat.index}__].ssasForm.id}"/>
-                            <input type="text" id="copyright"
-                                   th:field="*{ssaCopyrightsForms[__${stat.index}__].copyright}"/>
+
+                            <div class="col-sm-7">
+
+                                <input type="text" id="copyright"
+                                       th:field="*{ssaCopyrightsForms[__${stat.index}__].copyright}"/>
+                            </div>
                             <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
                         </div>
                     </div>
@@ -172,8 +244,11 @@
 		  <input th:if="${newssa ne '1'}" type="hidden" name="ssaAccessRestrictionsForms[0].ssasForm.id"
                  th:value="${ssasForm.id}"/>
 		  <input type="hidden" name="ssaAccessRestrictionsForms[0].idx" value="0"/>
+                                    <div class="col-sm-7">
+
 		  <input type="text" id="restriction" name="ssaAccessRestrictionsForms[0].restriction"
                  th:value="${defaultaccessrestriction}"/>
+                                    </div>
 		</span>
                             <span>
 		  <input type="button" value="-" onclick="removeit( this, 'restriction' )"/>
@@ -187,8 +262,11 @@
                             <input type="hidden" th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].idx}"/>
                             <input type="hidden"
                                    th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].ssasForm.id}"/>
-                            <input type="text" id="restriction"
-                                   th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
+                            <div class="col-sm-7">
+
+                                <input type="text" id="restriction"
+                                       th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
+                            </div>
                             <span><input type="button" value="-" onclick="removeit( this, 'restriction' )"/></span>
                         </div>
                     </div>
@@ -199,33 +277,37 @@
 
                 <p></p>
 
-                <div>
-                    <label for="ed">Agreement Effective Date</label>
-                    <span class="elements" id="ed">
-	      <input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
-                 th:field="*{effectivedate}"/>
-	    </span>
+                <div class="form-group row">
+                    <label for="ed" class="col-sm-2 col-form-label">Agreement Effective Date</label>
+                    <div class="col-sm-7">
+                        <input id="ed" type="text" class="datedropdown" data-format="YYYY-MM-DD"
+                               data-template="YYYY MMM D"
+                               th:field="*{effectivedate}"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="rs" class="col-sm-2 col-form-label">Retention Schedule</label>
+                    <div class="col-sm-7">
+                        <input id="rs" type="text" class="form-control" th:field="*{retentionschedule}"/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="rp" class="col-sm-2 col-form-label">Retention Period</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" th:field="*{retentionperiod}"/>
+                    </div>
                 </div>
 
                 <p></p>
 
-                <div>
-                    <label for="rs">Retention Schedule</label>
-                    <input type="text" th:field="*{retentionschedule}"/>
-                </div>
-
-                <p></p>
-
-                <div>
-                    <label for="rp">Retention Period</label>
-                    <input type="text" th:field="*{retentionperiod}"/>
-                </div>
-
-                <p></p>
-
-                <div>
-                    <label for="ads">Archival Description Standards</label>
-                    <input type="text" th:field="*{descriptionstandards}"/>
+                <div class="form-group row">
+                    <label for="ads" class="col-sm-2 col-form-label">Archival Description Standards</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" th:field="*{descriptionstandards}"/>
+                    </div>
                 </div>
 
                 <p></p>
@@ -233,36 +315,46 @@
                 <fieldset id="optapproved">
                     <p></p>
 
-                    <div>
-                        <label for="ex">Expiration Date</label>
+                    <div class="form-group row">
+                        <label for="ex" class="col-sm-2 col-form-label">Expiration Date</label>
+                        <div class="col-sm-7">
                         <span class="elements" id="ex">
-		<input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+		<input type="text" class="form-control" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
                th:field="*{expirationdate}"/>
 	      </span>
+                        </div>
                     </div>
 
                     <p></p>
 
-                    <div>
-                        <label for="rad">Retention Alert Date</label>
+                    <div class="form-group row">
+                        <label for="rad" class="col-sm-2 col-form-label">Retention Alert Date</label>
+                        <div class="col-sm-7">
                         <span class="elements" id="ex">
-		<input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+		<input type="text" class="form-control" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
                th:field="*{retentionalertdate}"/>
 	      </span>
+                        </div>
                     </div>
 
                     <p></p>
 
-                    <div>
-                        <label for="notinline">Other Record Format Types</label>
-                        <textarea class="notinline" cols="50" rows="10" th:field="*{otherformattypes}"></textarea>
+                    <div class="form-group row">
+                        <label for="notinline" class="col-sm-2 col-form-label">Other Record Format Types</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" cols="50" rows="10"
+                                      th:field="*{otherformattypes}"></textarea>
+                        </div>
                     </div>
 
                     <p></p>
 
-                    <div>
-                        <label for="notinline">General Records Description</label>
-                        <textarea class="notinline" cols="50" rows="10" th:field="*{recorddescription}"></textarea>
+                    <div class="form-group row">
+                        <label for="notinline" class="col-sm-2 col-form-label">General Records Description</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" cols="50" rows="10"
+                                      th:field="*{recorddescription}"></textarea>
+                        </div>
                     </div>
 
                     <p></p>
@@ -276,7 +368,9 @@
                                    th:value="${ssasForm.id}"/>
                             <div class="format">
 		  <span>
-		    <input type="text" name="ssaFormatTypesForms[0].formattype"/>
+		    <div class="col-sm-7">
+		    <input type="text" class="form-control" name="ssaFormatTypesForms[0].formattype"/>
+		    </div>
 		    <span><input type="button" value="-" onclick="removeit( this, 'format' )"/></span>
 		  </span>
                             </div>
@@ -287,7 +381,10 @@
                                 <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].id}"/>
                                 <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].idx}"/>
                                 <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].ssasForm.id}"/>
-                                <input type="text" th:field="*{ssaFormatTypesForms[__${stat.index}__].formattype}"/>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control"
+                                           th:field="*{ssaFormatTypesForms[__${stat.index}__].formattype}"/>
+                                </div>
                                 <span><input type="button" value="-" onclick="removeit( this, 'format' )"/></span>
                             </div>
                         </div>
@@ -302,12 +399,14 @@
             <p></p>
             <p></p>
 
-            <p><label><b>Approved</b></label> <input type="checkbox" onchange="approvedchange()" th:field="*{approved}"
+            <p><label><b>Approved</b></label> <input class="form-control" type="checkbox" onchange="approvedchange()"
+                                                     th:field="*{approved}"
                                                      th:checked="*{approved}"/></p>
 
             <p></p>
 
-            <p><label><b>Enabled</b></label> <input type="checkbox" th:field="*{enabled}" th:checked="*{enabled}"/></p>
+            <p><label><b>Enabled</b></label> <input class="form-control" type="checkbox" th:field="*{enabled}"
+                                                    th:checked="*{enabled}"/></p>
 
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
