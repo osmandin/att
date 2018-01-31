@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"/>-->
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+
+</head>
+<body class="app-thing">
+
+
+<div th:replace="mit/header :: header"/>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<a id="skip" class="skip sr sr-focusable" href="#content-main">Skip to main content</a>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <p>Welcome, User</p>
+                </div>
+                
+                <h3><a th:href="@{/SubmitRecords}">Submit Records to Archives</a></h3>
+
+                <h3><a th:href="@{/Admin}">Administrative Tools</a></h3>
+
+                <h3><a th:href="@{/ListApprovedRsas}">About</a></h3>
+
+
+                <h3><a th:href="@{/ListUsers}">FAQ</a></h3>
+
+                <h3><a th:href="@{/ListDepartments}">Help</a></h3>
+
+                <h3><a th:href="@{/ApprovedRsaLog}">Log Out</a></h3>
+
+                <p></p>
+
+            </main>
+            <!-- close content-main -->
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+</div>
+
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+
+</body>
+</html>
+
+
