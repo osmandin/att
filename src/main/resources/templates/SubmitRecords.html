@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Submit Records to Archives</title>
+    <div th:replace="fragments/header :: header-css"/>
+    <script type="text/javascript" th:src="@{/resources/js/SubmitRecords.js}"></script>
+</head>
+
+<body>
+
+
+<div th:replace="mit/header :: header"/>
+
+
+<div id="body_main">
+    <div class="window">
+
+
+        <div id="content">
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            <div th:switch="${session.loggedin}">
+                <div th:case="'1'">
+                    <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn
+                    </div>
+                </div>
+                <div th:case="*">
+                    <div th:replace="fragments/SubmitRecordsNotLoggedIn :: SubmitRecordsNotLoggedIn">
+                        SubmitRecordsNotLoggedIn
+                    </div>
+                </div>
+            </div> -->
+
+            <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn</div>
+
+
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+</body>
+</html>

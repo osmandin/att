@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Submit Records to Archives</title>
+    <div th:replace="fragments/Head :: Head"></div>
+</head>
+
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div id="body_main">
+    <div class="window">
+
+        <div id="content">
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+            <div class="success_box" th:if="${staffemailsent}">
+                <p>
+                    Thank you for your successful completion of a Records
+                    Submission for Submission Agreement ID=<span th:text="${ssaid}"></span> and
+                    Transfer Request ID=<span th:text="${rsaid}"></span>. The Spartan Archive staff
+                    has been notified of the submission. The Univerity
+                    Archives staff will review this transfer and upon
+                    approval will send an email acknowledgement.
+                </p>
+            </div>
+
+            <div class="alert_box" th:if="${not staffemailsent}">
+                <p>
+                    An attempt was made to send email about this submission to the Spartan Archive staff
+                    but the send failed.
+                </p>
+            </div>
+
+            <p th:if="${useremailsent != null and useremailsent}">An email has been sent to you with details of your
+                submission.</p>
+
+            <div th:if="${useremailsent!=null and !useremailsent}">
+                <div class="alert_box">
+                    <p>An attempt was made to send email to you with details of your submission, but the send
+                        failed.</p>
+                </div>
+                <p></p>
+            </div>
+
+            <p>The following files have been uploaded:</p>
+
+            <table border="0">
+                <div th:each="item : ${filedata}">
+                    <tr>
+                        <td width="20px"></td>
+                        <td th:text="${item.name}"></td>
+                        <td width="5px"></td>
+                        <td th:text="${item.nicesize}"></td>
+                    </tr>
+                </div>
+            </table>
+
+            <p>Total file size=<span th:text="${totalfilesize}"></span>.</p>
+            <br/><br/>
+
+            <h2>All done?</h2>
+            <form method="post" th:action="@{/Logout}">
+                <p>Click here to logout. <input type="submit" value="Log out"/></p>
+            </form>
+
+            <div th:switch="${departments}">
+                <div th:case="'0'">
+                    <h3>No offices defined for this user.</h3>
+                </div>
+                <div th:case="*">
+
+                    <h2>Want to complete another Records Submission?</h2>
+
+                    <p>Please select your office from the list below.</p>
+
+                    <form method="post" th:action="@{/RecordsSubmissionForm}">
+                        <p>
+                            <select class="styled-select" name="ssaid">
+                                <option class="templateOption" th:each="ssa,stat : *{ssaForms}"
+                                        th:selected="(${ssaid} eq *{ssaForms[__${stat.index}__].id})"
+                                        th:value="*{ssaForms[__${stat.index}__].id}"><span
+                                        th:text="*{ssaForms[__${stat.index}__].departmentForm.name}"></span>:<span
+                                        th:text="*{ssaForms[__${stat.index}__].recordstitle}"></span></option>
+                            </select>
+                        </p>
+
+                        <p>
+                            Select submit to continue your transfer request of <b>permanent</b> electronic records to
+                            the University Archives.
+                        </p>
+
+                        <p>
+                            <input type="submit" name="ssa_submit" value="Submit"/>
+                        </p>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+</body>
+</html>

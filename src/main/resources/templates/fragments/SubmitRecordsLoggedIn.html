@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="SubmitRecordsLoggedIn">
+
+    <div th:if="${ssa_not_found eq '1'}">
+        <p class="error">ERROR: There is no record of an SSA with the database ID '${ssa_id}'.</p>
+    </div>
+
+    <div class="alert_box" id="alert_box_top">
+        <p>Please make a selection.</p>
+    </div>
+
+    <div th:if="${rsa_complete ne '1'}">
+        <h1>Submit Records to Archives</h1>
+    </div>
+
+
+    <div class="success_box" th:if="${rsa_complete eq '1'}">
+        <p>Thank you for your successful completion of a Records Submission for Submission Agreement ID=${ssaid} and
+            Transfer Request ID=${rsaid}. The Spartan Archive staff has been notified of the submission. The University
+            Archives staff will review this transfer and upon approval will send an email acknowledgement.</p>
+
+        <p>An email has been sent to you with details of your submission.</p>
+
+        <p>The following files have been uploaded:</p>
+        <p th:text="${text}"></p>
+        <br/>
+        <br/>
+    </div>
+
+
+    <div th:if="${rsa_complete eq '1'}">
+        <h2>All done?</h2>
+        <form method="post" th:action="@{/Auth(type='logout')}">
+            <p>Click here to logout. <input type="submit" value="Log out"/></p>
+        </form>
+        <h2>Want to complete another Records Submission?</h2>
+    </div>
+
+    <div th:switch="${departments}">
+
+        <div th:case="'0'">
+            <h3>No Department/Unit or Donor with Standard Submission Agreements defined for this user.</h3>
+        </div>
+
+        <div th:case="*">
+
+            <p>
+                Please select your Department/Unit or Donor and Record Title
+                from the list below.
+            </p>
+
+            <div th:text="${adminmsg}"></div>
+
+            <form method="post" id="form" th:action="@{/RecordsSubmissionForm}">
+                <p>
+
+                    <select class="styled-select" name="ssaid" id="ssaid">
+                        <option class="templateOption" th:each="s, stat: *{ssaForms}"
+                                th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].departmentForm} != null and *{ssaForms[__${stat.index}__].id} != '0')"
+                                th:value="*{ssaForms[__${stat.index}__].id}"
+                                th:text="*{ssaForms[__${stat.index}__].departmentForm.name} + ': ' + *{ssaForms[__${stat.index}__].recordstitle}"></option>
+                    </select>
+                </p>
+
+                <p>
+                    Select submit to continue your transfer request of <b>permanent</b> electronic records to the
+                    University Archives.
+                </p>
+
+            </form>
+
+            <p>
+                <input type="button" value="Submit" onclick="validate()"/>
+            </p>
+
+        </div>
+
+ <!--       <script th:if="${session.isadmin}" th:inline="javascript">
+            /*<![CDATA[*/
+            var root = [[
+            @
+            {/
+            }
+            ]]
+            ;
+            /*]]>*/
+        </script>
+        <script th:if="${session.isadmin}">
+
+            window.onload = function () {
+                var d = new Date();
+                var seconds = Math.round(d.getTime() / 1000);
+                var bannernum = seconds % 6 + 1;
+                $("#thebanner").removeClass("banner1").removeClass("banner2").removeClass("banner3").removeClass("banner4").removeClass("banner5").removeClass("banner6").addClass("banner" + bannernum);
+
+                var e = document.getElementById("ssaid");
+                var selectedIndex = $("#ssaid option:selected").index();
+                var ssaid = e.options[e.selectedIndex].value;
+                if (ssaid != 0) {
+                    $("#alert_box_top").hide();
+                    $.ajax({
+                        method: "POST",
+                        url: root + "CheckIfSsaApproved",
+                        data: {ssaid: ssaid}
+                    })
+                        .done(function (approved) {
+                            if (approved == 'false') {
+                                alert("Note: This selection is associated with a draft Submission Agreement.");
+                            }
+                        });
+                }
+            };
+
+            $('#ssaid').change(function () {
+                var e = document.getElementById("ssaid");
+                var selectedIndex = $("#ssaid option:selected").index();
+                var ssaid = e.options[e.selectedIndex].value;
+                if (ssaid != 0) {
+                    $("#alert_box_top").hide();
+                    $.ajax({
+                        method: "POST",
+                        url: root + "CheckIfSsaApproved",
+                        data: {ssaid: ssaid}
+                    })
+                        .done(function (approved) {
+                            if (approved == 'false') {
+                                alert("Note: This selection is associated with a draft Submission Agreement.");
+                            }
+                        });
+                }
+            });
+        </script>-->
+
+    </div>
+</div>
+</body>
+</html>

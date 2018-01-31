@@ -312,7 +312,7 @@ public class UserAdmin {
      * @param usersForm
      * @return
      */
-    @RequestMapping(value = {"/add"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/add", "/AddUser", "AddUser"}, method = RequestMethod.GET)
     public ModelAndView AddUser(final Model usersForm) {
         logger.info("AddUser GET");
 
@@ -325,7 +325,7 @@ public class UserAdmin {
         final UsersForm item = new UsersForm();
         item.setDepartmentsForms(dfs);
 
-        final ModelAndView model = new ModelAndView("add");
+        final ModelAndView model = new ModelAndView("AddUser");
         model.addObject("usersForm", item);
         model.addObject("departmentsForm", dfs);
         return model;
@@ -337,7 +337,7 @@ public class UserAdmin {
      * @param item
      * @return
      */
-    @RequestMapping(value = {"/add"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/add", "AddUser", "/AddUser"}, method = RequestMethod.POST)
     public ModelAndView greetingForm(final UsersForm item,
                 @RequestParam(value = "department_id", required = false) DepartmentsForm[] selectedDepartmentsForms) {
 

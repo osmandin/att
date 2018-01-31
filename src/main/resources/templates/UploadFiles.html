@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Add Digital Content Files</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+    <div th:replace="fragments/header :: header-css"/>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var context = [[@{/}]];
+        var totalmax=[[${totalmax}]];
+        var peruploadmax=[[${peruploadmax}]];
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:src="@{/resources/js/UploadFiles.js}"></script>
+</head>
+
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div id="body_main">
+    <div class="window">
+
+        <div th:replace="fragments/Nav :: Nav"></div>
+
+        <div id="content">
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+            <h1>Add Digital Content Files</h1>
+
+            <p>
+                <a th:href="@{/SubmitRecords}">Return to Records Submission Form</a>
+            </p>
+
+            <form method="post" th:action="@{/UploadComplete}" enctype="multipart/form-data" id="form">
+                <input type="hidden" name="filedata" id="filedata"/>
+                <input name="file_counter" type="hidden" value="1" id="file_counter"/>
+                <div id="fileobj">
+                    <p></p>
+                    <span>File:</span><input type="file" name="file" id="file" multiple="multiple"
+                                             onchange="gatherdisplayfiledata('1')"/><br/>
+                    <input type="button" value="-" style="display:none" id="minus" onclick="removeit( this )"/>
+                </div>
+
+                <p></p>
+                <input type="button" value="+" onclick="addit( this  )"/>
+
+                <p></p>
+                <div>
+	      <span id="maxuploadsize">The total size of all files to
+	      be uploaded can be <span th:text="${avail_bytes}"></span>.</span>
+                </div>
+                <input name="havail_bytes" type="hidden" value="empty" id="havail_bytes"/>
+                <p>
+                    <input type="button" value="Clear selected files" onclick="clearfiles()"/>
+                </p>
+
+                <p></p>
+                <p>
+                <div id="displayfiledata"></div>
+                </p>
+                <p>
+                    Click the button below once you have specified <em>all</em> of the files you wish to attach to this
+                    record submission form.
+                </p>
+            </form>
+
+            <input type="button" value="Submit" onclick="gatherfiledata_validate_and_submit()"/>
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+</body>
+</html>
