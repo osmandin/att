@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"/>-->
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+
+</head>
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                </div>
+
+                <div id="content">
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                    <h1>Electronic Records Submission Tool</h1>
+
+
+                    <p>
+                        The Electronic Records Submission Tool was developed by IT Services
+                        using code created by Tufts University under a grant from the National
+                        Historical Publications and Records Commission (NHPRC).
+                    </p>
+
+                    <p>
+                        This document describes steps for users from departments and
+                        units (external to the University Archives) using the Electronic Record Submission Tool
+                        website. The general workflow is that a user completes an online Submission
+                        Agreement Form. Upon receipt, the information is entered into the Electronic Records Submission
+                        Tool by University Archives staff. When completed, the staff will notify the
+                        office. Departments/Unit representatives will then use the website tool to
+                        create transfer requests of electronic records. These requests will then be
+                        reviewed and approved by Archives staff and files moved to the Trusted
+                        Digital Repository pre-ingest area.
+                    </p>
+
+                    <p>Note: A Submission Agreement need only be created once per office.</p>
+
+                    <h2>1.0 Instructions for Units and Offices</h2>
+
+                    <h2>1.1. Login</h2>
+
+                    <p>
+                        From the main page (Figure 1), users login to access the
+                        tool using their username. Login is only possible after completing a Submission Agreement form, see 1.2.
+                        <span class="underline">NOTE: Login is not required for submitting a
+	      Submission Agreement Form.</span>
+                    </p>
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 1" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure1.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 1: Main Page</p>
+
+                    <h3>1.1.1 About</h3>
+
+                    <p>
+                        This page provides an overview of the University Archives Records Management.
+                    </p>
+
+                    <h3>1.1.2 Home</h3>
+
+                    <p>
+                        The <b>Home</b> link returns the user to the top level page. If not logged in, this would be Figure 1.
+                        After login, <b>Home</b> returns to Figure 3.
+                    </p>
+
+
+                    <h2>1.2 Submit Submission Agreement Form</h2>
+
+                    <p>
+                        A Submission Agreement Form (Figure 2) can only be completed
+                        prior to login. The option is not available after a user
+                        logs into the website.
+                    </p>
+
+                    <p><span>1.</span> Under First time Users, Select the <b>Submission Agreement Form</b> link.</p>
+
+                    <p><span>2.</span> The Submission Agreement Form - Verify appears.
+                        Enter the Captcha text.</p>
+
+                    <p>
+                        <span>3.</span> Carefully review the online document and then fill
+                        in fields for Department/Unit, Department Address, Contact Name, Contact Email,
+                        Contact Phone, and the name of the Head of
+                        Department/Unit.
+                    </p>
+
+                    <p>
+                        <span>4.</span> At the bottom, enter your name to acknowledge
+                        you have read the information provided. Users can Print or Save a copy of this
+                        agreement.
+                    </p>
+
+                    <p>
+                        <span>5.</span> Select <b>Submit Submission Agreement Form</b>. An email will be generated and sent to
+                        the
+                        University Archives. A copy will also be sent to the email address specified in
+                        the form.
+                    </p>
+
+                    <p>
+                        Upon notification of a new Submission Agreement form, University
+                        Archives staff will use the information to complete the Submission Agreement.
+                        The Submission Agreement defines the type of information being sent to the
+                        archives and is used as a template for electronic record transfers. University Archives Staff will also
+                        add the user account to the tool.
+                    </p>
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 2" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure2.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 2: Submission Agreement Form</p>
+
+                    <h2>1.3 Submit Records to Archives/Transmittal Form</h2>
+
+                    <p>
+                        Once a Submission Agreement has been entered by the
+                        University Archives staff, departmental and unit users can submit records to
+                        the Archives. Login (section 1.1)
+                        is required.
+                    </p>
+
+                    <p>
+                        <span>1.</span> After logging in to the website, the Electronic
+                        Records Submission Tools page is displayed. Figure 3)
+                    </p>
+
+                    <p>
+                        <span>2.</span> Select <b>Submit
+                        Records to Archives/Transmittal Form</b> link. The Submit Records to Archives
+                        page is displayed (Figure 4).
+                    </p>
+
+                    <p><span>3.</span> Select your office from the list to begin creating your transfer request.</p>
+
+                    <p><span>4.</span> Select <b>Submit</b>.</p>
+
+                    <p>
+                        <span>5.</span> The Records Submission Form is displayed to the
+                        user (Figure 5). Review the information presented at the bottom of this web page under <b>Submission
+                        Agreement Information (Figure 6).</b>
+                        If anything is incorrect, please <a th:href="@{mailto:{se}(se=${org.email})}">contact the archive</a> Do
+                        not proceed with the
+                        transfer. Select <b>Logout</b>. <span class="underline">If the
+	      information is accurate, proceed with completing the
+	      form.</span>
+                    </p>
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 3" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure3.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 3: Electronic Records Submission Tool</p>
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 4" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure4.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 4: Submit Records to Archives</p>
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 5" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure5.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 5: Records Submission Form</p>
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 6" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure6.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 6: Submission Agreement Information</p>
+
+                    <p>
+                        <span>6.</span> Enter the <b>Date span of the records</b> being
+                        sent. For example <b>Beginning Year</b> <span class="underline">2014</span>
+                        <b>Ending Year</b> <span class="underline">2015</span>.
+                    </p>
+
+                    <p>
+                        <span>7.</span> For <b>Description/Comments</b>, provide any
+                        additional information, excluding an inventory, about the history of the
+                        records, the person or office that created the records, or any special
+                        considerations regarding the records such as physical condition and
+                        arrangement/organization. In most cases, this will be left
+                        blank.
+                    </p>
+
+                    <p><span>8.</span> Select <b>Next</b>. The Add digital content files page is displayed (Figure 7).</p>
+
+                    <p>
+                        <span>9.</span> Select <b>Browse</b>. Navigate to directory and select one or multiple files.
+                        Use CTRL (PC) or CMD (Mac) to select multiple files or Shift Key for range. When complete,
+                        Select <b>Open</b>.
+                    </p>
+
+                    <p>
+                        <span>10.</span> The files selected will be displayed along with their size. If you inadvertantly
+                        selected an incorrect file, select <b>Clear</b> and
+                        <b>Choose Files</b> again. An Inventory is automatically generated. Users can create an inventory and
+                        select during the file selection step.
+                    </p>
+
+
+                    <p>
+                        <img class="imgwborder" alt="Image for figure 7" width="100%" height="100%"
+                             th:src="@{/resources/images/Figure7.jpg}"/>
+                    </p>
+
+                    <p align="center" style="text-align:center">Figure 7: Add digital content files</p>
+
+                    <p>
+                        <span>11.</span> To select additional files and/or from a different
+                        folder, select the +. Repeat steps 9 and 10. Note: a
+                        maximum of 50GB can be sent per transfer. If more than
+                        50GB is needed, send additional transfers.
+                    </p>
+
+                    <p><span>12.</span> Select <b>Submit</b>.</p>
+
+                    <p><span>13.</span> This completes the submission and an email is sent to the sender and the Archives staff.
+                    </p>
+
+                    <h2>1.4 Help Documentation</h2>
+
+                    <p>
+                        These instructions will be available on the website under
+                        the Help option.
+                    </p>
+
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                </div>
+
+            </main>
+            <!-- close content-main -->
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+</body>
+</html>

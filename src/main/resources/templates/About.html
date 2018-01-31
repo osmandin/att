@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"/>-->
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+
+</head>
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                </div>
+
+                <div id="content">
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                    <h1>About</h1>
+
+                    <p>
+                        .... historical records are now created digitally. The
+                        archives is trying to capture as many of these born-digital,
+                        and in some cases, digitized, documents, audio and video
+                        files as possible to document their potential historical
+                        significance to future Spartans.
+                    </p>
+
+                    <p>
+                        <img alt="Image depicting a records life cycle" src="/images/lifecycle.jpeg"
+                             th:src="@{/images/lifecycle.jpeg}" th:href="@{/images/lifecycle.jpeg}"></img>
+                    </p>
+
+                    <p>
+                        Born-digital materials transferred to the XYZ are added
+                        to the ABC Digital Repository. The method
+                        for transferring files digitally from campus departments
+                        to the archives is based on a process created by Tufts
+                        University that was also funded by the NHPRC.
+                    </p>
+
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                </div>
+            </main>
+            <!-- close content-main -->
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+</body>
+</html>
