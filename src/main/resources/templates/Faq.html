@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"/>-->
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+
+</head>
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                </div>
+
+                <div id="content">
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                    <h1>Frequently Asked Questions (FAQ)</h1>
+
+                    <p>A login to the Electronic Records Submission Tool is granted upon
+                        approval of a Submission Agreement. The IASC staff will
+                        send you an email when it has been activated. A Submission Agreement can be
+                        completed <a th:href="@{/SubmitRequest}">here</a>.</p>
+
+                    <h4>What kind of records can I send?</h4>
+
+                    <p>
+                        The IASC only accepts electronic records
+                        (computer files) of permanent retention. These are generally records of
+                        historical, administrative, or legal value and should be transferred to the
+                        Archives for preservation. More information can be found
+                    </p>
+
+                    <h4>What are permanent records?</h4>
+
+                    <p>
+                        Permanent records are those kept for their historical, administrative, or legal value to
+                        the university. They are designated as having "permanent" retention schedules. The university&#39;s
+                        retention schedules are available.
+                        If you have questions determining whether a record is permanent, contact the IASC
+                        Staff <a th:href="@{mailto:{se}(se=${staff_email})}">here</a>.
+                    </p>
+
+                    <h4>My electronic records are on a CD/DVD (etc.). Do I use this tool to transfer to archives?</h4>
+
+                    <p>
+                        For permanent electronic records on media, follow procedures for
+                        paper transfer. Alternatively, you could transfer the files from the media using this tool. In this
+                        case, the
+                        archives would not need the media.
+                    </p>
+
+                    <h4>I have multiple folders and files to send. How do I transfer them?</h4>
+
+                    <p>
+                        If the folders aren&#39;t important, then you can just select
+                        the files as done for a regular transfer. In the situation
+                        where the folder structure (ie. hierarchy) is important,
+                        the transfer can be made in two ways. One method is to
+                        create
+                        a <a target="_blank" href="http://www.wikihow.com/Make-a-Zip-File">zip
+                        file</a>. The zip file can then be transferred to us using
+                        ERST. The second method is to put the folders on external
+                        media such as a flash drive, external hard drive or
+                        optical media (CD or DVD). This media can then be dropped
+                        off at the archives in Conrad Hall. If you need media,
+                        please contact us at <span th:text="${org.phone}"></span>
+                        or <a th:href="@{mailto:{se}(se=${org.email})}">email</a>.
+                    </p>
+
+                    <h4>Do I need to create a Submission Agreement every time I want to send electronic records?</h4>
+
+                    <p>
+                        No, a Submission Agreement need only be created once per office.
+                    </p>
+
+                    <h4>Where do I enter an inventory?</h4>
+
+                    <p>The website automatically creates an inventory from the
+                        files selected for transfer. An email containing this list is sent to both the
+                        IASC and to the sender. The user can also create an inventory
+                        list and include as part of the file selection for transfer. Please label the file as "inventory."</p>
+
+                    <h4>What are access restrictions?</h4>
+
+                    <p>The records transferred should be free of any restrictions
+                        for viewing by university employees or the public. If some records need to be
+                        restricted from viewing, please note the restrictions on the transmittal form
+                        when the records are transferred. Restrictions could be due confidentiality
+                        information. If you have further questions, contact the <a th:href="@{mailto:{se}(se=${org.email})}">University
+                            Archives staff</a>.</p>
+
+                    <h4>Can I send records with a retention period?</h4>
+
+                    <p>The University only accepts electronic records of "permanent
+                        retention." For guidance on electronic records with a retention period,
+                        contact the <a th:href="@{mailto:{se}(se=${org.email})}">IASC staff</a>.</p>
+
+                    <h4>What if I need to add another user to send records?</h4>
+
+                    <p>
+                        Additional users can be added to an approved Submission Agreement for an office. Please contact the <a
+                            th:href="@{mailto:{se}(se=${org.email})}">IASC staff</a>.
+                    </p>
+
+                    <h4>I need to change the head of department (or other field) on my approved Submission Agreement. What do I
+                        do?</h4>
+
+                    <p>
+                        If you need to change information in your approved Submission Agreement, send an <a
+                            th:href="@{mailto:{se}(se=${org.email})}">email</a> with your Office/Department Name (registered in
+                        the Electronic Records Submission Tool), the field name that has new content and the new content.
+                    </p>
+
+                    <h4>I accidently sent an incomplete transfer request. I have more files to send. What should I do?</h4>
+
+                    <p>
+                        Send another transfer request with the missing files. Then either
+                        email the <a th:href="@{mailto:{se}(se=${org.email})}">IASC</a> to let
+                        them know, or you can also add a comment to this affect in the
+                        transfer request description/comments box explaining the situation. We&#39;ll link the two requests in
+                        our collection management system and put the downloaded files together.
+                    </p>
+
+                    <h4>How do I report a problem or bug or get more help?</h4>
+
+                    <p>
+                        If you are having a problem that can&#39;t be answered by the Help or FAQ or have found a possible
+                        software bug, please either call us at <span th:text="${org.phone}"></span> or
+                        <a th:href="@{mailto:{se}(se=${org.email})}">email</a>.
+                    </p>
+
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                </div>
+
+            </main>
+            <!-- close content-main -->
+        </div>
+    </div>
+
+    <script src="https://use.fontawesome.com/38304317ff.js"></script>
+
+</div>
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+</body>
+</html>
