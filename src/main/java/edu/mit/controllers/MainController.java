@@ -16,7 +16,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 @Controller
-public class QuickSearchResultsController {
+public class MainController {
 
     private static final int BUTTONS_TO_SHOW = 5;
     private static final int INITIAL_PAGE = 0;
@@ -32,7 +32,7 @@ public class QuickSearchResultsController {
      * @param page
      * @return model and view
      */
-    @RequestMapping(value={"/", "results"}, method = RequestMethod.GET)
+    @RequestMapping(value={"admin"}, method = RequestMethod.GET)
     public ModelAndView showItemsPage(
                                       @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "page", required = false) Integer page) {
