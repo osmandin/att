@@ -345,20 +345,19 @@ public class UserAdmin {
 
         // associated department logic:
 
-        final List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
+        final List<DepartmentsForm> depts = new ArrayList<DepartmentsForm>();
 
+        // Convert from string to department. this can be replaced by a spring converter in future.
 
         if (item.getSelectedDepartments() == null || item.getSelectedDepartments().size() == 0) {
             logger.error("No department specified");
         } else {
             logger.info("Selected departments:{}", item.getSelectedDepartments());
-            int cnt = 0;
             for (final String d : item.getSelectedDepartments()) {
                 //df.setActive(true); //TODO revisit is active/inactive logic necessary?
                 DepartmentsForm department = departmentrepo.findById(Integer.parseInt(d));
                 logger.info("Found department:{}", department);
-                newdfs.add(department);
-                cnt++;
+                depts.add(department);
             }
         }
 
@@ -366,7 +365,7 @@ public class UserAdmin {
 
         try {
             logger.info("Saving item:{}", item);
-            item.setDepartmentsForms(newdfs);
+            item.setDepartmentsForms(depts);
             userservice.create(item);
         } catch (Exception e) {
             logger.error("Error saving item:{}", e);
