@@ -322,12 +322,15 @@ public class UserAdmin {
         //model.addAttribute("departmentsForm", dfs);
         logger.info("Found departments:{}", dfs.toString());
 
+        List<DepartmentAdmin> selectedDepartments = new ArrayList<>();
+
         final UsersForm item = new UsersForm();
         item.setDepartmentsForms(dfs);
 
         final ModelAndView model = new ModelAndView("AddUser");
         model.addObject("usersForm", item);
-        model.addObject("departmentsForm", dfs);
+        model.addObject("allDepartments", dfs);
+        model.addObject("selectedDepartments", selectedDepartments);
         return model;
     }
 
@@ -365,7 +368,7 @@ public class UserAdmin {
         // save user:
 
         try {
-            logger.info("Saving item:{}", item.getUsername());
+            logger.info("Saving item:{}", item);
 
             userservice.create(item);
         } catch (Exception e) {

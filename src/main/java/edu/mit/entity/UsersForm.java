@@ -33,6 +33,10 @@ public class UsersForm {
     )
     private List<DepartmentsForm> departmentsForms;
 
+    @Transient
+    private List<String> selectedDepartments;
+
+
     public int getId() {
         return id;
     }
@@ -95,5 +99,13 @@ public class UsersForm {
 
     public void setDepartmentsForms(List<DepartmentsForm> departmentsForms) {
         this.departmentsForms = departmentsForms;
+    }
+
+    public List<String> getSelectedDepartments() {
+        return selectedDepartments;
+    }
+
+    public void setSelectedDepartments(List<String> selectedDepartmets) {
+        this.selectedDepartments = selectedDepartmets;
     }
 }

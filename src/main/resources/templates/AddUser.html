@@ -83,6 +83,37 @@
                            th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                            -->
 
+
+           <!--         <p></p>
+                    <p><b>Note:</b> added departments will default to active</p>
+                    <fieldset class="repeatable">
+                        <legend>Departments</legend>
+                        <input name="department_counter" type="hidden" value="0" id="department_counter"/>
+                        <div id="department">
+                            <div>
+                                <p></p>
+
+                                <select name="" id="add_department_select" onchange="add_department( this )">
+                                    <option value="">Add a new department:</option>
+                                    <option th:each="department: *{departmentsForms}" th:value="${department.id}"
+                                            th:text="${department.name}"></option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </fieldset-->
+
+                    <div class="form-group row">
+
+                        <div th:each="item : ${allDepartments}">
+                            <input type="checkbox" th:field="*{selectedDepartments}" th:value="${item}" />
+                            <label th:text="${item.name}">example</label>
+                        </div>
+
+                    </div>
+
+
+
                     <div class="form-group row">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary">Submit</button>
