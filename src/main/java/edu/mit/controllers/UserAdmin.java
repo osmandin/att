@@ -341,27 +341,24 @@ public class UserAdmin {
      * @return
      */
     @RequestMapping(value = {"/add", "AddUser", "/AddUser"}, method = RequestMethod.POST)
-    public ModelAndView greetingForm(final UsersForm item,
-                @RequestParam(value = "department_id", required = false) DepartmentsForm[] selectedDepartmentsForms) {
+    public ModelAndView greetingForm(final UsersForm item) {
 
         // associated department logic:
 
-        if (selectedDepartmentsForms == null) {
+        final List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
+
+
+        if (item.getSelectedDepartments() == null || item.getSelectedDepartments().size() == 0) {
             logger.error("No department specified");
         } else {
-            logger.info("Selected departments:{}", selectedDepartmentsForms);
-            final List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
+            logger.info("Selected departments:{}", item.getSelectedDepartments());
             int cnt = 0;
-            for (final DepartmentsForm df : selectedDepartmentsForms) {
+            for (final String d : item.getSelectedDepartments()) {
                 //df.setActive(true); //TODO revisit is active/inactive logic necessary?
-                newdfs.add(df);
+                DepartmentsForm department = departmentrepo.findById(Integer.parseInt(d));
+                logger.info("Found department:{}", department);
+                newdfs.add(department);
                 cnt++;
-            }
-
-            if (cnt > 0) {
-                item.setDepartmentsForms(newdfs);
-            } else {
-                logger.error("No departments for users");
             }
         }
 
@@ -369,7 +366,7 @@ public class UserAdmin {
 
         try {
             logger.info("Saving item:{}", item);
-
+            item.setDepartmentsForms(newdfs);
             userservice.create(item);
         } catch (Exception e) {
             logger.error("Error saving item:{}", e);

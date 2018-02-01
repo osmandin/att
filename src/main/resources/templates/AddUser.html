@@ -106,7 +106,7 @@
                     <div class="form-group row">
 
                         <div th:each="item : ${allDepartments}">
-                            <input type="checkbox" th:field="*{selectedDepartments}" th:value="${item}" />
+                            <input type="checkbox" th:field="*{selectedDepartments}" th:value="${item.id}" />
                             <label th:text="${item.name}">example</label>
                         </div>
 
