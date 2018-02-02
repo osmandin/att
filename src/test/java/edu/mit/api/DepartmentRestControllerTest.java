@@ -4,6 +4,7 @@ package edu.mit.api;
 import edu.mit.entity.DepartmentsForm;
 import edu.mit.repository.DepartmentsFormRepository;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,12 +76,14 @@ public class DepartmentRestControllerTest {
         this.repo.save(departmentsForm);
     }
 
+    @Ignore
     @Test
     public void findDepartments() throws Exception {
         mockMvc.perform(get("/departments/all"))
                 .andExpect(content().string(containsString(departmentName)));
     }
 
+    @Ignore
     @Test
     public void findDepartmentsByName() throws Exception {
         mockMvc.perform(get("/departments").param("name", departmentName))
@@ -88,10 +91,5 @@ public class DepartmentRestControllerTest {
     }
 
 
-    protected String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
-    }
+
 }

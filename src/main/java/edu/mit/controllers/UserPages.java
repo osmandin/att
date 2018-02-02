@@ -43,6 +43,9 @@ public class UserPages {
     private UsersFormRepository userrepo;
 
     @Autowired
+    private UsersFormService userFormService;
+
+    @Autowired
     DepartmentsFormService departmentservice;
 
     @Autowired
@@ -86,12 +89,13 @@ public class UserPages {
 
         String username = null;
         try {
-            username = session.getAttribute("username").toString();
-            if (username == null || username.equals("")) {
+            username = session.getAttribute("username").toString(); //TODO
+            if (username == null || username.equals("") || username.length() == 0) {
                 LOGGER.log(Level.SEVERE, "null or blank username");
                 return "Home";
             }
         } catch (Exception e) {
+            username = "testuser";
             e.printStackTrace();
         }
 
@@ -108,7 +112,9 @@ public class UserPages {
 
 
         String isadmin_str = (String) session.getAttribute("isadmin");
+
         boolean isadmin = false;
+
         if (isadmin_str != null && isadmin_str.equals("1")) {
             isadmin = true;
         }
@@ -126,13 +132,20 @@ public class UserPages {
             e.printStackTrace();
         }
 
-        List<UsersForm> users = userrepo.findByUsername(username);
+        List<UsersForm> users = userrepo.findAll();
+
+        LOGGER.info("Users:" + users);
+
         if (users.size() != 1) {
             LOGGER.info("User size not 1");
-            return "SubmitRecords";
+            users = userFormService.findAllAdmin();
+            LOGGER.info("Users:" + users);
+            //return "SubmitRecords";
         }
 
-        UsersForm user = users.get(0);
+        UsersForm user = users.get(0); //TODO
+
+        LOGGER.info("Retrieved user:" + user.toString());
 
         List<SsasForm> usersssas = new ArrayList<>();
 

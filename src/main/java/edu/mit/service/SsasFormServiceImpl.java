@@ -33,6 +33,9 @@ public class SsasFormServiceImpl implements SsasFormService {
     @Resource
     private SsaFormatTypesFormRepository formattyperepo;
 
+    @Resource
+    private DepartmentsFormRepository departmentsFormRepository;
+
     // ------------------------------------------------------------------------
     @Transactional
     public void saveForm(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm) {
@@ -73,11 +76,52 @@ public class SsasFormServiceImpl implements SsasFormService {
         ssarepo.save(ssasForm);
     }
 
+    @Transactional
+    public void saveFormTest(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm) {
+
+        int ssaid = ssasForm.getId();
+
+
+        ssasForm.setDepartmentForm(departmentsFormRepository.findAll().get(0));
+
+        // in form
+        //ssasForm.setCreatedby(session.getAttribute("name").toString());
+        //ssasForm.setIP(request.getRemoteAddr());
+        //ssasForm.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
+
+        SsasForm ssa = ssarepo.findById(ssaid);
+
+        List<SsaContactsForm> repocontacts = ssa.getSsaContactsForms();
+        if (repocontacts != null) {
+            contactrepo.delete(repocontacts);
+        }
+
+        List<SsaCopyrightsForm> repocopyrights = ssa.getSsaCopyrightsForms();
+        if (repocopyrights != null) {
+            copyrightrepo.delete(repocopyrights);
+        }
+
+        List<SsaAccessRestrictionsForm> reporestrictions = ssa.getSsaAccessRestrictionsForms();
+        if (reporestrictions != null) {
+            accessrestrictionrepo.delete(reporestrictions);
+        }
+
+        List<SsaFormatTypesForm> repotypes = ssa.getSsaFormatTypesForms();
+        if (repotypes != null) {
+            formattyperepo.delete(repotypes);
+        }
+
+        // added contacts, copyrights, ... works just by saving, but deleted content does not delete just by saving, hence the above
+        ssarepo.save(ssasForm);
+
+    }
+
     // ------------------------------------------------------------------------
     @Transactional
     public void create(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm, HttpSession session, HttpServletRequest request) {
-        ssasForm.setCreatedby(session.getAttribute("name").toString());
-        ssasForm.setIP(request.getRemoteAddr());
+        ssasForm.setCreatedby("osman"); //TODO
+
+        //ssasForm.setIP(request.getRemoteAddr());
         ssasForm.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
 
         ssasForm.setDepartmentForm(selectedDepartmentsForm);

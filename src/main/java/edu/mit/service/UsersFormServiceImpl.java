@@ -1,6 +1,7 @@
 package edu.mit.service;
 
 
+import edu.mit.entity.DepartmentsForm;
 import edu.mit.entity.UsersForm;
 import edu.mit.repository.DepartmentsFormRepository;
 import edu.mit.repository.UsersFormRepository;
@@ -28,6 +29,19 @@ public class UsersFormServiceImpl implements UsersFormService {
     @Transactional
     public UsersForm create(UsersForm usersForm) {
         return usersFormRepository.save(usersForm);
+    }
+
+
+    @Transactional
+    public UsersForm create(UsersForm usersForm, List<DepartmentsForm> departmentsForm) {
+        usersForm.setDepartmentsForms(departmentsFormRepository.findAll());
+        return usersFormRepository.save(usersForm);
+    }
+
+
+    @Transactional
+    public List<UsersForm> findAll() {
+        return usersFormRepository.findAll();
     }
 
     @Transactional

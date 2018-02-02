@@ -11,6 +11,8 @@ public interface SsasFormService {
 
     public void saveForm(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm);
 
+    public void saveFormTest(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm);
+
     public void saveSsaFormForRsa(SsasForm ssasForm);
 
     public void create(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm, HttpSession session, HttpServletRequest request);

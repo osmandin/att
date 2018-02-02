@@ -8,6 +8,9 @@ import java.util.Map;
 public interface UsersFormService {
     public UsersForm create(UsersForm usersForm);
 
+    public UsersForm create(UsersForm usersForm, List<DepartmentsForm> departmentsForms);
+
+
     public List<UsersForm> findAllAdmin();
 
     public List<UsersForm> findAllNonadmin();
@@ -19,4 +22,6 @@ public interface UsersFormService {
     public Map<String, Object> get(int id);
 
     public List<UsersForm> findByName(String name);
+
+    public List<UsersForm> findAll();
 }
