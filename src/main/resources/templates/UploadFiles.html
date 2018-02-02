@@ -15,20 +15,28 @@
         var peruploadmax=[[${peruploadmax}]];
         /*]]>*/
     </script>
-    <script type="text/javascript" th:src="@{/resources/js/UploadFiles.js}"></script>
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" th:src="@{/js/UploadFiles.js}"></script>
 </head>
 
 <body>
 
 <div th:replace="mit/header :: header"/>
 
-<div id="body_main">
-    <div class="window">
+<div class="wrap-outer-content layout-band">
+    <div class="wrap-content">
+        <main id="content-main" class="content-main" role="main">
 
-        <div th:replace="fragments/Nav :: Nav"></div>
-
-        <div id="content">
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <div class="details">
+                <h3></h3>
+            </div>
 
             <h1>Add Digital Content Files</h1>
 
@@ -67,15 +75,20 @@
                     Click the button below once you have specified <em>all</em> of the files you wish to attach to this
                     record submission form.
                 </p>
+
+                <input type="button" value="Submit" onclick="gatherfiledata_validate_and_submit()"/>
+
             </form>
 
-            <input type="button" value="Submit" onclick="gatherfiledata_validate_and_submit()"/>
 
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        </div>
 
+        </main>
     </div>
-</div>
+
+</div> <!-- end wrap outercontent -->
+
+
+
 
 <div th:replace="mit/site_footer :: footer"/>
 <div th:replace="mit/institute_footer :: footer"/>

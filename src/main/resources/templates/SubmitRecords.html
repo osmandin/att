@@ -12,35 +12,44 @@
 
 
 <div th:replace="mit/header :: header"/>
+<div class="wrap-page">
 
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
 
-<div id="body_main">
-    <div class="window">
-
-
-        <div id="content">
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-            <div th:switch="${session.loggedin}">
-                <div th:case="'1'">
-                    <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn
-                    </div>
+                <div class="details">
+                    <h3></h3>
                 </div>
-                <div th:case="*">
-                    <div th:replace="fragments/SubmitRecordsNotLoggedIn :: SubmitRecordsNotLoggedIn">
-                        SubmitRecordsNotLoggedIn
-                    </div>
-                </div>
-            </div> -->
 
-            <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn</div>
+
+                <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn</div>
+
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                            <div th:switch="${session.loggedin}">
+                                <div th:case="'1'">
+                                    <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn
+                                    </div>
+                                </div>
+                                <div th:case="*">
+                                    <div th:replace="fragments/SubmitRecordsNotLoggedIn :: SubmitRecordsNotLoggedIn">
+                                        SubmitRecordsNotLoggedIn
+                                    </div>
+                                </div>
+                            </div> -->
+
 
 
                 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            </main>
         </div>
 
-    </div>
+    </div> <!-- end wrap outercontent -->
 </div>
+
+
+
 
 <div th:replace="mit/site_footer :: footer"/>
 <div th:replace="mit/institute_footer :: footer"/>

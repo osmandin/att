@@ -18,156 +18,168 @@
 <div id="body_main">
     <div class="window">
 
-        <div th:replace="mit/header :: header"/>
+        <div class="wrap-page">
 
-        <div id="content">
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <div class="wrap-outer-content layout-band">
+                <div class="wrap-content">
+                    <main id="content-main" class="content-main" role="main">
 
-            <h1>Records Submission Form</h1>
 
-            <div class="alert_box" id="alert_box_top">
-                <p>Please enter the missing values below.</p>
-                <ul>
-                    <li class="hiddenerror2" id="startyear_error">Please enter a valid Beginning Year</li>
-                    <li class="hiddenerror2" id="endyear_error">Please enter a valid Ending Year (leave blank or enter a
-                        valid year)
-                    </li>
-                </ul>
-            </div>
+                        <h1>Records Submission Form</h1>
 
-            <form th:action="@{/UploadFiles}" id="form" name="submission" method="post">
-                <p></p>
-                <p></p>
+                        <div class="alert_box" id="alert_box_top">
+                            <p>Please enter the missing values below.</p>
+                            <ul>
+                                <li class="hiddenerror2" id="startyear_error">Please enter a valid Beginning Year</li>
+                                <li class="hiddenerror2" id="endyear_error">Please enter a valid Ending Year (leave blank or enter a
+                                    valid year)
+                                </li>
+                            </ul>
+                        </div>
 
-                <div><b>Date span of the records:</b></div>
+                        <form th:action="@{/UploadFiles}" id="form" name="submission" method="post">
+                            <p></p>
+                            <p></p>
 
-                <p>
-                    Beginning year: <input id="startyear" name="startyear" type="text" maxlength="4" size="4"
-                                           th:value="${startyear}"/>&nbsp;&nbsp;&nbsp;
-                    Ending year: <input name="endyear" id="endyear" type="text" maxlength="4" size="4"
-                                        th:value="${endyear}"/>
-                </p>
+                            <div><b>Date span of the records:</b></div>
 
-                <p></p>
+                            <p>
+                                Beginning year: <input id="startyear" name="startyear" type="text" maxlength="4" size="4"
+                                                       th:value="${startyear}"/>&nbsp;&nbsp;&nbsp;
+                                Ending year: <input name="endyear" id="endyear" type="text" maxlength="4" size="4"
+                                                    th:value="${endyear}"/>
+                            </p>
 
-                <div>
-                    <b>Description/comments (not required):</b>
-                </div>
+                            <p></p>
 
-                <p>
-                    Please provide any additional information about the history of
-                    the records, the person or office that created the records, or any
-                    special considerations regarding the records such as comments on
-                    copyright or access restrictions.
-                </p>
+                            <div>
+                                <b>Description/comments (not required):</b>
+                            </div>
 
-                <div>
+                            <p>
+                                Please provide any additional information about the history of
+                                the records, the person or office that created the records, or any
+                                special considerations regarding the records such as comments on
+                                copyright or access restrictions.
+                            </p>
+
+                            <div>
                     <textarea name="generalRecordsDescription" cols="40" rows="5"
                               th:text="${generalRecordsDescription}"></textarea>
+                            </div>
+
+                            <p></p>
+
+                            <div><b>Inventory:</b></div>
+                            <p>
+                                An inventory will be generated after files are selected
+                                for transfer. Alternatively, you can create an
+                                inventory document and submit to the Archives in the
+                                next step.
+                            </p>
+
+
+                        <br/>
+                        <h2>Submission Agreement information</h2>
+
+                        <p>The following information will be automatically added to this document, inherited from its records
+                            submission template.</p>
+
+                        <p>
+                        <table border="1">
+                            <tr>
+                                <th id="ssainfo" valign="top">Effective date for the Submission Agreement</th>
+                                <td valign="top" th:text="*{ssa.effectivedate}"></td>
+                            </tr>
+                            <tr>
+                                <th valign="top">Retention Schedule</th>
+                                <td valign="top" th:text="*{ssa.retentionschedule}"></td>
+                            </tr>
+                            <tr>
+                                <th valign="top">Creator(s) of the records</th>
+                                <td valign="top"><span
+                                        th:text="'Head of Department/Unit: ' + *{ssa.departmenthead}"></span><br/><span
+                                        th:text="'Record or Collection Identifier: ' + *{ssa.recordid}"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th valign="top">Person or group authorized to transfer the records to the archives</th>
+                                <td valign="top">
+                                    <div th:each="item,stat : *{ssa.ssaContactsForms}">
+                                        <div th:if="${stat.index ne 0}">
+                                            <hr/>
+                                        </div>
+                                        <span th:text="'Name: ' + *{ssa.ssaContactsForms[__${stat.index}__].name}"></span><br/>
+                                        <span th:text="'Phone Number: ' +  *{ssa.ssaContactsForms[__${stat.index}__].phone}"></span><br/>
+                                        <span th:text="'Email: ' +  *{ssa.ssaContactsForms[__${stat.index}__].email}"></span><br/>
+                                        <span th:text="'Campus Address: ' +  *{ssa.ssaContactsForms[__${stat.index}__].address}"></span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th valign="top">Type of records</th>
+                                <td valign="top" th:text="*{ssa.recordstitle}"></td>
+                            </tr>
+
+                            <tr>
+                                <th valign="top">Copyright and licensing agreement(s)</th>
+                                <td valign="top">
+                                    <div th:each="item,stat : *{ssa.ssaCopyrightsForms}">
+                                        <div th:if="${stat.index ne 0}">
+                                            <hr/>
+                                        </div>
+                                        <span th:text="*{ssa.ssaCopyrightsForms[__${stat.index}__].copyright}"></span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th valign="top">Access restrictions</th>
+                                <td valign="top">
+                                    <div th:switch="*{ssa.ssaAccessRestrictionsForms == null or ssa.ssaAccessRestrictionsForms.size() == 0}">
+                                        <div th:case="true">
+                                            None
+                                        </div>
+                                        <div th:case="*">
+                                            <div th:each="item,stat : *{ssa.ssaAccessRestrictionsForms}">
+                                                <div th:if="${stat.index ne 0}">
+                                                    <hr/>
+                                                </div>
+                                                <span th:text="*{ssa.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th valign="top">Retention period(s)</th>
+                                <td valign="top" th:text="*{ssa.retentionperiod}"></td>
+                            </tr>
+
+                        </table>
+                        </p>
+
+                  <!--      <div class="alert_box" id="alert_box_bottom">
+                            <p>Please enter the missing values above.</p>
+                        </div>-->
+
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Next</button>
+                            </div>
+                        </div>
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                        </form>
+
+                    </main>
+
                 </div>
 
-                <p></p>
-
-                <div><b>Inventory:</b></div>
-                <p>
-                    An inventory will be generated after files are selected
-                    for transfer. Alternatively, you can create an
-                    inventory document and submit to the Archives in the
-                    next step.
-                </p>
-
-            </form>
-
-            <br/>
-            <h2>Submission Agreement information</h2>
-
-            <p>The following information will be automatically added to this document, inherited from its records
-                submission template.</p>
-
-            <p>
-            <table border="1">
-                <tr>
-                    <th id="ssainfo" valign="top">Effective date for the Submission Agreement</th>
-                    <td valign="top" th:text="*{ssa.effectivedate}"></td>
-                </tr>
-                <tr>
-                    <th valign="top">Retention Schedule</th>
-                    <td valign="top" th:text="*{ssa.retentionschedule}"></td>
-                </tr>
-                <tr>
-                    <th valign="top">Creator(s) of the records</th>
-                    <td valign="top"><span
-                            th:text="'Head of Department/Unit: ' + *{ssa.departmenthead}"></span><br/><span
-                            th:text="'Record or Collection Identifier: ' + *{ssa.recordid}"></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th valign="top">Person or group authorized to transfer the records to the archives</th>
-                    <td valign="top">
-                        <div th:each="item,stat : *{ssa.ssaContactsForms}">
-                            <div th:if="${stat.index ne 0}">
-                                <hr/>
-                            </div>
-                            <span th:text="'Name: ' + *{ssa.ssaContactsForms[__${stat.index}__].name}"></span><br/>
-                            <span th:text="'Phone Number: ' +  *{ssa.ssaContactsForms[__${stat.index}__].phone}"></span><br/>
-                            <span th:text="'Email: ' +  *{ssa.ssaContactsForms[__${stat.index}__].email}"></span><br/>
-                            <span th:text="'Campus Address: ' +  *{ssa.ssaContactsForms[__${stat.index}__].address}"></span>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th valign="top">Type of records</th>
-                    <td valign="top" th:text="*{ssa.recordstitle}"></td>
-                </tr>
-
-                <tr>
-                    <th valign="top">Copyright and licensing agreement(s)</th>
-                    <td valign="top">
-                        <div th:each="item,stat : *{ssa.ssaCopyrightsForms}">
-                            <div th:if="${stat.index ne 0}">
-                                <hr/>
-                            </div>
-                            <span th:text="*{ssa.ssaCopyrightsForms[__${stat.index}__].copyright}"></span>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th valign="top">Access restrictions</th>
-                    <td valign="top">
-                        <div th:switch="*{ssa.ssaAccessRestrictionsForms == null or ssa.ssaAccessRestrictionsForms.size() == 0}">
-                            <div th:case="true">
-                                None
-                            </div>
-                            <div th:case="*">
-                                <div th:each="item,stat : *{ssa.ssaAccessRestrictionsForms}">
-                                    <div th:if="${stat.index ne 0}">
-                                        <hr/>
-                                    </div>
-                                    <span th:text="*{ssa.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th valign="top">Retention period(s)</th>
-                    <td valign="top" th:text="*{ssa.retentionperiod}"></td>
-                </tr>
-
-            </table>
-            </p>
-
-            <div class="alert_box" id="alert_box_bottom">
-                <p>Please enter the missing values above.</p>
-            </div>
-
-            <p><input type="button" value="Next"/></p>
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            </div> <!-- end wrap outercontent -->
         </div>
 
     </div>

@@ -16,6 +16,8 @@
     </div>
 
 
+
+
     <div class="success_box" th:if="${rsa_complete eq '1'}">
         <p>Thank you for your successful completion of a Records Submission for Submission Agreement ID=${ssaid} and
             Transfer Request ID=${rsaid}. The Spartan Archive staff has been notified of the submission. The University
@@ -46,34 +48,39 @@
 
         <div th:case="*">
 
-            <p>
-                Please select your Department/Unit or Donor and Record Title
-                from the list below.
-            </p>
 
             <div th:text="${adminmsg}"></div>
 
             <form method="post" id="form" th:action="@{/RecordsSubmissionForm}">
-                <p>
 
-                    <select class="styled-select" name="ssaid" id="ssaid">
-                        <option class="templateOption" th:each="s, stat: *{ssaForms}"
-                                th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].departmentForm} != null and *{ssaForms[__${stat.index}__].id} != '0')"
-                                th:value="*{ssaForms[__${stat.index}__].id}"
-                                th:text="*{ssaForms[__${stat.index}__].departmentForm.name} + ': ' + *{ssaForms[__${stat.index}__].recordstitle}"></option>
-                    </select>
-                </p>
 
-                <p>
-                    Select submit to continue your transfer request of <b>permanent</b> electronic records to the
-                    University Archives.
-                </p>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+
+                        <p>
+                            Please select your Department/Unit or Donor and Record Title
+                            from the list below.
+                        </p>
+
+                        <select class="styled-select" name="ssaid" id="ssaid">
+                            <option th:each="s, stat: *{ssaForms}"
+                                    th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].departmentForm} != null and *{ssaForms[__${stat.index}__].id} != '0')"
+                                    th:value="*{ssaForms[__${stat.index}__].id}"
+                                    th:text="*{ssaForms[__${stat.index}__].departmentForm.name} + ': ' + *{ssaForms[__${stat.index}__].recordstitle}"></option>
+                        </select>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
 
             </form>
 
-            <p>
-                <input type="button" value="Submit" onclick="validate()"/>
-            </p>
 
         </div>
 

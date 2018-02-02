@@ -161,6 +161,9 @@ public class UserPages {
             }
         }
 
+        LOGGER.info("Retrieved SSAs:" + usersssas.toString());
+
+
         if (usersssas != null && usersssas.size() > 0) {
             model.addAttribute("departments", 1);
             model.addAttribute("ssaForms", usersssas);
@@ -178,16 +181,20 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "RecordsSubmissionForm Post");
 
-        Utils utils = new Utils();
+        /*   Utils utils = new Utils();
         if (!utils.setupAuthdHandler(model, session, env)) {
             return "Home";
-        }
+        }*/
 
-        if (ssaid <= 0 && session.getAttribute("ssaid") != null && !session.getAttribute("ssaid").equals("")) {
-            ssaid = Integer.parseInt(session.getAttribute("ssaid").toString());
-        }
+        try {
+            if (ssaid <= 0 && session.getAttribute("ssaid") != null && !session.getAttribute("ssaid").equals("")) {
+                ssaid = Integer.parseInt(session.getAttribute("ssaid").toString());
+            }
 
-        session.setAttribute("ssaid", ssaid);
+            session.setAttribute("ssaid", ssaid);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
 
         if (ssaid != 0) {
             LOGGER.log(Level.INFO, "ssaid={0}", new Object[]{ssaid});
@@ -214,11 +221,11 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "UploadFiles");
 
-        Utils utils = new Utils();
+        /*Utils utils = new Utils();
         if (!utils.setupAuthdHandler(model, session, env)) {
             return "Home";
         }
-
+*/
         Format format = new Format();
         String avail = format.showavailbytes(env.getRequiredProperty("dropoff.dir"));
         model.addAttribute("avail_bytes", avail);
@@ -242,11 +249,11 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "CheckSpace");
 
-        Utils utils = new Utils();
+   /*     Utils utils = new Utils();
         if (!utils.setupAuthdHandler(model, session, env)) {
             return "";
         }
-
+*/
         File f = new File(env.getRequiredProperty("dropoff.dir"));
         Long bytes = f.getUsableSpace();
         String strbytes = Long.toString(bytes);
@@ -264,10 +271,10 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "UploadComplete GET");
 
-        Utils utils = new Utils();
+/*        Utils utils = new Utils();
         if (!utils.setupAuthdHandler(model, session, env)) {
             return "Home";
-        }
+        }*/
 
         String ssaid = (String) session.getAttribute("ssaid");
         model.addAttribute("ssaid", ssaid);
@@ -286,10 +293,10 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "UploadComplete POST");
 
-        Utils utils = new Utils();
+     /*   Utils utils = new Utils();
         if (!utils.setupAuthdHandler(model, session, env)) {
             return "Home";
-        }
+        }*/
 
         int ssaid = (Integer) session.getAttribute("ssaid");
         model.addAttribute("ssaid", ssaid);
@@ -303,9 +310,10 @@ public class UserPages {
         String useremail = (String) session.getAttribute("email");
 
         if (username == null || username.equals("")) {
-            LOGGER.log(Level.SEVERE, "username is blank");
+            LOGGER.log(Level.SEVERE, "username is blank. setting to remporary user");
+            username = "testuser";
             model.addAttribute("nooffices", 1);
-            return "Home";
+            // return "Home";
         }
 
         if (endyear == null || endyear.equals("") || endyear.matches("^\\s*$")) {
@@ -405,14 +413,14 @@ public class UserPages {
             isadmin = true;
         }
 
-        List<SsasForm> ssas = null;
+        List<SsasForm> ssas1 = null;
         // osm: In later versions of MySql the distinct fails
         // for now modified mysql profile to fix this.
         // SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));
         // and restart MYSql
 
 
-        if (isadmin) {
+       /* if (isadmin) {
             ssas = ssarepo.findAllEnabledDepartments();
         } else {
             ssas = ssarepo.findAllActiveApprovedEnabledDepartmentsForUsername(username);
@@ -426,9 +434,11 @@ public class UserPages {
 
         model.addAttribute("departments", 1);
         model.addAttribute("ssaForms", ssas);
+*/
 
-        EmailSetup emailsetup = new EmailSetup();
+       // FIXME add email functionality
 
+       /* EmailSetup emailsetup = new EmailSetup();
         emailsetup.setFrom(env.getRequiredProperty("submit.from"));
         emailsetup.setSubject("New Records Transfer Request: " + rsa.getId());
 
@@ -436,8 +446,8 @@ public class UserPages {
 
         emailsetup.setToarray(recipts);
 
-       /* Email email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-        email.UploadCompleteSendToStaff(rsa);*/
+       *//* Email email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
+        email.UploadCompleteSendToStaff(rsa);*//*
 
         emailsetup = new EmailSetup();
 
@@ -448,9 +458,9 @@ public class UserPages {
 
         emailsetup.setTo(useremailaddress);
 
-        /*email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-        email.UploadCompleteSendToUser(rsa);*/
-
+        email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
+        email.UploadCompleteSendToUser(rsa);
+        */
         return "UploadComplete";
     }
 
