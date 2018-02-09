@@ -33,7 +33,7 @@ public class Utils {
 
     // ------------------------------------------------------------------------
     public boolean setupAdminHandler(ModelMap model, HttpSession session, Environment env) {
-        if (session.isNew()) {
+        /*if (session.isNew()) {
             return false;
         }
 
@@ -42,7 +42,7 @@ public class Utils {
 
         if (session.getAttribute("loggedin") == null || session.getAttribute("loggedin").toString().equals("0") || session.getAttribute("isadmin") == null || session.getAttribute("isadmin").toString().equals("0")) {
             return false;
-        }
+        }*/
 
         return true;
     }

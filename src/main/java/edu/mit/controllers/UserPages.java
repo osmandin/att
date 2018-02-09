@@ -99,6 +99,8 @@ public class UserPages {
             e.printStackTrace();
         }
 
+        // FIXME: Removed session extension logic:
+        /*
         try {
             int sessiontimeout = Integer.parseInt(env.getRequiredProperty("session.timeout"));
             session.setMaxInactiveInterval(sessiontimeout);
@@ -106,7 +108,7 @@ public class UserPages {
             e.printStackTrace();
         } catch (IllegalStateException e) {
             e.printStackTrace();
-        }
+        }*/
 
         model.addAttribute("departments", 0);
 
