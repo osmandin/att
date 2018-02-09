@@ -52,7 +52,7 @@ public class DatabaseInitializer {
         //FIXME this is only for testing purposes. remvoe later.
 
         DepartmentsForm departmentsForm = new DepartmentsForm();
-        departmentsForm.setName("testdept");
+        departmentsForm.setName("IASC");
 
 
 
@@ -63,8 +63,8 @@ public class DatabaseInitializer {
             UsersForm usersForm = new UsersForm();
             usersForm.setUsername("testuser");
             usersForm.setEmail("test@mit.edu");
-            usersForm.setFirstname("john");
-            usersForm.setLastname("doe");
+            usersForm.setFirstname("K");
+            usersForm.setLastname("Smith");
             usersForm.setIsadmin(true);
             List<DepartmentsForm> depts = departmentrepo.findAll();
 

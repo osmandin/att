@@ -94,7 +94,9 @@
                                         <table class="table">
                                             <tr>
                                                 <th style="min-width:20px">&nbsp;</th>
+<!--
                                                 <th style="min-width:20px">&nbsp;</th>
+-->
                                                 <th style="min-width:20px">Transfer No.</th>
                                                 <th style="min-width:25px">Agreement<br/>creation<br/>date</th>
                                                 <th style="min-width:25px">Transfer<br/>date</th>
@@ -111,9 +113,9 @@
                                                 <td><input name="rsa" type="checkbox"
                                                            th:value="*{rsasForms[__${stat.index}__].id}"/>
                                                 </td>
-                                                <td>
+                                               <!-- <td>
                                                     <a th:href="@{/EditApprovedRsa(rsaid=*{rsasForms[__${stat.index}__].id})}">Edit</a>
-                                                </td>
+                                                </td>-->
                                                 <td align="center" th:text="*{rsasForms[__${stat.index}__].id}"></td>
                                                 <td th:text="*{rsasForms[__${stat.index}__].ssasForm.creationdate}"></td>
                                                 <td th:text="*{rsasForms[__${stat.index}__].transferdate}"></td>

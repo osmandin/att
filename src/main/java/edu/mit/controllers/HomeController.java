@@ -68,5 +68,11 @@ public class HomeController {
         return "Help";
     }
 
+    // ------------------------------------------------------------------------
+    @RequestMapping("/Logout")
+    public String Logout(ModelMap model) {
+        return "Logout";
+    }
+
 
 }
