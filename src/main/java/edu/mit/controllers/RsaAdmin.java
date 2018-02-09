@@ -31,9 +31,6 @@ import edu.mit.service.*;
 public class RsaAdmin {
     private final static Logger LOGGER = Logger.getLogger(RsaAdmin.class.getCanonicalName());
 
-    @SuppressWarnings("unused")
-    private static final String rcsinfo = "$Id: RsaAdmin.java,v 1.34 2017-02-18 02:01:05-04 ericholp Exp $";
-
     @Resource
     private Environment env;
 
@@ -520,7 +517,7 @@ public class RsaAdmin {
         if (rsaids == null) {
             model.addAttribute("nodeletes", "1");
 
-            List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+            final List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
             model.addAttribute("rsasForms", rsasForms);
 
             return "ListApprovedRsas";
@@ -528,6 +525,7 @@ public class RsaAdmin {
 
         String deletersaids = "";
         String sep = "";
+
         for (int rsaid : rsaids) {
             if (rsaid <= 0) {
                 LOGGER.log(Level.SEVERE, "rsaid <= 0");
@@ -540,21 +538,27 @@ public class RsaAdmin {
             model.addAttribute("weredeletes", "1");
             model.addAttribute("deletersaids", deletersaids);
 
-            RsasForm rsa = rsarepo.findById(rsaid);
+            final RsasForm rsa = rsarepo.findById(rsaid);
+
+            LOGGER.info("About to update Rsas:" + rsa.toString());
 
             approvedrsaservice.recordDeletedRsa(rsa, session);
 
             rsa.setDeleted(true);
-            rsarepo.save(rsa);
+            try {
+                rsarepo.save(rsa);
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Error saving RSA", e);
+            }
 
             try {
                 FileUtils.deleteDirectory(new File(dropoff + "/" + rsaid));
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, "Error deleting directory", ex);
             }
         }
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+        final List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
         model.addAttribute("rsasForms", rsasForms);
 
         return "ListApprovedRsas";
