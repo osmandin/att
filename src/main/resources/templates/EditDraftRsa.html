@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--
+<head>
+    &lt;!&ndash; $Id: EditDraftRsa.html,v 1.28 2016-11-15 11:30:03-04 ericholp Exp $ &ndash;&gt;
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Edit Draft Transfer Requests</title>
+    <div th:replace="fragments/Head :: Head"></div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var prefix = "ssasForm.";
+        var defaultrestriction = [[${defaultaccessrestriction}]];
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:src="@{/resources/js/Populate.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/ValidateRsa.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/EditDraftRsa.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/moment.js}"></script>
+    <script type="text/javascript" th:src="@{/resources/js/combodate.js}"></script>
+    <script>
+        $(function () {
+            $(".datedropdown").combodate({
+                firstItem: 'name',
+                minYear: new Date().getFullYear() - 10,
+                maxYear: new Date().getFullYear() + 10
+            });
+        });
+    </script>
+</head>
+-->
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Review Draft Transfer Requests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+    <div th:replace="fragments/header :: header-css"/>
+    <script type="text/javascript" th:src="@{/resources/js/ListDraftRsas.js}"></script>
+</head>
+
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <h3></h3>
+                </div>
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            <div class="alert_box" id="alert_box_top">
+                <p>Please enter the missing values below.</p>
+                <ul>
+                    <li id="departmentheaderr">Please enter a valid "Head of Department/Unit."</li>
+                    <li id="startyearerr">Please enter a valid "Beginning Year."</li>
+                    <li id="endyearerr">Please enter a valid "Ending Year."</li>
+                    <li id="recordiderr">Please enter a valid "Record or Collection Identifier."</li>
+                    <li id="nameerr">Please enter a valid "Department/Unit or Donor Contact: Name(s)."</li>
+                    <li id="phoneerr">Please enter a valid "Department/Unit or Donor Contact: Phone(s)."</li>
+                    <li id="emailerr">Please enter a valid "Department/Unit or Donor Contact: Email address(es)."</li>
+                    <li id="addresserr">Please enter a valid "Department/Unit or Donor Contact: Campus Address(es)."
+                    </li>
+                    <li id="creationdateyearerr">Please enter a valid "Agreement Creation Date Year."</li>
+                    <li id="creationdatemontherr">Please enter a valid "Agreement Creation Date Month."</li>
+                    <li id="creationdatedayerr">Please enter a valid "Agreement Creation Date Day of the Month."</li>
+                    <li id="recordstitleerr">Please enter a valid "Records Title."</li>
+                    <li id="extenterr">Please enter a valid "Extent."</li>
+                    <li id="transferdateyearerr">Please enter a valid "Transfer Date Year."</li>
+                    <li id="transferdatemontherr">Please enter a valid "Transfer Date Month."</li>
+                    <li id="transferdatedayerr">Please enter a valid "Transfer Date Day of the Month."</li>
+                    <li id="copyrighterr">Please enter a valid "Copyright Statement(s)."</li>
+                    <li id="accessrestrictionserr">Please enter a valid "Access Restrictions."</li>
+                    <li id="effectivedateyearerr">Please enter a valid "Effective Date Year."</li>
+                    <li id="effectivedatemontherr">Please enter a valid "Effective Date Month."</li>
+                    <li id="effectivedatedayerr">Please enter a valid "Effective Date Day of the Month."</li>
+                    <li id="retentionperioderr">Please enter a valid "Retention Period."</li>
+                    <li id="descriptionstandardserr">Please enter a valid "Archival Description Standards."</li>
+                    <li id="accessionnumbererr">Please enter a valid "Accession Number."</li>
+                </ul>
+            </div>
+
+            -->
+
+            <div class="success_box" th:if="${emailsent eq 1}">
+                <p>This Transfer Request has been updated and an email has been
+                    sent to the user ${name}.</p>
+            </div>
+
+            <h1>Edit Draft Transfer Requests</h1>
+
+            <p><a th:href="@{/ListDraftRsas}">Return to Review Draft Transfer Requests</a></p>
+
+            <p>Use the form below to modify this Draft Transfer Requests. Select
+                <i>Approved</i> to highlight the required fields. When complete, select <i>Update</i> button.</p>
+
+            <p><a onclick="return confirm_delete()" th:href="@{/DeleteDraftRsa(rsaid=${rsasForm.id})}">Delete the
+                Transfer Request</a></p>
+
+            <div th:replace="fragments/RsaForm :: RsaForm"></div>
+
+            <p><a th:href="@{/ListDraftRsas}">Return to Review Draft Transfer Requests</a></p>
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+            </main>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div th:replace="mit/site_footer :: footer"/>
+<div th:replace="mit/institute_footer :: footer"/>
+
+
+
+</body>
+</html>

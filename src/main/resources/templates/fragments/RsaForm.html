@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="RsaForm">
+
+    <form method="post" id="form" th:object="${rsasForm}" th:action="@{/} + ${action}">
+
+        <!-- TODO lot of hidden fields -->
+
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{createdby}"/>
+        <input type="hidden" th:field="*{idx}"/>
+        <input type="hidden" th:field="*{ssasForm.id}"/>
+        <input type="hidden" th:field="*{ssasForm.enabled}"/>
+        <input type="hidden" th:field="*{ssasForm.approved}"/>
+        <input type="hidden" th:field="*{ssasForm.departmentForm.id}"/>
+        <input type="hidden" th:field="*{ssasForm.createdby}"/>
+        <input type="hidden" th:field="*{ssasForm.editdate}"/>
+        <input type="hidden" th:field="*{ssasForm.IP}"/>
+        <input type="hidden" th:field="*{ssasForm.onlinesubmission}"/>
+
+        <div>
+            <label for="id">Transfer Request ID</label>
+            <input type="text" size="4" readonly="readonly" th:field="*{id}"/>
+        </div>
+
+        <p></p>
+
+        <fieldset>
+            <legend>Transfer Request Status</legend>
+            <span id="approved">
+	    <span>
+	      <input name="approved" type="radio" onchange="approvedchange()" value="0" th:checked="*{!approved}"/>
+	      <label>Draft</label>
+	    </span>
+	    <span>
+	      <input name="approved" type="radio" value="1" onchange="approvedchange()" th:checked="*{approved}"/>
+	      <label>Approved</label>
+	    </span>
+	  </span>
+        </fieldset>
+
+        <p></p>
+
+        <div>
+            <label for="ssaid">Submission Agreement ID</label>
+            <input name="ssaid" class="id" type="text" size="4" readonly="readonly" id="ssaid"
+                   th:field="*{ssasForm.id}"/>
+        </div>
+
+        <p></p>
+
+        <fieldset>
+            <legend>Date Span of the Records</legend>
+            <div id="dateSpan">
+	    <span>
+	      <label>Beginning Year</label>
+	      <input type="text" maxlength="4" size="4" th:field="*{startyear}"/>&nbsp;&nbsp;&nbsp;
+	      <label>Ending Year</label>
+	      <input type="text" maxlength="4" size="4" th:field="*{endyear}"/>
+	    </span>
+            </div>
+        </fieldset>
+
+        <p></p>
+
+        <fieldset class="repeatable">
+            <legend>Submission Agreement Header Information</legend>
+
+            <p>The name of the office or person creating the records, a Record Group , and/or an email address.</p>
+
+            <div>
+                <div>
+                    <div>
+                        <label for="hdu">Head of Department/Unit</label>
+                        <input name="departmenthead" type="text" class="wide" id="departmenthead"
+                               th:field="${rsasForm.ssasForm.departmenthead}"/>
+                    </div>
+                    <div>
+                        <label for="rsarcid">Record or Collection Identifier</label>
+                        <input name="recordid" type="text" id="recordid" class="wide" th:field="*{ssasForm.recordid}"/>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <p></p>
+
+        <fieldset class="repeatable"
+                  th:switch="*{ssasForm == null or ssasForm.ssaContactsForms == null or ssasForm.ssaContactsForms.size() == 0}">
+            <legend>Department/Unit or Donor Contact Information</legend>
+            <p>Supply a name, phone number and email address.</p>
+            <div id="contacts" th:case="true">
+                <div class="contact">
+                    <input type="hidden" value="0" id="contactcnt"/>
+                    <input type="hidden" name="ssasForm.ssaContactsForms[0].idx" value="0"/>
+                    <input type="hidden" name="ssasForm.ssaContactsForms[0].ssasForm.id"
+                           th:value="${rsasForm.ssasForm.id}"/>
+                    <div>
+                        <label for="ssacontactname">Name</label>
+                        <input type="text" class="wide" id="name" name="ssasForm.ssaContactsForms[0].name"/>
+                    </div>
+                    <div>
+                        <label for="ssacontactphone">Phone Number</label>
+                        <input type="text" class="wide" id="phone" name="ssasForm.ssaContactsForms[0].phone"/>
+                    </div>
+                    <div>
+                        <label for="ssacontactemail">Email</label>
+                        <input type="text" class="wide" id="email" name="ssasForm.ssaContactsForms[0].email"/>
+                    </div>
+                    <div>
+                        <label for="ssacontactaddress">Campus Address</label>
+                        <input type="text" class="wide" id="address" name="ssasForm.ssaContactsForms[0].address"/>
+                    </div>
+                    <div>
+                        <input type="button" value="-" onclick="removeit( this, 'contact' )"/>
+                    </div>
+                </div>
+            </div>
+            <div id="contacts" th:case="*">
+                <input type="hidden" id="contactcnt" th:value="*{ssasForm.ssaContactsForms.size()}"/>
+                <div class="contact" th:each="con, stat : *{ssasForm.ssaContactsForms}">
+                    <input type="hidden" th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].idx}"/>
+                    <input type="hidden" th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].ssasForm.id}"/>
+                    <div>
+                        <label for="ssacontactname">Name</label>
+                        <input type="text" class="wide" id="name"
+                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].name}"/>
+                    </div>
+                    <div>
+                        <label for="ssacontactphone">Phone Number</label>
+                        <input type="text" class="wide" id="phone"
+                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].phone}"/>
+                    </div>
+                    <div>
+                        <label for="ssacontactemail">Email</label>
+                        <input type="text" class="wide" id="email"
+                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].email}"/>
+                    </div>
+                    <div>
+                        <label for="ssacontactaddress">Campus Address</label>
+                        <input type="text" class="wide" id="address"
+                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].address}"/>
+                    </div>
+                    <div>
+                        <input type="button" value="-" onclick="removeit( this, 'contact'  )"/>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input type="button" value="+" onclick="createit( this, 'contact' )"/>
+            </div>
+        </fieldset>
+
+        <p></p>
+
+        <div>
+            <label for="acd">Agreement Creation Date</label>
+            <span class="elements" id="acd">
+	    <input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+               th:field="*{ssasForm.creationdate}"/>
+	  </span>
+        </div>
+
+        <p></p>
+
+        <div>
+            <label for="rt">Records Title</label>
+            <input id="recordstitle" type="text" class="wide" th:field="*{ssasForm.recordstitle}"/>
+        </div>
+
+        <p></p>
+
+        <div>
+            <label for="ext">Extent</label>
+            <input id="extent" type="text" class="wide" th:field="*{extentstr}"/>
+        </div>
+
+        <p></p>
+
+        <fieldset class="repeatable"
+                  th:switch="*{ssasForm == null or ssasForm.ssaCopyrightsForms == null or ssasForm.ssaCopyrightsForms.size() == 0}">
+            <legend>Copyright Statement</legend>
+            <div id="copyrights" th:case="true">
+                <input type="hidden" id="copyrightcnt" value="0"/>
+                <div class="copyright">
+                    <input type="hidden" name="ssasForm.ssaCopyrightsForms[0].ssasForm.id"
+                           th:value="${rsasForm.ssasForm.id}"/>
+                    <input type="text" id="copyright" name="ssasForm.ssaCopyrightsForms[0].copyright"/>
+                    <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
+                </div>
+            </div>
+            <div id="copyrights" th:case="*">
+                <input type="hidden" th:value="*{ssasForm.ssaCopyrightsForms.size()}" id="copyrightcnt"/>
+                <div class="copyright" th:each="cr, stat : *{ssasForm.ssaCopyrightsForms}">
+                    <input type="hidden" th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].idx}"/>
+                    <input type="hidden" th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].ssasForm.id}"/>
+                    <input type="text" id="copyright"
+                           th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].copyright}"/>
+                    <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
+                </div>
+            </div>
+            <div>
+                <input type="button" value="+" onclick="createit( this, 'copyright' )"/>
+            </div>
+        </fieldset>
+
+        <p></p>
+
+        <fieldset class="repeatable"
+                  th:switch="*{ssasForm == null} or *{ssasForm.ssaAccessRestrictionsForms == null} or *{ssasForm.ssaAccessRestrictionsForms.size() == 0}">
+            <legend>Access Restrictions</legend>
+            <div id="restrictions" th:case="true">
+                <input type="hidden" id="restrictioncnt" value="1"/>
+                <div class="restriction">
+	      <span>
+		<input type="hidden" name="ssasForm.ssaAccessRestrictionsForms[0].ssasForm.id"
+               th:value="${rsasForm.ssasForm.id}"/>
+		<input type="hidden" name="ssasForm.ssaAccessRestrictionsForms[0].idx" value="0"/>
+		<input type="text" id="restriction" name="ssasForm.ssaAccessRestrictionsForms[0].restriction"
+               th:value="${defaultaccessrestriction}"/>
+	      </span>
+                    <span>
+		<input type="button" value="-" onclick="removeit( this, 'restriction' )"/>
+	      </span>
+                </div>
+            </div>
+            <div id="restrictions" th:case="*">
+                <input type="hidden" th:value="*{ssasForm.ssaAccessRestrictionsForms.size()}" id="restrictioncnt"/>
+                <div class="restriction" th:each="cr, stat : *{ssasForm.ssaAccessRestrictionsForms}">
+                    <input type="hidden" th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].idx}"/>
+                    <input type="hidden"
+                           th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].ssasForm.id}"/>
+                    <input type="text" id="restriction"
+                           th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
+                    <span><input type="button" value="-" onclick="removeit( this, 'restriction' )"/></span>
+                </div>
+            </div>
+            <div>
+                <input type="button" value="+" onclick="createit( this, 'restriction' )"/>
+            </div>
+        </fieldset>
+
+        <p></p>
+
+        <div>
+            <label for="td">Transfer Date</label>
+            <span class="elements">
+	    <input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+               th:field="*{transferdate}"/>
+	  </span>
+        </div>
+
+        <p></p>
+
+        <div>
+            <label for="rp2">Retention Period</label>
+            <div th:switch="*{ssasForm != null} and *{ssasForm.retentionperiod != null} and *{ssasForm.retentionperiod.length() eq '0'}">
+                <div th:case="true">
+                    <input type="text" name="retentionperiod" value="Permanent"/>
+                </div>
+                <div th:case="*">
+                    <input type="text" name="retentionperiod" th:field="*{ssasForm.retentionperiod}"/>
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div>
+            <label for="ads">Archival Description Standards</label>
+            <div th:switch="*{ssasForm != null} and *{ssasForm.descriptionstandards != null} and *{ssasForm.descriptionstandards.length() eq '0'}">
+                <div th:case="true">
+                    <input type="text" name="descriptionstandards" id="descriptionstandards" value="DACS"/>
+                </div>
+                <div th:case="*">
+                    <input type="text" id="descriptionstandards" th:field="*{ssasForm.descriptionstandards}"/>
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <fieldset id="optdraft">
+            <legend id="optlegenddraft">Optional fields</legend>
+            <p id="optdraftspace"></p>
+
+            <div>
+                <label for="an">Accession Number</label>
+                <input type="text" th:field="*{accessionnumber}"/>
+            </div>
+
+            <p></p>
+
+            <div>
+                <label for="ed">Agreement Effective Date</label>
+                <span class="elements" id="ed">
+	      <input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+                 th:field="*{ssasForm.effectivedate}"/>
+	    </span>
+            </div>
+
+            <p></p>
+
+            <fieldset id="optapproved">
+                <legend id="optlegendapproved">Optional fields</legend>
+                <p id="optapprovedspace"></p>
+
+                <div>
+                    <label for="ex">Expiration Date</label>
+                    <span class="elements" id="ex">
+		<input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+               th:field="*{ssasForm.expirationdate}"/>
+	      </span>
+                </div>
+
+                <p></p>
+
+                <div>
+                    <label for="rad">Retention Alert Date</label>
+                    <span class="elements" id="ex">
+		<input type="text" class="datedropdown" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
+               th:field="*{ssasForm.retentionalertdate}"/>
+	      </span>
+                </div>
+
+                <p></p>
+
+                <div>
+                    <label for="tn">Description/comments (for transfer request)</label>
+                    <textarea cols="40" rows="5" th:field="*{description}"></textarea>
+                </div>
+
+                <p></p>
+
+            </fieldset> <!-- optapproved -->
+        </fieldset> <!-- optdraft -->
+
+        <p></p>
+
+        <h4>Files Selected for Transfer:</h4>
+        <div th:switch="*{rsaFileDataForms == null or rsaFileDataForms.size() == 0}">
+            <div th:case="true">
+                <p>There were no files transferred or they have been deleted.</p>
+            </div>
+            <div th:case="*">
+                <table class="maintable" border="1">
+                    <tr>
+                        <th>name</th>
+                        <th>size</th>
+                        <th>date</th>
+                        <th>status</th>
+                    </tr>
+                    <div th:each="item,stat: *{rsaFileDataForms}">
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].id}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].idx}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].rsasForm.id}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].name}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].nicesize}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].lastmoddatetime}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].status}"/>
+                        <tr>
+                            <td th:text="*{rsaFileDataForms[__${stat.index}__].name}"></td>
+                            <td th:text="*{rsaFileDataForms[__${stat.index}__].nicesize}"></td>
+                            <td th:text="*{rsaFileDataForms[__${stat.index}__].lastmoddatetime}"></td>
+                            <td th:text="*{rsaFileDataForms[__${stat.index}__].status}"></td>
+                        </tr>
+                    </div>
+                </table>
+            </div>
+        </div>
+
+        <!--
+                <p><input type="button" value="Update" onclick="validate()"/></p>
+        -->
+
+        <button type="submit" class="btn btn-primary">Update</button>
+
+
+    </form>
+
+</div>
+
+</body>
+</html>

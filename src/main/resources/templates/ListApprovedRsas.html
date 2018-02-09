@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<!--<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Manage Approved Transfer Requests</title>
+    <div th:replace="fragments/Head :: Head"></div>
+    <script type="text/javascript" th:src="@{/resources/js/ListApprovedRsas.js}"></script>
+</head>-->
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Review Draft Transfer Requests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+
+
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <h3></h3>
+                </div>
+
+
+                <div>
+                    <div>
+
+
+                        <div>
+                            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                            <div class="success_box" th:if="${edited eq '1'}">
+                                <p>Transfer Transfer <span th:text="${updatersaid}"></span> edited successfully.</p>
+                            </div>
+
+                            <div class="alert_box" th:if="${nodeletes eq '1'}">
+                                <p>
+                                    No Approved Transfer Requests selected for deletion.
+                                </p>
+                            </div>
+
+                            <div th:if="${downloadfailed == '1'}">
+                                <div class="alert_box">
+                                    <p>The download for Transfer No. <span th:text="${rsaid}"></span> failed due to the
+                                        server being out
+                                        of memory.</p>
+                                </div>
+                                <p></p>
+                            </div>
+
+                            <div class="success_box" th:if="${weredeletes eq '1'}">
+                                <p>
+                                    The following Approved Transfer Request(s) was/were
+                                    deleted: <span th:text="${deletersaids}"></span>
+                                </p>
+                            </div>
+
+                            <div class="success_box" th:if="${onedeleted eq '1'}">
+                                <p>
+                                    Approved Transfer Request with id=<span th:text="${onedeletedrsaid}"></span> was
+                                    successfully deleted.
+                                </p>
+                            </div>
+
+                            <h1>Manage Approved Transfer Requests</h1>
+
+                            <div th:switch="*{rsasForms == null or rsasForms.size() == 0}">
+
+                                <div th:case="true">
+                                    <p>There are currently no Approved Transfer Requests.</p>
+                                </div>
+
+                                <div th:case="*">
+                                    <p>Deleted approved Transfer Requests will be added to the Completed Transfer
+                                        Request Log.</p>
+
+                                    <form method="POST" th:action="@{/DeleteApprovedRsas}">
+
+                                            <!-- table -->
+
+                                        <table class="table">
+                                            <tr>
+                                                <th style="min-width:20px">&nbsp;</th>
+                                                <th style="min-width:20px">&nbsp;</th>
+                                                <th style="min-width:20px">Transfer No.</th>
+                                                <th style="min-width:25px">Agreement<br/>creation<br/>date</th>
+                                                <th style="min-width:25px">Transfer<br/>date</th>
+                                                <th style="min-width:150px">Department/Unit<br/>or Donor<br/>Contact
+                                                    Name(s)
+                                                </th>
+                                                <th style="min-width:100px">Department/Unit<br/>or Donor<br/>Name</th>
+                                                <th>Inventory documents</th>
+                                                <th>AT<br/>Import<br/>File</th>
+                                            </tr>
+                                            <tr th:each="rsa,stat : *{rsasForms}">
+                                                <td><input name="rsa" type="checkbox"
+                                                           th:value="*{rsasForms[__${stat.index}__].id}"/>
+                                                </td>
+                                                <td>
+                                                    <a th:href="@{/EditApprovedRsa(rsaid=*{rsasForms[__${stat.index}__].id})}">Edit</a>
+                                                </td>
+                                                <td align="center" th:text="*{rsasForms[__${stat.index}__].id}"></td>
+                                                <td th:text="*{rsasForms[__${stat.index}__].ssasForm.creationdate}"></td>
+                                                <td th:text="*{rsasForms[__${stat.index}__].transferdate}"></td>
+                                                <td>
+                                                    <div th:each="contact,cstat : *{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms}">
+                                                        <span th:text="*{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms[__${cstat.index}__].name}"></span><br/>
+                                                    </div>
+                                                </td>
+                                                <td th:switch="*{rsasForms[__${stat.index}__].ssasForm.departmentForm == null}">
+                                                    <div th:case="true">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div th:case="*">
+                                                        <span th:text="*{rsasForms[__${stat.index}__].ssasForm.departmentForm.name}"></span>
+                                                    </div>
+                                                </td>
+                                                <td th:switch="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}">
+                                                    <div th:case="'0'">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div th:case="*">
+                                                        <span th:text="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}"></span>
+                                                        document<span
+                                                            th:if="*{rsasForms[__${stat.index}__].rsaFileDataForms.size() != 1}"></span>
+                                                        <br/>
+                                                        <a th:href="@{/DownloadZipFile(rsaid=*{rsasForms[__${stat.index}__].id}, redirect='ListApprovedRsas')}">Download</a>
+                                                        <a th:href="@{/ListApprovedFiles(rsaid=*{rsasForms[__${stat.index}__].id})}">&#9632;</a>&nbsp;&nbsp;<a
+                                                            th:onclick="*{'return confirm_delete_inventory(' + rsasForms[__${stat.index}__].rsaFileDataForms.size() + ')'}"
+                                                            th:href="@{/DeleteApprovedInventory(rsaid=*{rsasForms[__${stat.index}__].id})}">Delete</a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a th:href="@{/CreateATImportFile(rsaid=*{rsasForms[__${stat.index}__].id})}">Create</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+
+                                        <!-- end: table -->
+
+                                        <input type="submit" name="delete" value="Delete selected Transfer Request"
+                                               onclick="return confirm_delete_rsas( this.form )"/>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                        </div>
+
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+    </div> <!-- end wrap outercontent -->
+
+</div>
+
+</body>
+</html>

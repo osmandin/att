@@ -171,7 +171,7 @@ public class RsaAdmin {
         String name = (String) session.getAttribute("name");
         String emailaddr = (String) session.getAttribute("email");
 
-        String useremailaddress = "\"" + name.trim() + "\" <" + emailaddr.trim() + ">";
+//        String useremailaddress = "\"" + name.trim() + "\" <" + emailaddr.trim() + ">";
 
  /*       EmailSetup emailsetup = new EmailSetup();
 
@@ -200,7 +200,7 @@ public class RsaAdmin {
                 StringBuilder sb = new StringBuilder();
                 int i = 0;
                 for (SsaContactsForm contact : contactinfo) {
-                    emailrecipts[i++] = "\"" + contact.getName() + "\" <" + contact.getEmail() + ">";
+//                    emailrecipts[i++] = "\"" + contact.getName() + "\" <" + contact.getEmail() + ">";
                     sb.append(sep + "\"" + contact.getName() + "\" <" + contact.getEmail() + ">");
                     sep = ", ";
                 }
