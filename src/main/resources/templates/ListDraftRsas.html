@@ -92,72 +92,70 @@
 
                         <div th:case="*">
                             <form method="POST" th:action="@{/DeleteDraftRsas}">
-                                <p>
 
-                                <table border="1">
-
-                                    <tr>
-                                        <th style="min-width:20px">&nbsp;</th>
-                                        <th style="min-width:20px">&nbsp;</th>
-                                        <th style="min-width:20px">Transfer No.</th>
-                                        <th style="min-width:25px">Agreement<br/>creation<br/>date</th>
-                                        <th style="min-width:25px">Transfer<br/>date</th>
-                                        <th style="min-width:150px">Department/Unit<br/>or Donor<br/>Contact Name(s)</th>
-                                        <th style="min-width:100px">Department/Unit<br/>or Donor<br/>Name</th>
-                                        <th>Inventory documents</th>
-                                    </tr>
-
-                                    <tr th:each="rsa,stat : *{rsasForms}">
-                                        <td><input name="rsa" type="checkbox" th:value="*{rsasForms[__${stat.index}__].id}"/>
-                                        </td>
-                                        <td><a th:href="@{/EditDraftRsa(rsaid=*{rsasForms[__${stat.index}__].id})}">Edit</a>
-                                        </td>
-                                        <td align="center" th:text="*{rsasForms[__${stat.index}__].id}"></td>
-                                        <td th:switch="*{rsasForms == null} or *{rsasForms[__${stat.index}__] == null} or *{rsasForms[__${stat.index}__].ssasForm == null}">
-                                            <div th:case="true">
-                                                &nbsp;
-                                            </div>
-                                            <div th:case="*">
-                                                <span th:text="*{rsasForms[__${stat.index}__].ssasForm.creationdate}"></span>
-                                            </div>
-                                        </td>
-                                        <td th:text="*{rsasForms[__${stat.index}__].transferdate}"></td>
-                                        <td th:switch="*{rsasForms == null} or *{rsasForms[__${stat.index}__] == null} or *{rsasForms[__${stat.index}__].ssasForm == null} or *{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms == null}">
-                                            <div th:case="true">
-                                                &nbsp;
-                                            </div>
-                                            <div th:case="*">
-                                                <div th:each="contact,cstat : *{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms}">
-                                                    <span th:text="*{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms[__${cstat.index}__].name}"></span><br/>
+                                <div class="results-table-outer wrapper">
+                                    <table class="table">
+                                        <tr>
+                                            <th style="min-width:20px">&nbsp;</th>
+                                            <th style="min-width:20px">&nbsp;</th>
+                                            <th style="min-width:20px">Transfer No.</th>
+                                            <th style="min-width:25px">Agreement<br/>creation<br/>date</th>
+                                            <th style="min-width:25px">Transfer<br/>date</th>
+                                            <th style="min-width:150px">Department/Unit<br/>or Donor<br/>Contact Name(s)</th>
+                                            <th style="min-width:100px">Department/Unit<br/>or Donor<br/>Name</th>
+                                            <th>Inventory documents</th>
+                                        </tr>
+                                        <tr th:each="rsa,stat : *{rsasForms}">
+                                            <td><input name="rsa" type="checkbox" th:value="*{rsasForms[__${stat.index}__].id}"/>
+                                            </td>
+                                            <td><a th:href="@{/EditDraftRsa(rsaid=*{rsasForms[__${stat.index}__].id})}">Edit</a>
+                                            </td>
+                                            <td align="center" th:text="*{rsasForms[__${stat.index}__].id}"></td>
+                                            <td th:switch="*{rsasForms == null} or *{rsasForms[__${stat.index}__] == null} or *{rsasForms[__${stat.index}__].ssasForm == null}">
+                                                <div th:case="true">
+                                                    &nbsp;
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td th:switch="*{rsasForms == null} or *{rsasForms[__${stat.index}__] == null} or *{rsasForms[__${stat.index}__].ssasForm == null} or *{rsasForms[__${stat.index}__].ssasForm.departmentForm == null}">
-                                            <div th:case="true">
-                                                &nbsp;
-                                            </div>
-                                            <div th:case="*">
-                                                <span th:text="*{rsasForms[__${stat.index}__].ssasForm.departmentForm.name}"></span>
-                                            </div>
-                                        </td>
-                                        <td th:switch="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}">
-                                            <div th:case="'0'">
-                                                &nbsp;
-                                            </div>
-                                            <div th:case="*">
-                                                <span th:text="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}"></span>
-                                                document<span
-                                                    th:if="*{rsasForms[__${stat.index}__].rsaFileDataForms.size() != 1}"></span>
-                                                <br/>
-                                                <a th:href="@{/DownloadZipFile(rsaid=*{rsasForms[__${stat.index}__].id}, redirect='ListDraftRsas')}">Download</a>
-                                                <a th:href="@{/ListDraftFiles(rsaid=*{rsasForms[__${stat.index}__].id})}">&#9632;</a>&nbsp;&nbsp;<a
-                                                    th:onclick="*{'return confirm_delete_inventory(' + rsasForms[__${stat.index}__].rsaFileDataForms.size() + ')'}"
-                                                    th:href="@{/DeleteDraftInventory(rsaid=*{rsasForms[__${stat.index}__].id})}">Delete</a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                                </p>
+                                                <div th:case="*">
+                                                    <span th:text="*{rsasForms[__${stat.index}__].ssasForm.creationdate}"></span>
+                                                </div>
+                                            </td>
+                                            <td th:text="*{rsasForms[__${stat.index}__].transferdate}"></td>
+                                            <td th:switch="*{rsasForms == null} or *{rsasForms[__${stat.index}__] == null} or *{rsasForms[__${stat.index}__].ssasForm == null} or *{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms == null}">
+                                                <div th:case="true">
+                                                    &nbsp;
+                                                </div>
+                                                <div th:case="*">
+                                                    <div th:each="contact,cstat : *{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms}">
+                                                        <span th:text="*{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms[__${cstat.index}__].name}"></span><br/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td th:switch="*{rsasForms == null} or *{rsasForms[__${stat.index}__] == null} or *{rsasForms[__${stat.index}__].ssasForm == null} or *{rsasForms[__${stat.index}__].ssasForm.departmentForm == null}">
+                                                <div th:case="true">
+                                                    &nbsp;
+                                                </div>
+                                                <div th:case="*">
+                                                    <span th:text="*{rsasForms[__${stat.index}__].ssasForm.departmentForm.name}"></span>
+                                                </div>
+                                            </td>
+                                            <td th:switch="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}">
+                                                <div th:case="'0'">
+                                                    &nbsp;
+                                                </div>
+                                                <div th:case="*">
+                                                    <span th:text="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}"></span>
+                                                    document<span
+                                                        th:if="*{rsasForms[__${stat.index}__].rsaFileDataForms.size() != 1}"></span>
+                                                    <br/>
+                                                    <a th:href="@{/DownloadZipFile(rsaid=*{rsasForms[__${stat.index}__].id}, redirect='ListDraftRsas')}">Download</a>
+                                                    <a th:href="@{/ListDraftFiles(rsaid=*{rsasForms[__${stat.index}__].id})}">&#9632;</a>&nbsp;&nbsp;<a
+                                                        th:onclick="*{'return confirm_delete_inventory(' + rsasForms[__${stat.index}__].rsaFileDataForms.size() + ')'}"
+                                                        th:href="@{/DeleteDraftInventory(rsaid=*{rsasForms[__${stat.index}__].id})}">Delete</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
 
                                 <input type="submit" name="delete" value="Delete selected Transfer Request"
                                        onclick="return confirm_delete_rsas( this.form )"/>
@@ -169,13 +167,6 @@
                     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
                 </div>
 
-
-                <!-- Add new button -->
-                <div>
-                    <a href="/att/AddDepartment" role="button">Add Department</a>
-
-                </div>
-
             </main>
         </div>
 
@@ -185,6 +176,7 @@
     <div th:replace="mit/institute_footer :: footer"/>
 
 </div> <!-- end wrap page -->
+
 
 </body>
 </html>
