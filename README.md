@@ -1,5 +1,33 @@
 # Archives Transfer Tool
 
+Build (with Docker)
+--------------
+
+The project can be launched with Docker
+
+```sh
+# first time only:
+docker pull maven:3.5.3-jdk-8-alpine
+
+# from the folder, build the docker image (it will take a while the first time:
+
+docker build -t att:1.0 .
+
+# now run it:
+
+docker run -p 8080:8080 att:1.0
+
+# the app should now be live at localhost:8080/att
+ 
+```
+
+Now if you want to make a change to the app:
+
+Hit ```Ctrl-C```
+Edit /src/main/resources/templates/AddDepartment.html (for example)
+Run the image build command (```docker build```), as described above (it should take a second now).
+Run the image again (```docker run```).
+
 Build
 --------------
 
@@ -37,10 +65,8 @@ The design is based on:
 https://stackoverflow.com/questions/20318592/spring-mvc-how-to-generate-temporary-link
 
 
-Technical
-----------
-
-Read up on project lombok here:
+Technical Resources
+--------------------
 
 http://www.baeldung.com/intro-to-project-lombok
 
@@ -49,10 +75,10 @@ https://projectlombok.org/features/all
 Data Model
 -----------
 
-A user can belong to multiple departments.
-A department can have multiple users.
-A department can have multiple submission agreements.
-A submission agreement departments on a department.
+- A user can belong to multiple departments.
+- A department can have multiple users.
+- A department can have multiple submission agreements.
+- A submission agreement departments on a department.
 
 
 
