@@ -9,7 +9,7 @@ The project can be launched with Docker
 # first time only:
 docker pull maven:3.5.3-jdk-8-alpine
 
-# from the folder, build the docker image (it will take a while the first time:
+# from the folder, build the docker image (it will take a while the first time):
 
 docker build -t att:1.0 .
 
@@ -23,10 +23,10 @@ docker run -p 8080:8080 att:1.0
 
 Now if you want to make a change to the app:
 
-Hit ```Ctrl-C```
-Edit /src/main/resources/templates/AddDepartment.html (for example)
-Run the image build command (```docker build```), as described above (it should take a second now).
-Run the image again (```docker run```).
+- Hit ```Ctrl-C```
+- Edit /src/main/resources/templates/AddDepartment.html (for example)
+- Run the image build command (```docker build```), as described above (it should take a second now).
+- Run the image again (```docker run```).
 
 Build
 --------------
