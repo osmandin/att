@@ -38,13 +38,20 @@
         <div class="wrap-content">
             <main id="content-main" class="content-main" role="main">
 
-                <div class="details">
-                    <p>Welcome, {User}</p>
-                </div>
-                
-                <h3><a th:href="@{/SubmitRecords}">Submit Records to Archives</a></h3>
+                    <div class="details">
+                        <p>Welcome, {User}</p>
+                    </div>
 
-                <h3><a th:href="@{/Admin}">Administrative Tools</a></h3>
+                    <p>The Digital Transfer Tool is used to send digital archival materials to the MIT Library's Institute Archvies and Special Collections. [Full description TBD]</p>
+
+                    <h3 class="hd-4">Submit Records to Archives</h3>
+                    <p>[Full description TBD] Submit your records to the IASC</p>
+                    <p><a class="btn button-primary" th:href="@{/SubmitRecords}">Submit records to Archives</a></p>
+
+                    <h3 class="hd-4">Administrative Tools</h3>
+                    <p>[Full description TBD] Access the admin tools</p>
+                    <p><a class="btn button-primary" th:href="@{/Admin}">Administrative Tools</a></p>
+
 
             </main>
             <!-- close content-main -->
