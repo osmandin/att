@@ -1,0 +1,14 @@
+/* ATT style overrides */
+
+form legend {
+  width: auto;
+  border: 0;
+  margin-bottom: 0;
+}
+
+.wrap-content form h4 {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+  font-size: 16px;
+}
