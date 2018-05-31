@@ -19,29 +19,43 @@
             <main id="content-main" class="content-main" role="main">
 
                 <div class="details">
-                    <h3></h3>
+                </div>
+
+                <div class="layout-3q1q layout-band">
+
+                    <div class="col3q">
+                        <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn</div>
+
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                                    <div th:switch="${session.loggedin}">
+                                        <div th:case="'1'">
+                                            <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn
+                                            </div>
+                                        </div>
+                                        <div th:case="*">
+                                            <div th:replace="fragments/SubmitRecordsNotLoggedIn :: SubmitRecordsNotLoggedIn">
+                                                SubmitRecordsNotLoggedIn
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+
+
+                        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                    </div>
+                    <aside class="content-sup col1q-r" role="complementary">
+                        <div class="bit">
+                            <h3 class="title">Questions? Contact us.</h3>
+                            <p><a href="mailto:recordstransfer@mit.edu">recordstransfer@mit.edu</a><br />
+                            (617) 253-5136</p>
+                        </div>
+                    </aside>
                 </div>
 
 
-                <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn</div>
 
-                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-                            <div th:switch="${session.loggedin}">
-                                <div th:case="'1'">
-                                    <div th:replace="fragments/SubmitRecordsLoggedIn :: SubmitRecordsLoggedIn">SubmitRecordsLoggedIn
-                                    </div>
-                                </div>
-                                <div th:case="*">
-                                    <div th:replace="fragments/SubmitRecordsNotLoggedIn :: SubmitRecordsNotLoggedIn">
-                                        SubmitRecordsNotLoggedIn
-                                    </div>
-                                </div>
-                            </div> -->
-
-
-
-                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
             </main>
         </div>
 

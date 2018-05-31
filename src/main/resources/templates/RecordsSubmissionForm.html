@@ -66,22 +66,11 @@
                                             th:text="${generalRecordsDescription}" aria-describedby="comment-tip"></textarea>
                                     </div>
 
+                                    <h4>Submission Agreement information for DLC or Donor</h4>
 
-                                    <h4>Inventory</h4>
-                                    <p>
-                                        An inventory will be generated after files are selected
-                                        for transfer. Alternatively, you can create an
-                                        inventory document and submit to the Archives in the
-                                        next step.
-                                    </p>
+                                    <p>This is a submission agreement we have on file for your DLC or Donor record. This information will be automatically added to this submission.</p>
 
-
-                                    <h4>Submission Agreement information</h4>
-
-                                    <p>The following information will be automatically added to this document, inherited from its records
-                                        submission template.</p>
-
-                                    <table class="table">
+                                    <table class="table copy-sup">
                                         <tr>
                                             <th id="ssainfo" valign="top">Effective date for the Submission Agreement</th>
                                             <td valign="top" th:text="*{ssa.effectivedate}"></td>
@@ -156,10 +145,15 @@
 
                                     </table>
 
-                          <!--      <div class="alert_box" id="alert_box_bottom">
-                                    <p>Please enter the missing values above.</p>
-                                </div>-->
+                                    <h4>Inventory</h4>
+                                    <p>
+                                        In the next step, you can upload your records and an inventory will be automatically generated for you. Alternatively, you can create and upload an inventory document to submit.
+                                    </p>
 
+
+                                <!--      <div class="alert_box" id="alert_box_bottom">
+                                          <p>Please enter the missing values above.</p>
+                                      </div>-->
 
                                     <button type="submit" class="btn button-primary">Next: Select files</button>
          

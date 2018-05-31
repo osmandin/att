@@ -12,3 +12,7 @@ form legend {
   padding-top: 20px;
   font-size: 16px;
 }
+
+form .tip {
+  display: block;
+}
