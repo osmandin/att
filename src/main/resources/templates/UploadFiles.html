@@ -40,11 +40,8 @@
 
                     <h3 class="title-page">Add Digital Content Files</h3>
 
-                    <p>
-                        <a th:href="@{/SubmitRecords}">Return to Records Submission Form</a>
-                    </p>
-
                     <form method="post" th:action="@{/UploadComplete}" enctype="multipart/form-data" id="form">
+                        <p>Please select the files you would like to upload below. An inventory will be automatically generated for you. Alternatively, you can create and upload an inventory document to submit. </p>
                         <p class="tip" id="maxuploadsize">The total size of all files to be uploaded must be less than <span th:text="${avail_bytes}"></span>.</p>
 
                         <input type="hidden" name="filedata" id="filedata"/>
@@ -54,23 +51,23 @@
                         <fieldset>
                             <legend>Select files to submit to the Archives</legend>
 
-                            <div id="fileobj">
+                            <div id="fileobj" class="wrap-file-upload">
 
                                 <div class="field-wrap">
 
                                     <label for="file" class="field-label">Select a file to upload</label>
                                     <input class="field-upload" type="file" name="file" id="file" multiple="multiple" onchange="gatherdisplayfiledata('1')"/>
 
-                                    <input class="btn button-secondary" type="button" value="Remove this file" style="display:none" id="minus" onclick="removeit( this )"/>
-
-                                    <input class="btn button-secondary" type="button" value="Add another file" onclick="addit( this  )"/>
                                 </div>
 
-                                <hr />
-
-                                <input class="btn button-secondary warn" type="button" value="Clear all files" onclick="clearfiles()"/>
+                                <input class="btn button-secondary button-small" type="button" value="Remove this file" style="display:none" id="minus" onclick="removeit( this )"/>
 
                             </div>
+
+
+                            <input class="btn button-secondary" type="button" value="Add another file" onclick="addit( this  )"/>
+
+                            <input class="btn button-secondary warn" type="button" value="Remove all files" onclick="clearfiles()"/>
 
                         </fieldset>
 

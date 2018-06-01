@@ -16,3 +16,7 @@ form legend {
 form .tip {
   display: block;
 }
+
+form .wrap-file-upload {
+  margin-bottom: 20px;
+}
