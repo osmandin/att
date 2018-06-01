@@ -59,7 +59,7 @@
 
             <p>The following files have been uploaded:</p>
 
-            <table border="0">
+            <table class="table">
                 <div th:each="item : ${filedata}">
                     <tr>
                         <td width="20px"></td>
@@ -71,9 +71,8 @@
             </table>
 
             <p>Total file size=<span th:text="${totalfilesize}"></span>.</p>
-            <br/><br/>
 
-            Upload complete. <a href="/"> Return to home page. </a>
+            Upload complete. <a href="/">Return to home page</a>
 
 <!--            <h2>All done?</h2>
             <form method="post" th:action="@{/Logout}">
