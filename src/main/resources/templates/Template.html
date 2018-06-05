@@ -32,9 +32,9 @@
                 <div class="results-table-outer wrapper">
                     <table class="table">
                         <tr>
-                            <th>department name</th>
+                            <th>Department name</th>
                             <!-- edit button -->
-                            <th>&nbsp;</th>
+                            <th>Actions</th>
                             <!-- notify button -->
                         </tr>
                         <tr th:each="item : ${departmentsForms}" style="cursor: pointer"
@@ -47,7 +47,7 @@
 
                 <!-- Add new button -->
                 <div>
-                    <a href="/att/AddDepartment" role="button">Add Department</a>
+                    <a class="btn button-secondary" href="/att/AddDepartment" role="button">Add Department</a>
 
                 </div>
 

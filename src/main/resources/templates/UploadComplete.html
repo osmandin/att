@@ -60,6 +60,12 @@
             <p>The following files have been uploaded:</p>
 
             <table class="table">
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th></th>
+                    <th>Size</th>
+                </tr>
                 <div th:each="item : ${filedata}">
                     <tr>
                         <td width="20px"></td>
@@ -72,7 +78,8 @@
 
             <p>Total file size=<span th:text="${totalfilesize}"></span>.</p>
 
-            Upload complete. <a href="/">Return to home page</a>
+            <p>Thank you for submitting your digital records to the MIT Libraries!</p>
+
 
 <!--            <h2>All done?</h2>
             <form method="post" th:action="@{/Logout}">

@@ -45,16 +45,16 @@
                 <div class="results-table-outer wrapper">
                     <table class="table">
                         <tr>
-                            <th>last name</th>
-                            <th>first name</th>
-                            <th>username</th>
-                            <th>email</th>
+                            <th>Last name</th>
+                            <th>First name</th>
+                            <th>Username</th>
+                            <th>Email</th>
                             <!-- department -->
                             <th>Department/Unit/Donor</th>
                             <!-- edit button -->
-                            <th>&nbsp;</th>
+                            <th>Edit</th>
                             <!-- notify button -->
-                            <th>&nbsp;</th>
+                            <th>Notify</th>
                         </tr>
                         <tr th:each="item : ${adminusersForms}" style="cursor: pointer"
                             th:onclick="'javascript:rowClicked(\'' + ${item.id} + '\');'">
@@ -95,7 +95,7 @@
 
                 <!-- Add new user button -->
                 <div>
-                    <a href="/att/AddUser" role="button">Add New User</a>
+                    <a class="btn button-secondary" href="/att/AddUser" role="button">Add New User</a>
 
                 </div>
 
