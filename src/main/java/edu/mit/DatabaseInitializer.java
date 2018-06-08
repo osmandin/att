@@ -10,6 +10,8 @@ import edu.mit.repository.UsersFormRepository;
 import edu.mit.service.SsasFormService;
 import edu.mit.service.UsersFormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -94,7 +96,6 @@ public class DatabaseInitializer {
             ssasForm.setSsaFormatTypesForms(Collections.emptyList());
             ssasFormService.saveFormTest(ssasForm, null);
 
-
         } catch (Exception e) {
             logger.error("Error saving test item:{}", e);
         }
@@ -103,5 +104,6 @@ public class DatabaseInitializer {
 
 
     }
+
 
 }

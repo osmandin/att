@@ -1,6 +1,8 @@
 package edu.mit.controllers;
 
+import edu.mit.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -56,6 +58,18 @@ public class UserPages {
 
     @Autowired
     private RsaFileDataFormRepository filedatarepo;
+
+    @Autowired
+    private EmailUtil emailUtil;
+
+    @Value("${email.admin}")
+    private String adminEmail;
+
+    @Value("${email.subject}")
+    private String emailSubject;
+
+    @Value("${email.message.prefix}")
+    private String emailPrefix;
 
 
 
@@ -375,13 +389,22 @@ public class UserPages {
 
         rsa = rsarepo.save(rsa);
 
+        final List<String> uploadedFileNames = new ArrayList<>(); // this will be emailed to the user
+
+
         if (files == null) {
             LOGGER.log(Level.SEVERE, "files null");
         } else {
             rfds = new ArrayList<RsaFileDataForm>();
             MyFileUtils fileutils = new MyFileUtils();
             List<FileData> uploadfileinfo = fileutils.uploadFiles(files, dropoffdirfull, fileinfodata);
+
+
             for (FileData fileinfo : uploadfileinfo) {
+
+                LOGGER.log(Level.INFO, "Considering file:" + fileinfo.getName());
+                uploadedFileNames.add(fileinfo.getName()); //TODO we need more than file name!
+
                 if (fileinfo.getName().equals("")) { // ignore cases where filename is empty... happenes when file tag is created in page but not populated
                     LOGGER.log(Level.INFO, "for rsa={0} filename is blank as happens when file tag used but not populated", new Object[]{rsa.getId()});
                 } else {
@@ -436,33 +459,10 @@ public class UserPages {
 
         model.addAttribute("departments", 1);
         model.addAttribute("ssaForms", ssas);
-*/
-
-       // FIXME add email functionality
-
-       /* EmailSetup emailsetup = new EmailSetup();
-        emailsetup.setFrom(env.getRequiredProperty("submit.from"));
-        emailsetup.setSubject("New Records Transfer Request: " + rsa.getId());
-
-        String[] recipts = env.getRequiredProperty("org.email").split(",");
-
-        emailsetup.setToarray(recipts);
-
-       *//* Email email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-        email.UploadCompleteSendToStaff(rsa);*//*
-
-        emailsetup = new EmailSetup();
-
-        emailsetup.setFrom(env.getRequiredProperty("submit.from"));
-        emailsetup.setSubject("Draft Transfer Request sent");
-
-        String useremailaddress = "\"" + name.trim() + "\" <" + useremail.trim() + ">";
-
-        emailsetup.setTo(useremailaddress);
-
-        email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-        email.UploadCompleteSendToUser(rsa);
         */
+
+        emailUtil.notify(adminEmail, emailSubject, emailPrefix + uploadedFileNames.toString());
+
         return "UploadComplete";
     }
 
