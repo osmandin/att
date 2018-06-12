@@ -20,3 +20,7 @@ form .tip {
 form .wrap-file-upload {
   margin-bottom: 20px;
 }
+
+form .button-add {
+  margin: 10px 0;
+}

@@ -33,44 +33,34 @@
             <main id="content-main" class="content-main" role="main">
 
                 <div class="details">
-                    <h3 class="title-page">Add New User</h3>
+                    <h3 class="title-page">Add new user</h3>
                 </div>
 
                 <form action="#" th:object="${usersForm}" method="post">
-                    <div class="form-group row">
-                        <label for="id" class="col-sm-2 col-form-label">ID</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="id" placeholder="" th:field= "${usersForm.id}" readonly="readonly"/>
-                        </div>
+                    <div class="field-wrap">
+                        <label for="id" class="field-label">ID</label>
+                        <input class="field field-text" id="id" placeholder="" th:field= "${usersForm.id}" readonly="readonly"/>
                     </div>
 
-                    <div class="form-group row">
-                        <label for="username" class="col-sm-2 col-form-label">Username</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="username" placeholder="" th:field="${usersForm.username}"/>
-                        </div>
+                    <div class="field-wrap">
+                        <label for="username" class="field-label">Username</label>
+                        <input class="field field-text" id="username" placeholder="" th:field="${usersForm.username}"/>
                     </div>
 
 
-                    <div class="form-group row">
-                        <label for="firstname" class="col-sm-2 col-form-label">First name</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="firstname" placeholder="" th:field="${usersForm.firstname}"/>
-                        </div>
+                    <div class="field-wrap">
+                        <label for="firstname" class="field-label">First name</label>
+                        <input class="field field-text" id="firstname" placeholder="" th:field="${usersForm.firstname}"/>
                     </div>
 
-                    <div class="form-group row">
-                        <label for="lastname" class="col-sm-2 col-form-label">Last name</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="lastname" placeholder="" th:field="${usersForm.lastname}"/>
-                        </div>
+                    <div class="field-wrap">
+                        <label for="lastname" class="field-label">Last name</label>
+                        <input class="field field-text" id="lastname" placeholder="" th:field="${usersForm.lastname}"/>
                     </div>
 
-                    <div class="form-group row">
-                        <label for="email" class="col-sm-2 col-form-label">Email</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" id="email" placeholder="" th:field="${usersForm.email}"/>
-                        </div>
+                    <div class="field-wrap">
+                        <label for="email" class="field-label">Email</label>
+                        <input class="field field-text" id="email" placeholder="" th:field="${usersForm.email}"/>
                     </div>
 
                     <!-- CSRF token
@@ -98,22 +88,17 @@
                         </div>
                     </fieldset-->
 
-                    <div class="form-group row">
+                    <div class="field-wrap">
+                        <h3 class="field-label">Department</h3>
 
-                        <div th:each="item : ${allDepartments}">
+                        <div class="field-subitem" th:each="item : ${allDepartments}">
                             <input type="checkbox" th:field="*{selectedDepartments}" th:value="${item.id}" />
-                            <label th:text="${item.name}">example</label>
+                            <label class="field-checkbox" th:text="${item.name}">example</label>
                         </div>
 
                     </div>
 
-
-
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
+                    <button type="submit" class="btn button-primary">Submit</button>
 
                 </form>
 
