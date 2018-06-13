@@ -15,7 +15,7 @@ RUN mvn verify clean --fail-never
 # Adding source, compile and package into a fat jar
 
 ADD src /code/src
-RUN ["mvn", "package", "-Pdev"]
+RUN ["mvn", "clean", "package", "-Pdev"]
 
 EXPOSE 8080
 CMD ["java", "-jar", "target/att-0.0.1-SNAPSHOT.war"]
