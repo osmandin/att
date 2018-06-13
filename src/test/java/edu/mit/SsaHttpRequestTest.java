@@ -46,7 +46,7 @@ public class SsaHttpRequestTest {
     @Test
     public void testAddPage() throws Exception {
         assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + POST_ENDPOINT,
-                String.class)).contains("Create a Submission Agreement");
+                String.class)).containsIgnoringCase("Create a Submission Agreement");
     }
 
     /**
