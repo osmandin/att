@@ -17,7 +17,7 @@
         <main id="content-main" class="content-main" role="main">
 
             <div class="details">
-                <h3></h3>
+                <h3 class="title-page">Submission complete</h3>
             </div>
 
             <div class="success_box" th:if="${staffemailsent}">
@@ -59,7 +59,13 @@
 
             <p>The following files have been uploaded:</p>
 
-            <table border="0">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th></th>
+                    <th>Size</th>
+                </tr>
                 <div th:each="item : ${filedata}">
                     <tr>
                         <td width="20px"></td>
@@ -71,9 +77,9 @@
             </table>
 
             <p>Total file size=<span th:text="${totalfilesize}"></span>.</p>
-            <br/><br/>
 
-            Upload complete. <a href="/"> Return to home page. </a>
+            <p>Thank you for submitting your digital records to the MIT Libraries!</p>
+
 
 <!--            <h2>All done?</h2>
             <form method="post" th:action="@{/Logout}">

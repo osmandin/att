@@ -7,14 +7,6 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title></title>
 
-    <!-- Bootstrap -->
-    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"/>-->
-
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-
-    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
-
     <div th:replace="fragments/header :: header-css"/>
 
 
@@ -45,36 +37,55 @@
     <div class="wrap-outer-content layout-band">
         <div class="wrap-content">
             <main id="content-main" class="content-main" role="main">
+                <div class="layout-3q1q layout-band">
+                    <div class="col3q">
 
-                <div class="details">
-                    <h3>Administrative Tools</h3>
+                        <div class="details">
+                            <h3 class="title-page">Administrative Tools</h3>
+                            <p> This is the homepage of staff tools. </p>
+                        </div>
+                        
+                        <h4><a th:href="@{/ListSsas}">Create and Manage Submission Agreements</a></h4>
 
-                    <p> This is the homepage of staff tools. </p>
+                        <p>Visit this page to create, view, and edit Submission Agreements.</p>
+
+                        <h4><a th:href="@{/ListDraftRsas}">Review Draft Transfer Requests</a></h4>
+
+                        <p>Visit this page to review, edit, edit and approve Draft Transfer Requests.</p>
+
+                        <h4><a th:href="@{/ListApprovedRsas}">Manage Approved Transfer Requests</a></h4>
+
+                        <p>Visit this page to view and download approved Transfer Requests.</p>
+
+                        <h4><a th:href="@{/ListUsers}">Manage Users</a></h4>
+
+                        <p>Visit this page to add, view, and edit users.</p>
+
+                        <h4><a th:href="@{/ListDepartments}">Manage Department/Unit and Donors</a></h4>
+
+                        <p>Visit this page to add, view, and edit department/unit and donors.</p>
+
+                        <h4><a th:href="@{/ApprovedRsaLog}">View Completed Transfer Request Log</a></h4>
+
+                        <p>Visit this page to view the completed transfer requests.</p>
+
+                    </div>
+                    <aside class="content-sup col1q-r" role="complementary">
+                        <div class="bit">
+                            <h3 class="title">Admin tools</h3>
+
+                            <ul>
+                                <li><a th:href="@{/ListSsas}">Create and Manage Submission Agreements</a></li>
+                                <li><a th:href="@{/ListDraftRsas}">Review Draft Transfer Requests</a></li>
+                                <li><a th:href="@{/ListApprovedRsas}">Manage Approved Transfer Requests</a></li>
+                                <li><a th:href="@{/ListUsers}">Manage Users</a></li>
+                                <li><a th:href="@{/ListDepartments}">Manage Department/Unit and Donors</a></li>
+                                <li><a th:href="@{/ApprovedRsaLog}">View Completed Transfer Request Log</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+
                 </div>
-                
-                <h4><a th:href="@{/ListSsas}">Create and Manage Submission Agreements</a></h4>
-
-                <p>Visit this page to create, view, and edit Submission Agreements.</p>
-
-                <h4><a th:href="@{/ListDraftRsas}">Review Draft Transfer Requests</a></h4>
-
-                <p>Visit this page to review, edit, edit and approve Draft Transfer Requests.</p>
-
-                <h4><a th:href="@{/ListApprovedRsas}">Manage Approved Transfer Requests</a></h4>
-
-                <p>Visit this page to view and download approved Transfer Requests.</p>
-
-                <h4><a th:href="@{/ListUsers}">Manage Users</a></h4>
-
-                <p>Visit this page to add, view, and edit users.</p>
-
-                <h4><a th:href="@{/ListDepartments}">Manage Department/Unit and Donors</a></h4>
-
-                <p>Visit this page to add, view, and edit department/unit and donors.</p>
-
-                <h4><a th:href="@{/ApprovedRsaLog}">View Completed Transfer Request Log</a></h4>
-
-                <p>Visit this page to view the completed transfer requests.</p>
 
             </main>
             <!-- close content-main -->

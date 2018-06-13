@@ -7,13 +7,8 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title></title>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
-
     <div th:replace="fragments/header :: header-css"/>
     <script type="text/javascript" th:src="@{/js/AddUser.js}"></script>
-
 
 </head>
 
@@ -38,17 +33,14 @@
         <div class="wrap-content">
             <main id="content-main" class="content-main" role="main">
 
-                <div class="details">
-                    <h3>New</h3>
+                <div class="details"><h3 class="title-page">Add new department or donor</h3>
                 </div>
 
                 <form action="#" th:object="${departmentsForm}" th:action="@{/AddDepartment}" method="post">
-                    <div class="form-group row">
-                        <label for="id" class="col-sm-2 col-form-label">Name</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="departmentiname" placeholder=""
+                    <div class="field-wrap">
+                        <label class="field-label" for="id">Name</label>
+                        <input class="field field-text" id="departmentiname" placeholder=""
                                    th:field= "${departmentForm.name}"/>
-                        </div>
                     </div>
 
                     <!-- CSRF token
@@ -56,11 +48,7 @@
                            th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                            -->
 
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
+                    <button type="submit" class="btn button-primary">Submit</button>
 
                 </form>
 

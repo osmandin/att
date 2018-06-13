@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
     <div th:replace="fragments/header :: header-css"/>
 </head>
 
@@ -23,16 +22,16 @@
             <main id="content-main" class="content-main" role="main">
 
                 <div class="details">
-                    <h3>Manage Departments</h3>
+                    <h3 class="title-page">Manage Departments</h3>
                 </div>
 
 
                 <div class="results-table-outer wrapper">
                     <table class="table">
                         <tr>
-                            <th>department name</th>
+                            <th>Department name</th>
                             <!-- edit button -->
-                            <th>&nbsp;</th>
+                            <th>Edit</th>
                             <!-- notify button -->
                         </tr>
                         <tr th:each="item : ${departmentsForms}" style="cursor: pointer"
@@ -48,7 +47,7 @@
 
                 <!-- Add new button -->
                 <div>
-                    <a href="/att/AddDepartment" role="button">Add Department</a>
+                    <a class="btn button-secondary button-add" href="/att/AddDepartment" role="button">Add Department</a>
 
                 </div>
 

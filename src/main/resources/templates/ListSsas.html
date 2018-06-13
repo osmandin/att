@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/static/stylesheets/layout.css" th:href="@{/stylesheets/layout.css}"/>
+
     <div th:replace="fragments/header :: header-css"/>
+    
 </head>
 
 <body>
@@ -24,7 +24,7 @@
             <main id="content-main" class="content-main" role="main">
 
                 <div class="details">
-                    <h3>Manage Submission Agreements</h3>
+                    <h3 class="title-page">Manage Submission Agreements</h3>
                 </div>
 
 
@@ -32,13 +32,13 @@
 
                     <table class="table">
                         <tr>
-                            <th style="min-width:15px">&nbsp;</th>
-                            <th style="min-width:15px">&nbsp;</th>
-                            <th align="center" style="min-width:15px;text-align:center">ID</th>
-                            <th>Department/Unit or Donor</th>
+                            <th style="min-width:15px">Select</th>
+                            <th style="min-width:15px">Edit</th>
+                            <th align="center" style="min-width:15px;">ID</th>
+                            <th>DLC or Donor</th>
                             <th>Records Title</th>
-                            <th align="center" style="min-width:80px;text-align:center">Status</th>
-                            <th align="center" style="text-align:center">Enabled</th>
+                            <th align="center" style="min-width:80px;">Status</th>
+                            <th align="center">Enabled</th>
                         </tr>
                         <tr th:each="ssa : ${ssasForm}">
                             <td align="center"><input name="ssa" type="checkbox" th:value="${ssa.id}"
@@ -67,7 +67,7 @@
 
                 <!-- Add new button -->
                 <div>
-                    <a href="/att/CreateSsa" role="button">Add New </a>
+                    <a class="btn button-secondary" href="/att/CreateSsa" role="button">Add New Agreement</a>
                 </div>
 
 
