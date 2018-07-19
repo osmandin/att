@@ -23,5 +23,7 @@ public interface UsersFormService {
 
     public List<UsersForm> findByName(String name);
 
+    public List<UsersForm> findByEmail(String email);
+
     public List<UsersForm> findAll();
 }

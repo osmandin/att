@@ -106,5 +106,10 @@ public class UsersFormServiceImpl implements UsersFormService {
         return newus;
     }
 
+    @Transactional
+    public List<UsersForm> findByEmail(String email) {
+        return usersFormRepository.findByEmail(email);
+    }
+
 }
 

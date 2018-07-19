@@ -56,18 +56,18 @@ public class DatabaseInitializer {
         DepartmentsForm departmentsForm = new DepartmentsForm();
         departmentsForm.setName("IASC");
 
-
-
         try {
             departmentrepo.save(departmentsForm);
 
+            //TODO load from properties file
 
             UsersForm usersForm = new UsersForm();
-            usersForm.setUsername("testuser");
-            usersForm.setEmail("test@mit.edu");
-            usersForm.setFirstname("K");
-            usersForm.setLastname("Smith");
-            usersForm.setIsadmin(true);
+            usersForm.setUsername("osmandin");
+            usersForm.setEmail("osmandin@mit.edu");
+            usersForm.setFirstname("Osman");
+            usersForm.setLastname("Din");
+            usersForm.setIsadmin(true); //TODO CHECK -- WHAT DOES THIS DO?
+            usersForm.setRole("siteadmin");
             List<DepartmentsForm> depts = departmentrepo.findAll();
 
             // done to take care of hiberante exception

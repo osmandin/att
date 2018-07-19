@@ -51,10 +51,12 @@
                             <th>Email</th>
                             <!-- department -->
                             <th>Department/Unit/Donor</th>
+                            <th>Role</th>
+
                             <!-- edit button -->
                             <th>Edit</th>
                             <!-- notify button -->
-                            <th>Notify</th>
+                            <!--<th>Notify</th>-->
                         </tr>
                         <tr th:each="item : ${adminusersForms}" style="cursor: pointer"
                             th:onclick="'javascript:rowClicked(\'' + ${item.id} + '\');'">
@@ -83,10 +85,12 @@
                                 </span>
                             </td>
 
+                            <td th:text="${item.role}"></td>
+
                             <!-- end department logic -->
 
                             <td><a th:href="@{/EditUser(userid=${item.id})}">edit</a></td>
-                            <td><a th:href="@{/NotifyUser(userid=${item.id})}">notify</a></td>
+                            <!--<td><a th:href="@{/NotifyUser(userid=${item.id})}">notify</a></td>-->
 
                         </tr>
                     </table>

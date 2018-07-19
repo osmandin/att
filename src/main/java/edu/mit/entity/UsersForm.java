@@ -22,6 +22,7 @@ public class UsersForm {
     private String lastname;
     private boolean isadmin;
     private String email;
+    private String role = "visitor";
     private boolean enabled;
 
     @JsonIgnore // this is done to avoid circular serialization to json when using the api
@@ -107,5 +108,13 @@ public class UsersForm {
 
     public void setSelectedDepartments(List<String> selectedDepartmets) {
         this.selectedDepartments = selectedDepartmets;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

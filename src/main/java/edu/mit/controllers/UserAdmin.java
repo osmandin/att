@@ -66,10 +66,6 @@ public class UserAdmin {
 
         logger.info("ListUsers GET");
 
-       /* Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }*/
 
         Map<Integer, Map<Integer, Boolean>> adminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
         // List<UsersForm> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
@@ -130,33 +126,27 @@ public class UserAdmin {
             HttpSession session
     ) {
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         model.addAttribute("userid", userid);
 
-        List<DepartmentsForm> dfs = departmentservice.findSkipUserid(userid);
+        List<DepartmentsForm> dfs = departmentservice.findAllOrderByName();
+
+        logger.info("Found departments:{}", dfs);
+
         model.addAttribute("dropdowndepartments", dfs);
 
         UsersForm usersForm = userrepo.findById(userid);
 
-        List<DepartmentsForm> ds = usersForm.getDepartmentsForms();
-        if (ds != null) {
-            for (DepartmentsForm dept : ds) {
-                IdKey ik = new IdKey();
-                ik.userid = usersForm.getId();
-                ik.departmentid = dept.getId();
+        //List<DepartmentsForm> ds = usersForm.getDepartmentsForms();
 
-                MapForm mf = maprepo.findByKey(ik);
-/*
-                if (mf.isDepartmentactive()) {
-                    dept.setActive(true);
-                }
-*/
-            }
-        }
+
+        // add roles:
+
+        final Map<Integer, String> roles = Util.getRoles();
+        model.addAttribute("roles", roles);
+
+
+
 
         model.addAttribute("usersForm", usersForm);
 
@@ -174,6 +164,8 @@ public class UserAdmin {
             ModelMap model,
             HttpSession session
     ) {
+
+        logger.info("Editing user to:{}", usersForm.toString());
 
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
@@ -300,7 +292,7 @@ public class UserAdmin {
 
             model.addAttribute("usersForm", usersForm);
 
-            mav.setViewName("/EditUser");
+            mav.setViewName("redirect:/ListUsers");
         }
 
         return mav;
