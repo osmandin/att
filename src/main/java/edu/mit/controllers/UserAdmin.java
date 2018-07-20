@@ -129,24 +129,24 @@ public class UserAdmin {
 
         model.addAttribute("userid", userid);
 
-        List<DepartmentsForm> dfs = departmentservice.findAllOrderByName();
+        final UsersForm usersForm = userrepo.findById(userid);
 
-        logger.info("Found departments:{}", dfs);
+        // First find all departments user is not associated with
+        List<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
 
-        model.addAttribute("dropdowndepartments", dfs);
+        // Now find the existing bindings:
+        final List<DepartmentsForm> existing = usersForm.getDepartmentsForms();
 
-        UsersForm usersForm = userrepo.findById(userid);
+        otherDepartments.addAll(existing);
 
-        //List<DepartmentsForm> ds = usersForm.getDepartmentsForms();
+        logger.info("Found departments:{}", otherDepartments);
 
+        model.addAttribute("dropdowndepartments", otherDepartments);
 
         // add roles:
 
         final Map<Integer, String> roles = Util.getRoles();
         model.addAttribute("roles", roles);
-
-
-
 
         model.addAttribute("usersForm", usersForm);
 
@@ -155,146 +155,34 @@ public class UserAdmin {
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditUser", method = RequestMethod.POST)
-    public ModelAndView EditUser(
-            UsersForm usersForm,
-            BindingResult result,
-            final RedirectAttributes redirectAttributes,
-            @RequestParam(value = "delete", required = false) String delete,
-            @RequestParam(value = "department_id", required = false) DepartmentsForm selectedDepartmentsForms,
-            ModelMap model,
-            HttpSession session
-    ) {
+    public ModelAndView EditUser(UsersForm user) {
 
-        logger.info("Editing user to:{}", usersForm.toString());
+        logger.info("Editing user:{}", user.toString());
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return new ModelAndView("/Home");
+        // This is done to prevent a IllegalStateException from JPA.
+        // Assign a new list TODO: check any side effects
+
+        final UsersForm updatedUser = userrepo.findById(user.getId());
+
+        final List<DepartmentsForm> updatedDepartments = new ArrayList<>();
+
+        for (final String s : user.getSelectedDepartments()) {
+            final DepartmentsForm d = departmentrepo.findById(Integer.parseInt(s));
+            updatedDepartments.add(d);
         }
 
-        if (result.hasErrors()) {
-            logger.info("EditUser Post: has errors"
-            );
-            return new ModelAndView("/EditUser");
-        }
-
-        if (delete != null) {
-            String username = usersForm.getUsername();
-            // otherwise departments will be removed from map table for other users
-            usersForm.setDepartmentsForms(null);
-            userrepo.delete(usersForm);
-            userrepo.delete(usersForm); // first delete only deletes depts
-            redirectAttributes.addFlashAttribute("userdeleted", true);
-            redirectAttributes.addFlashAttribute("username", username);
-        } else {
-
-            List<MapForm> mfstop = maprepo.findAll(); // why needed? (see below)
-
-            int userid = usersForm.getId();
-
-            if (selectedDepartmentsForms == null) {
-                logger.info("selecte dpet null");
-            } else {
-                List<DepartmentsForm> ds = usersForm.getDepartmentsForms();
-                if (ds == null) {
-                    List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
-                    newdfs.add(selectedDepartmentsForms);
-                    usersForm.setDepartmentsForms(newdfs);
-                    userrepo.save(usersForm);
-                } else {
-                    ds.add(selectedDepartmentsForms);
-                    usersForm.setDepartmentsForms(ds);
-                    userrepo.save(usersForm);
-                }
-            }
-
-            String thisusername = usersForm.getUsername();
-
-            boolean found = false;
-            List<UsersForm> UsersForms = userrepo.findByUsername(thisusername);
-            for (UsersForm uf : UsersForms) {
-                if (uf.getId() != userid && thisusername.equals(uf.getUsername())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                ModelAndView mav = new ModelAndView();
-
-                logger.info("EditUser Post: Duplicate usernames are not allowed!!");
-
-                model.addAttribute("error", "Duplicate usernames are not allowed.");
-                mav.setViewName("/EditUser");
-
-                return mav;
-            }
-
-            List<DepartmentsForm> dfs = usersForm.getDepartmentsForms();
-
-            userrepo.save(usersForm);
-
-            maprepo.save(mfstop);  // needed because all departments not present in template as hidden variables... could do it but this is easier
-
-            if (dfs == null) {
-                logger.info("DepartmentsForm null");
-            } else {
-                for (DepartmentsForm df : dfs) {
-
-                    IdKey ik = new IdKey();
-                    ik.userid = usersForm.getId();
-                    ik.departmentid = df.getId();
-
-                    MapForm mf = maprepo.findByKey(ik);
-
-                    if (mf == null) {
-                        logger.info("map form null");
-                    } else {
-                        //mf.setDepartmentactive(df.isActive());
-                        maprepo.save(mf);
-                    }
-                }
-            }
-
-            redirectAttributes.addFlashAttribute("usermodified", true);
-            redirectAttributes.addFlashAttribute("username", usersForm.getUsername());
-        }
+        updatedUser.setDepartmentsForms(updatedDepartments);
+        updatedUser.setRole(user.getRole());
+        updatedUser.setFirstname(user.getFirstname());
+        updatedUser.setLastname(user.getLastname());
+        updatedUser.setEmail(user.getEmail());
 
 
-        ModelAndView mav = new ModelAndView();
+        // Save the object
+        userrepo.save(updatedUser);
 
-        if (delete != null) {
-            List<UsersForm> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
-            model.addAttribute("adminusersForms", adminusersForms);
-
-            List<UsersForm> usersForms = userservice.findAllNonadmin();
-            model.addAttribute("nonadminusersForms", usersForms);
-
-            mav.setViewName("redirect:/ListUsers");
-        } else {
-            List<DepartmentsForm> dfs = departmentservice.findSkipUserid(usersForm.getId());
-            model.addAttribute("dropdowndepartments", dfs);
-
-            usersForm = userrepo.findById(usersForm.getId());
-
-            List<DepartmentsForm> ds = usersForm.getDepartmentsForms();
-            if (ds != null) {
-                for (DepartmentsForm dept : ds) {
-                    IdKey ik = new IdKey();
-                    ik.userid = usersForm.getId();
-                    ik.departmentid = dept.getId();
-
-                    MapForm mf = maprepo.findByKey(ik);
-                    /*if (mf.isDepartmentactive()) {
-                        dept.setActive(true);
-                    }*/
-                }
-            }
-
-            model.addAttribute("usersForm", usersForm);
-
-            mav.setViewName("redirect:/ListUsers");
-        }
-
+        final ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:/ListUsers");
         return mav;
     }
 
