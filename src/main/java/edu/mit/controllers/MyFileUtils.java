@@ -2,13 +2,21 @@ package edu.mit.controllers;
 
 // $Id: MyFileUtils.java,v 1.32 2016-11-11 16:15:01-04 ericholp Exp $
 
+import gov.loc.repository.bagit.creator.BagCreator;
+import gov.loc.repository.bagit.domain.Bag;
+import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
+import gov.loc.repository.bagit.writer.BagWriter;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,8 +25,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class MyFileUtils {
-    @SuppressWarnings("unused")
-    private static final String rcsinfo = "$Id: MyFileUtils.java,v 1.32 2016-11-11 16:15:01-04 ericholp Exp $";
 
     private final static Logger LOGGER = Logger.getLogger(MyFileUtils.class.getCanonicalName());
 
@@ -29,13 +35,14 @@ public class MyFileUtils {
             List<FileData> fileinfodata
     ) {
 
-        List<FileData> fileinfo = new ArrayList<FileData>();
+        final List<FileData> fileinfo = new ArrayList<FileData>();
 
-        for (MultipartFile file : files) {
-            FileData filedata = new FileData();
+        for (final MultipartFile file : files) {
 
-            String filename = file.getOriginalFilename();
-            String filesize = String.valueOf(file.getSize());
+            final FileData filedata = new FileData();
+
+            final String filename = file.getOriginalFilename();
+            final String filesize = String.valueOf(file.getSize());
             filedata.setName(filename);
             filedata.setSize(Long.parseLong(filesize));
             filedata.setStatus("");
@@ -43,7 +50,7 @@ public class MyFileUtils {
             filedata.setSetmoddatetimestatus("");
 
             try {
-                file.transferTo(new File(dropoffdirfull + "/" + filename));
+                file.transferTo(new File(dropoffdirfull + "/" + filename)); //TODO zip here or later?
             } catch (IOException ex) {
                 filedata.setStatus("Error: IOException: " + ex.toString());
                 fileinfo.add(filedata);
@@ -85,14 +92,21 @@ public class MyFileUtils {
                 filedata.setSetmoddatetimestatus("Error: set of modtime=" + lastmoddatetime + " failed");
                 fileinfo.add(filedata);
                 continue;
-            }
+            } else {
 
-            filedata.setStatus("Error: updating fileinfo status: incorrect number of matches");
-            fileinfo.add(filedata);
-            LOGGER.log(Level.SEVERE, "uploadFiles: Error: updating fileinfo status: incorrect number of matches filename={0}", new Object[]{filedata.getName()});
+                filedata.setStatus("Error: updating fileinfo status: incorrect number of matches");
+                fileinfo.add(filedata);
+                LOGGER.log(Level.SEVERE, "uploadFiles: Error: updating fileinfo status: incorrect number of matches filename={0}",
+                        new Object[]{filedata.getName()});
+                LOGGER.log(Level.SEVERE, "uploadFiles: Error: file length={0}",
+                        file.getSize());
+                LOGGER.log(Level.SEVERE, "uploadFiles: Error: size={0}",
+                        new File(dropoffdirfull + "/" + filename).length());
+            }
         }
         return fileinfo;
     }
+
 
     // ------------------------------------------------------------------------
     public void downloadzipfile(
@@ -281,6 +295,20 @@ public class MyFileUtils {
 
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void bagit(List<FileData> uploadfileinfo, String dropoffdirfull) {
+
+        Path folder = Paths.get(dropoffdirfull);
+        StandardSupportedAlgorithms algorithm = StandardSupportedAlgorithms.MD5;
+        boolean includeHiddenFiles = false;
+        final String outputDir = "/tmp/bags/";
+        try {
+            Bag bag = BagCreator.bagInPlace(folder, Arrays.asList(algorithm), includeHiddenFiles);
+            BagWriter.write(bag, Paths.get(outputDir)); //where bag is a Bag object
+        } catch (NoSuchAlgorithmException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Error writing bag", e);
         }
     }
 }

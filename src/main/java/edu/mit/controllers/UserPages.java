@@ -31,12 +31,8 @@ import java.util.logging.Logger;
 public class UserPages {
     private final static Logger LOGGER = Logger.getLogger(UserPages.class.getCanonicalName());
 
-    private boolean isadmin = false;
-    private String email = "";
-
     @Resource
     private Environment env;
-
 
     @Autowired
     ServletContext context;
@@ -70,7 +66,6 @@ public class UserPages {
 
     @Value("${email.message.prefix}")
     private String emailPrefix;
-
 
 
     // ------------------------------------------------------------------------
@@ -197,11 +192,6 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "RecordsSubmissionForm Post");
 
-        /*   Utils utils = new Utils();
-        if (!utils.setupAuthdHandler(model, session, env)) {
-            return "Home";
-        }*/
-
         try {
             if (ssaid <= 0 && session.getAttribute("ssaid") != null && !session.getAttribute("ssaid").equals("")) {
                 ssaid = Integer.parseInt(session.getAttribute("ssaid").toString());
@@ -237,11 +227,6 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "UploadFiles");
 
-        /*Utils utils = new Utils();
-        if (!utils.setupAuthdHandler(model, session, env)) {
-            return "Home";
-        }
-*/
         Format format = new Format();
         String avail = format.showavailbytes(env.getRequiredProperty("dropoff.dir"));
         model.addAttribute("avail_bytes", avail);
@@ -263,20 +248,12 @@ public class UserPages {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "CheckSpace");
-
-   /*     Utils utils = new Utils();
-        if (!utils.setupAuthdHandler(model, session, env)) {
-            return "";
-        }
-*/
-        File f = new File(env.getRequiredProperty("dropoff.dir"));
-        Long bytes = f.getUsableSpace();
-        String strbytes = Long.toString(bytes);
-        LOGGER.log(Level.INFO, "available bytes: {0}", new Object[]{strbytes});
-
+        LOGGER.log(Level.INFO, "Checking space...");
+        final File f = new File(env.getRequiredProperty("dropoff.dir"));
+        final Long bytes = f.getUsableSpace();
+        final String strbytes = Long.toString(bytes);
+        LOGGER.log(Level.INFO, "Available bytes: {0}", new Object[]{strbytes});
         return strbytes;
-        //return "338610"; // 338614 Screen Shot 2016-11-03 at 10.30.25 AM.png
     }
 
     // ------------------------------------------------------------------------
@@ -287,12 +264,9 @@ public class UserPages {
     ) {
         LOGGER.log(Level.INFO, "UploadComplete GET");
 
-/*        Utils utils = new Utils();
-        if (!utils.setupAuthdHandler(model, session, env)) {
-            return "Home";
-        }*/
-
         String ssaid = (String) session.getAttribute("ssaid");
+        LOGGER.log(Level.INFO, "SSAID: {0}", ssaid);
+
         model.addAttribute("ssaid", ssaid);
 
         return "UploadComplete";
@@ -305,48 +279,40 @@ public class UserPages {
             ModelMap model,
             HttpServletRequest request,
             @RequestParam(value = "filedata", required = false) String myfiledatastring,
-            HttpSession session
-    ) {
+            HttpSession session) {
+
         LOGGER.log(Level.INFO, "UploadComplete POST");
 
-     /*   Utils utils = new Utils();
-        if (!utils.setupAuthdHandler(model, session, env)) {
-            return "Home";
-        }*/
+        LOGGER.log(Level.INFO, "FileDataString:", myfiledatastring); // TODO remove
 
-        int ssaid = (Integer) session.getAttribute("ssaid");
+        final int ssaid = (Integer) session.getAttribute("ssaid");
         model.addAttribute("ssaid", ssaid);
 
+        final String description = (String) session.getAttribute("generalRecordsDescription");
+        final String startYear = (String) session.getAttribute("startyear");
+        String endYear = (String) session.getAttribute("endyear");
+        if (endYear == null || endYear.equals("") || endYear.matches("^\\s*$")) {
+            endYear = startYear;
+        }
 
-        String description = (String) session.getAttribute("generalRecordsDescription");
-        String startyear = (String) session.getAttribute("startyear");
-        String endyear = (String) session.getAttribute("endyear");
+
+        final String name = (String) session.getAttribute("name");
         String username = (String) session.getAttribute("username");
-        String name = (String) session.getAttribute("name");
         String useremail = (String) session.getAttribute("email");
 
-        if (username == null || username.equals("")) {
-            LOGGER.log(Level.SEVERE, "username is blank. setting to remporary user");
-            username = "testuser";
-            model.addAttribute("nooffices", 1);
-            // return "Home";
-        }
 
-        if (endyear == null || endyear.equals("") || endyear.matches("^\\s*$")) {
-            endyear = startyear;
-        }
-
-        String sqldate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
+        // Create RsasForm:
 
         RsasForm rsa = new RsasForm();
-        rsa.setStartyear(startyear);
-        rsa.setEndyear(endyear);
+        rsa.setStartyear(startYear);
+        rsa.setEndyear(endYear);
         rsa.setDescription(description);
         rsa.setApproved(false);
         rsa.setCreatedby(name); // name here... not username... change?
-        rsa.setTransferdate(sqldate);
+        final String sqlDate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
+        rsa.setTransferdate(sqlDate);
 
-        SsasForm ssa = ssarepo.findById(ssaid);
+        final SsasForm ssa = ssarepo.findById(ssaid);
         if (ssa == null || ssaid == 0) {
             LOGGER.log(Level.SEVERE, "ssa is null or ssaid is zero: ssaid={0}", new Object[]{ssaid});
         } else {
@@ -355,115 +321,119 @@ public class UserPages {
 
         rsa = rsarepo.save(rsa);
 
-        model.addAttribute("rsaid", rsa.getId());
+        // Add info for file size (for web side):
 
-        String dropoffdirfull = env.getRequiredProperty("dropoff.dir") + "/" + Integer.toString(rsa.getId());
-        File dir = new File(dropoffdirfull);
-        boolean successful = dir.mkdir();
-        if (!successful) {
-            LOGGER.log(Level.SEVERE, "dir={0} NOT created", new Object[]{dropoffdirfull});
-        }
-
-        Format format = new Format();
-        List<FileData> fileinfodata = format.parseFileInfo(myfiledatastring);
-
-        model.addAttribute("filedata", fileinfodata);
+        final Format format = new Format();
+        final List<FileData> fileData = format.parseFileInfo(myfiledatastring);
+        model.addAttribute("filedata", fileData);
         model.addAttribute("totalfilesize", format.getTotalfilesizestr());
 
-        List<RsaFileDataForm> rfds = new ArrayList<RsaFileDataForm>();
-        for (FileData filedetails : fileinfodata) {
+        // Details for each file ?
+
+        List<RsaFileDataForm> fileDataForms = new ArrayList<RsaFileDataForm>();
+
+        for (final FileData fileDetails : fileData) {
             RsaFileDataForm fd = new RsaFileDataForm();
-            fd.setName(filedetails.getName());
-            fd.setSize(filedetails.getSize());
-            fd.setNicesize(format.displayBytes(filedetails.getSize()));
-            fd.setLastmoddatetime(filedetails.getLastmoddatetime());
+            fd.setName(fileDetails.getName());
+            fd.setSize(fileDetails.getSize());
+            fd.setNicesize(format.displayBytes(fileDetails.getSize()));
+            fd.setLastmoddatetime(fileDetails.getLastmoddatetime());
             fd.setRsasForm(rsa);
 
             fd = filedatarepo.save(fd);
-            rfds.add(fd);
+            fileDataForms.add(fd);
         }
-        rsa.setRsaFileDataForms(rfds);
 
+        rsa.setRsaFileDataForms(fileDataForms);
         rsa.setExtent(format.getTotalfilesize());
         rsa.setExtentstr(format.getTotalfilesizestr());
 
-        rsa = rsarepo.save(rsa);
 
-        final List<String> uploadedFileNames = new ArrayList<>(); // this will be emailed to the user
+        rsa = rsarepo.save(rsa); // Saved!
 
-
-        if (files == null) {
-            LOGGER.log(Level.SEVERE, "files null");
-        } else {
-            rfds = new ArrayList<RsaFileDataForm>();
-            MyFileUtils fileutils = new MyFileUtils();
-            List<FileData> uploadfileinfo = fileutils.uploadFiles(files, dropoffdirfull, fileinfodata);
+        LOGGER.log(Level.INFO, "Saved form:", rsa.getId());
 
 
-            for (FileData fileinfo : uploadfileinfo) {
+        model.addAttribute("rsaid", rsa.getId());
 
-                LOGGER.log(Level.INFO, "Considering file:" + fileinfo.getName());
-                uploadedFileNames.add(fileinfo.getName()); //TODO we need more than file name!
+        // Create drop off directory:
 
-                if (fileinfo.getName().equals("")) { // ignore cases where filename is empty... happenes when file tag is created in page but not populated
+        final String DROP_OFF_DIR = env.getRequiredProperty("dropoff.dir") + "/" + Integer.toString(rsa.getId());
+        LOGGER.log(Level.INFO, "Drop off directory:", DROP_OFF_DIR);
+        final File dir = new File(DROP_OFF_DIR);
+        boolean successful = dir.mkdir();
+        if (!successful) {
+            LOGGER.log(Level.SEVERE, "dir={0} NOT created", new Object[]{DROP_OFF_DIR});
+        }
+
+
+        final List<String> fileList = new ArrayList<>(); // this will be emailed to the user
+        final MyFileUtils fileutils = new MyFileUtils();
+
+
+        if (files != null) {
+            fileDataForms = new ArrayList<>();
+
+            // Copy files:
+
+            final List<FileData> uploadfileinfo = fileutils.uploadFiles(files, DROP_OFF_DIR, fileData);
+
+            // Create a bag:
+
+            fileutils.bagit(uploadfileinfo, DROP_OFF_DIR);
+
+            for (final FileData fileinfo : uploadfileinfo) {
+
+                LOGGER.log(Level.INFO, "Processing file:" + fileinfo.getName());
+                fileList.add(fileinfo.getName()); //TODO we need more than file name!
+
+                if (fileinfo.getName().equals("")) { // ignore cases where filename is empty... happens when file tag is created in page but not populated
                     LOGGER.log(Level.INFO, "for rsa={0} filename is blank as happens when file tag used but not populated", new Object[]{rsa.getId()});
-                } else {
-                    List<RsaFileDataForm> fds = filedatarepo.findBasedOnIdAndFilename(rsa.getId(), fileinfo.getName());
-                    if (fds.size() != 1) {
-                        LOGGER.log(Level.SEVERE, "Error: incorrect number of matches ({0}) for rsa={1} filename={2} myfiledatastring={3}", new Object[]{fds.size(), rsa.getId(), fileinfo.getName(), myfiledatastring});
-                        continue;
-                    }
-
-                    if (!fileinfo.getSetmoddatetimestatus().equals("success")) {
-                        LOGGER.log(Level.SEVERE, "Error: setmoddatetimestatus={0} for rsa={1} filename={2}", new Object[]{fileinfo.getSetmoddatetimestatus(), rsa.getId(), fileinfo.getName()});
-                    }
-                    // update with extra info
-                    RsaFileDataForm fd = fds.get(0);
-                    fd.setStatus(fileinfo.getStatus());
-                    fd.setSize(fileinfo.getSize());
-                    fd.setNicesize(format.displayBytes((long) fileinfo.getSize()));
-                    fd.setStatus(fileinfo.getStatus());
-                    fd = filedatarepo.save(fd);
-                    rfds.add(fd);
+                    continue;
                 }
+
+                final List<RsaFileDataForm> fds = filedatarepo.findBasedOnIdAndFilename(rsa.getId(), fileinfo.getName());
+
+                if (fds.size() != 1) {
+                    LOGGER.log(Level.SEVERE, "Error: incorrect number of matches ({0}) for rsa={1} filename={2} myfiledatastring={3}", new Object[]{fds.size(), rsa.getId(), fileinfo.getName(), myfiledatastring});
+                    continue;
+                }
+
+                if (!fileinfo.getSetmoddatetimestatus().equals("success")) {
+                    LOGGER.log(Level.SEVERE, "Error: setmoddatetimestatus={0} for rsa={1} filename={2}", new Object[]{fileinfo.getSetmoddatetimestatus(), rsa.getId(), fileinfo.getName()});
+                }
+
+                // update with extra info
+                RsaFileDataForm fd = fds.get(0);
+                fd.setStatus(fileinfo.getStatus());
+                fd.setSize(fileinfo.getSize());
+                fd.setNicesize(format.displayBytes(fileinfo.getSize()));
+                fd.setStatus(fileinfo.getStatus());
+                fd = filedatarepo.save(fd);
+                fileDataForms.add(fd);
             }
 
-            rsa.setRsaFileDataForms(rfds);
-            rsa = rsarepo.save(rsa);
+            rsa.setRsaFileDataForms(fileDataForms);
+            rsa = rsarepo.saveAndFlush(rsa);
+            LOGGER.log(Level.INFO, "Saved RSA:" + rsa.getId());
+
+        } else if (files == null){
+            LOGGER.log(Level.SEVERE, "files null");
         }
 
-        String isadmin_str = (String) session.getAttribute("isadmin");
-        boolean isadmin = false;
-        if (isadmin_str != null && isadmin_str.equals("1")) {
-            isadmin = true;
-        }
-
-        List<SsasForm> ssas1 = null;
-        // osm: In later versions of MySql the distinct fails
-        // for now modified mysql profile to fix this.
-        // SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));
-        // and restart MYSql
-
-
-       /* if (isadmin) {
-            ssas = ssarepo.findAllEnabledDepartments();
-        } else {
-            ssas = ssarepo.findAllActiveApprovedEnabledDepartmentsForUsername(username);
-        }
-
-        if (ssas == null || ssas.isEmpty()) {
-            LOGGER.log(Level.SEVERE, "ssa null or empty for username={0} isadmin={1}", new Object[]{username, isadmin});
-            model.addAttribute("departments", 0);
-            return "Home";
-        }
-
-        model.addAttribute("departments", 1);
-        model.addAttribute("ssaForms", ssas);
-        */
-
-        emailUtil.notify(adminEmail, emailSubject, emailPrefix + uploadedFileNames.toString());
+        // Send mail
+        // notifyUser(fileList);
 
         return "UploadComplete";
+    }
+
+    // TODO Policy - what happens if the file is copied but the mail is never sent?
+    private void notifyUser(List<String> fileList) {
+        try {
+            emailUtil.notify(adminEmail, emailSubject, emailPrefix + fileList.toString());
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error sending mail:{}", e);
+        }
     }
 
     // ------------------------------------------------------------------------
