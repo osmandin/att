@@ -285,8 +285,22 @@ public class UserPages {
 
         LOGGER.log(Level.INFO, "FileDataString:", myfiledatastring); // TODO remove
 
+        LOGGER.log(Level.INFO, "Number of files uploaded:"+ files.length);
+        LOGGER.log(Level.INFO, "fileinfodata" + myfiledatastring);
+
+        if (myfiledatastring == null || myfiledatastring.isEmpty()) {
+            // Not doing this results in files getting submitted again and again.
+            return "UploadComplete";
+        }
+
+
         final int ssaid = (Integer) session.getAttribute("ssaid");
         model.addAttribute("ssaid", ssaid);
+
+        SsasForm ssasForm = ssarepo.findById(ssaid);
+        LOGGER.log(Level.INFO, "Associated Department form:" + ssasForm.getDepartmentForm());
+        final String DEPARTMENT_ID = ssasForm.getDepartmentForm().getName();
+
 
         final String description = (String) session.getAttribute("generalRecordsDescription");
         final String startYear = (String) session.getAttribute("startyear");
@@ -358,14 +372,17 @@ public class UserPages {
 
         // Create drop off directory:
 
-        final String DROP_OFF_DIR = env.getRequiredProperty("dropoff.dir") + "/" + Integer.toString(rsa.getId());
-        LOGGER.log(Level.INFO, "Drop off directory:", DROP_OFF_DIR);
+        final String DROP_OFF_DIR = getDrop_off_dir(DEPARTMENT_ID, rsa);
+        LOGGER.log(Level.INFO, "Drop off directory:" +  DROP_OFF_DIR);
+
         final File dir = new File(DROP_OFF_DIR);
-        boolean successful = dir.mkdir();
+        boolean successful = dir.mkdirs();
         if (!successful) {
             LOGGER.log(Level.SEVERE, "dir={0} NOT created", new Object[]{DROP_OFF_DIR});
+
         }
 
+        rsa.setPath(DROP_OFF_DIR);
 
         final List<String> fileList = new ArrayList<>(); // this will be emailed to the user
         final MyFileUtils fileutils = new MyFileUtils();
@@ -380,7 +397,7 @@ public class UserPages {
 
             // Create a bag:
 
-            fileutils.bagit(uploadfileinfo, DROP_OFF_DIR);
+            //fileutils.bagit(uploadfileinfo, DROP_OFF_DIR);
 
             for (final FileData fileinfo : uploadfileinfo) {
 
@@ -425,6 +442,17 @@ public class UserPages {
         // notifyUser(fileList);
 
         return "UploadComplete";
+    }
+
+    /**
+     * Returns where the file must be stored
+     * @param DEPARTMENT_ID
+     * @param rsa
+     * @return
+     */
+    private String getDrop_off_dir(String DEPARTMENT_ID, RsasForm rsa) {
+        return env.getRequiredProperty("dropoff.dir") + "/" +
+                DEPARTMENT_ID + "/" + Integer.toString(rsa.getId());
     }
 
     // TODO Policy - what happens if the file is copied but the mail is never sent?

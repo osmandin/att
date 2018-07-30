@@ -150,7 +150,11 @@ public class FileOps {
 
         if (rsaid != null) {
             MyFileUtils fileutils = new MyFileUtils();
-            fileutils.downloadfile(env.getRequiredProperty("dropoff.dir") + "/" + rsaid, filename, response, context);
+
+            RsasForm r = rsarepo.findById(Integer.parseInt(rsaid));
+            String dropoffdirfull = r.getPath();
+            String dropoffdirfull1 = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
+            fileutils.downloadfile(dropoffdirfull, filename, response, context);
         } else {
             LOGGER.log(Level.SEVERE, "rsaid is null");
         }
@@ -168,14 +172,22 @@ public class FileOps {
     ) {
         LOGGER.log(Level.INFO, "DownloadZipFile");
 
-        Utils utils = new Utils();
+        /*  Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return;
-        }
+        }*/
 
         if (rsaid != null) {
+
+            RsasForm r = rsarepo.findById(Integer.parseInt(rsaid));
+
+            LOGGER.info("Found RsasForm:" + r);
+            LOGGER.info("Found RsasForm:" + r.getPath());
+
             MyFileUtils fileutils = new MyFileUtils();
-            fileutils.downloadzipfile(model, env.getRequiredProperty("dropoff.dir") + "/" + rsaid, response, context, redirect, rsaid);
+            //String dropoffdirfull = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
+            String dropoffdirfull = r.getPath();
+            fileutils.downloadzipfile(model, dropoffdirfull, response, context, redirect, rsaid);
         } else {
             LOGGER.log(Level.SEVERE, "rsaid is null");
         }

@@ -32,6 +32,7 @@ public class RsasForm {
     private boolean approved;
     private boolean deleted = false;
     private int idx;
+    private String path; // Osm added path to file
 
     public void setTransferdate(String date) {
         if (date.equals("")) {
@@ -83,5 +84,13 @@ public class RsasForm {
 
     public int hashCode(RsaFileDataForm fd) {
         return fd.getId();
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -68,10 +68,12 @@ public class RsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "ListDraftRsas");
 
+/*
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
         }
+*/
 
         model.addAttribute("rsaid", rsaid);
         model.addAttribute("downloadfailed", downloadfailed);
@@ -92,10 +94,12 @@ public class RsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "ListAppovedRsas");
 
+/*
         Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
         }
+*/
 
         model.addAttribute("rsaid", rsaid);
         model.addAttribute("downloadfailed", downloadfailed);
@@ -130,6 +134,8 @@ public class RsaAdmin {
 
         model.addAttribute("rsasForm", rsasForm);
 
+        LOGGER.info("File path (get):" + rsasForm.getPath());
+
         model.addAttribute("action", "EditDraftRsa");
         return "EditDraftRsa";
     }
@@ -163,6 +169,7 @@ public class RsaAdmin {
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
 
+        LOGGER.info("File path (POST):" + rsasForm.getPath());
         rsaservice.saveForm(rsasForm);
 
         String name = (String) session.getAttribute("name");

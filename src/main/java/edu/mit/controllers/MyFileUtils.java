@@ -118,6 +118,8 @@ public class MyFileUtils {
             String rsaid
     ) {
 
+        LOGGER.log(Level.INFO, "Dropoffdirectory:" + dropoffdirfull);
+
 
         Date start = new Date();
 
