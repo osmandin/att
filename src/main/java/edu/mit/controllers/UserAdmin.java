@@ -21,10 +21,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -74,7 +71,7 @@ public class UserAdmin {
         logger.info("Found users:{}", adminusersForms.toString());
 
         for (UsersForm uf : adminusersForms) {
-            List<DepartmentsForm> dfs = uf.getDepartmentsForms();
+            Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
 
             logger.debug("Found departments for user:{}", dfs);
 
@@ -132,10 +129,10 @@ public class UserAdmin {
         final UsersForm usersForm = userrepo.findById(userid);
 
         // First find all departments user is not associated with
-        List<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
+        Set<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
 
         // Now find the existing bindings:
-        final List<DepartmentsForm> existing = usersForm.getDepartmentsForms();
+        final Set<DepartmentsForm> existing = usersForm.getDepartmentsForms();
 
         otherDepartments.addAll(existing);
 
@@ -164,7 +161,7 @@ public class UserAdmin {
 
         final UsersForm updatedUser = userrepo.findById(user.getId());
 
-        final List<DepartmentsForm> updatedDepartments = new ArrayList<>();
+        final Set<DepartmentsForm> updatedDepartments = new HashSet<>();
 
         for (final String s : user.getSelectedDepartments()) {
             final DepartmentsForm d = departmentrepo.findById(Integer.parseInt(s));
@@ -198,7 +195,8 @@ public class UserAdmin {
 
 
         // populate any form elements here:
-        List<DepartmentsForm> dfs = departmentrepo.findAll();
+        List<DepartmentsForm> dfsList =  departmentrepo.findAll();
+        Set<DepartmentsForm> dfs = new HashSet<>(dfsList);
         //model.addAttribute("departmentsForm", dfs);
         logger.info("Found departments:{}", dfs.toString());
 
@@ -225,7 +223,7 @@ public class UserAdmin {
 
         // associated department logic:
 
-        final List<DepartmentsForm> depts = new ArrayList<DepartmentsForm>();
+        final Set<DepartmentsForm> depts = new HashSet<>();
 
         // Convert from string to department. this can be replaced by a spring converter in future.
 
@@ -307,11 +305,11 @@ public class UserAdmin {
         model.addAttribute("userid", userid);
 
         UsersForm uf = userrepo.findById(userid);
-        List<DepartmentsForm> dfs = uf.getDepartmentsForms();
+        Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
 
         logger.info("delete departmentsForms id={0}", new Object[]{id});
 
-        List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
+        final Set<DepartmentsForm> newdfs = new HashSet<>();
         for (DepartmentsForm df : dfs) {
             if (df.getId() != id) {
                 newdfs.add(df);

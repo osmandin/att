@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
@@ -34,7 +31,8 @@ public class UsersFormServiceImpl implements UsersFormService {
 
     @Transactional
     public UsersForm create(UsersForm usersForm, List<DepartmentsForm> departmentsForm) {
-        usersForm.setDepartmentsForms(departmentsFormRepository.findAll());
+        // FIXME - Check Is this legit?
+        usersForm.setDepartmentsForms(new HashSet<>(departmentsFormRepository.findAll()));
         return usersFormRepository.save(usersForm);
     }
 

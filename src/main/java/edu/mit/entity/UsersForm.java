@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -31,8 +32,9 @@ public class UsersForm {
             name = "map",
             joinColumns = @JoinColumn(name = "userid", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "departmentid", referencedColumnName = "id")
+
     )
-    private List<DepartmentsForm> departmentsForms;
+    private Set<DepartmentsForm> departmentsForms;
 
     @Transient
     private List<String> selectedDepartments;
@@ -94,11 +96,12 @@ public class UsersForm {
         this.enabled = enabled;
     }
 
-    public List<DepartmentsForm> getDepartmentsForms() {
+    public Set<DepartmentsForm> getDepartmentsForms() {
         return departmentsForms;
     }
 
-    public void setDepartmentsForms(List<DepartmentsForm> departmentsForms) {
+    public void setDepartmentsForms(Set<DepartmentsForm> departmentsForms) {
+
         this.departmentsForms = departmentsForms;
     }
 

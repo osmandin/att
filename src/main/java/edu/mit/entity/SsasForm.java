@@ -17,7 +17,7 @@ public class SsasForm {
     private final static Logger LOGGER = Logger.getLogger(SsasForm.class.getCanonicalName());
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private String departmenthead;

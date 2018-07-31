@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -286,7 +287,7 @@ public class DepartmentAdmin {
 
         for (UsersForm uf : users) {
             LOGGER.info( "  userid={0}", new Object[]{uf.getId()});
-            List<DepartmentsForm> dfs = uf.getDepartmentsForms();
+            Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
             for (DepartmentsForm dfi : dfs) {
                 LOGGER.info( "     df id={0}", new Object[]{dfi.getId()});
             }

@@ -3,9 +3,10 @@ package edu.mit.service;
 import edu.mit.entity.*;
 
 import java.util.List;
+import java.util.Set;
 
 public interface DepartmentsFormService {
-    public List<DepartmentsForm> findSkipUserid(int userid);
+    public Set<DepartmentsForm> findSkipUserid(int userid);
 
     public List<DepartmentsForm> findAllOrderByName();
 

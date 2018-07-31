@@ -8,7 +8,9 @@ import edu.mit.repository.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +26,7 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
 
     // ------------------------------------------------------------------------
     @Transactional
-    public List<DepartmentsForm> findSkipUserid(int userid) {
+    public Set<DepartmentsForm> findSkipUserid(int userid) {
 
         List<DepartmentsForm> dfs = departmentrepo.findAllOrderByNameAsc();
         if (dfs == null) {
@@ -32,7 +34,7 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
             return null;
         }
 
-        List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
+        Set<DepartmentsForm> newdfs = new HashSet<>();
         for (DepartmentsForm df : dfs) {
             List<UsersForm> ufs = df.getUsersForms();
             boolean found = false;

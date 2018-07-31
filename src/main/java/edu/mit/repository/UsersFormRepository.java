@@ -21,6 +21,5 @@ public interface UsersFormRepository extends JpaRepository<UsersForm, Integer> {
 
     List<UsersForm> findByEmail(String email);
 
-
     List<UsersForm> findAllByIdAfter(int id);
 }

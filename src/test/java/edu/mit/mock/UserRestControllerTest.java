@@ -78,7 +78,7 @@ public class UserRestControllerTest {
 
         UsersForm usersForm = new UsersForm();
         usersForm.setUsername(userName);
-        usersForm.setDepartmentsForms(Collections.emptyList());
+        usersForm.setDepartmentsForms(Collections.emptySet());
         this.usersFormRepository.save(usersForm);
 
         // samples:

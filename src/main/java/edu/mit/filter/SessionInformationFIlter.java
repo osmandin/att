@@ -31,6 +31,10 @@ import java.util.Enumeration;
 public class SessionInformationFIlter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(SessionInformationFIlter.class);
 
+    // TODO: for testing
+    @Resource
+    private Environment env;
+
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -107,16 +111,23 @@ public class SessionInformationFIlter implements Filter {
 
         // Information from TouchStone:
 
-        logger.info("Touchstone Attrib:{}", httpServletRequest.getAttribute("displayName"));
-        logger.info("Touchstone Attrib:{}", httpServletRequest.getAttribute("mail"));
-        logger.info("Touchstone Attrib:{}", httpServletRequest.getAttribute("nickname"));
+        logger.info("Touchstone Attrib {}: {}", "displayName", httpServletRequest.getAttribute("displayName"));
+        logger.info("Touchstone Attrib {}: {}", "mail", httpServletRequest.getAttribute("mail"));
+        logger.info("Touchstone Attrib {}: {}", "nickname", httpServletRequest.getAttribute("nickname"));
 
 
-        logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("displayName"));
+/*        logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("displayName"));
         logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("mail"));
-        logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("nickname"));
+        logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("nickname"));*/
 
         session.setAttribute("mail", httpServletRequest.getAttribute("mail"));
+
+        if (env.getRequiredProperty("testing.status").equals("true")) {
+            httpServletRequest.setAttribute("mail", "osmandin@mit.edu");        }
+
+        if (httpServletRequest.getAttribute("mail") == null) { //TODO
+           // httpServletRequest.setAttribute("mail", "osmandin@mit.edu");
+        }
 
 
         filterChain.doFilter(servletRequest, servletResponse);

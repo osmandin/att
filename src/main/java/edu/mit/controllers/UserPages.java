@@ -1,6 +1,8 @@
 package edu.mit.controllers;
 
 import edu.mit.EmailUtil;
+import edu.mit.authz.Role;
+import edu.mit.authz.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.mit.repository.*;
 import edu.mit.service.*;
 import edu.mit.entity.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 import javax.annotation.Resource;
@@ -35,10 +38,16 @@ public class UserPages {
     private Environment env;
 
     @Autowired
+    private Subject subject;
+
+    @Autowired
     ServletContext context;
 
     @Autowired
     private UsersFormRepository userrepo;
+
+    @Autowired
+    private DepartmentsFormRepository departmentsFormRepository;
 
     @Autowired
     private UsersFormService userFormService;
@@ -72,14 +81,14 @@ public class UserPages {
     @RequestMapping("/SubmitRecords")
     public String SubmitRecords(
             ModelMap model,
-            HttpServletRequest request,
+            HttpServletRequest httpServletRequest,
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "SubmitRecords");
 
         model.addAttribute("page", "SubmitRecords");
 
-        if (session.isNew()) {
+/*        if (session.isNew()) {
             String acceptedaddressmatch = env.getRequiredProperty("acceptedaddressmatch");
             Utils utils = new Utils();
             if (!utils.isAcceptedAddress(request, acceptedaddressmatch)) {
@@ -87,25 +96,13 @@ public class UserPages {
                 model.addAttribute("displaysubmitlink", 0);
                 //return "Home"; //FIXME OSMAN REMVOED
             }
-        }
+        }*/
 
         if (session.getAttribute("loggedin") == null || session.getAttribute("loggedin").toString().equals("0")) {
             LoginData logindata = new LoginData();
             model.addAttribute("loginData", logindata);
             LOGGER.log(Level.INFO, "user related data null");
             // return "Auth";
-        }
-
-        String username = null;
-        try {
-            username = session.getAttribute("username").toString(); //TODO
-            if (username == null || username.equals("") || username.length() == 0) {
-                LOGGER.log(Level.SEVERE, "null or blank username");
-                return "Home";
-            }
-        } catch (Exception e) {
-            username = "testuser";
-            e.printStackTrace();
         }
 
         // FIXME: Removed session extension logic:
@@ -121,18 +118,31 @@ public class UserPages {
 
         model.addAttribute("departments", 0);
 
+        final String principal = (String) httpServletRequest.getAttribute("mail");
 
-        String isadmin_str = (String) session.getAttribute("isadmin");
+        if (principal == null) {
+            LOGGER.severe("Error getting current user");
+            throw new RuntimeException(); //TODO
+        }
+
+        LOGGER.info("Mail attribute:" + principal);
 
         boolean isadmin = false;
 
-        if (isadmin_str != null && isadmin_str.equals("1")) {
+        final Role role = subject.getRole(principal);
+
+        if ((role.equals(Role.siteadmin))) {
+            LOGGER.info("Is site admin");
             isadmin = true;
         }
 
-        try {
+
+        // TODO find all for admin:
+
+/*        try {
             if (isadmin) {
-                List<SsasForm> ssas = ssarepo.findAllEnabledDepartments();
+                List<SsasForm> ssas = ssarepo.findAll();
+                LOGGER.info("ssas for admin user:" + ssas.toString());
                 if (ssas != null && !ssas.isEmpty() && ssas.size() != 0) {
                     model.addAttribute("departments", 1);
                     model.addAttribute("ssaForms", ssas);
@@ -140,44 +150,64 @@ public class UserPages {
                 return "SubmitRecords";
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            LOGGER.severe("Error:" + e);
+            throw new RuntimeException(e);
+        }*/
 
-        List<UsersForm> users = userrepo.findAll();
+        // Not an admin:
 
-        LOGGER.info("Users:" + users);
-
-        if (users.size() != 1) {
-            LOGGER.info("User size not 1");
-            users = userFormService.findAllAdmin();
-            LOGGER.info("Users:" + users);
-            //return "SubmitRecords";
-        }
-
-        UsersForm user = users.get(0); //TODO
+        final List<UsersForm> users = userrepo.findByEmail(principal);
+        final UsersForm user = users.get(0); //TODO Get current user
 
         LOGGER.info("Retrieved user:" + user.toString());
 
-        List<SsasForm> usersssas = new ArrayList<>();
+        final List<SsasForm> userSubmissionAgreements = new ArrayList<>();
 
-        List<DepartmentsForm> departments = user.getDepartmentsForms();
-        for (DepartmentsForm df : departments) {
-            int deptid = df.getId();
-            List<SsasForm> ssas = ssarepo.findAll();
-            for (SsasForm ssa : ssas) {
-                DepartmentsForm ssadf = ssa.getDepartmentForm();
-                if (ssadf.getId() == deptid) {
-                    usersssas.add(ssa);
+        // FIXME: BUG - extra departments are created when a new SSA is created
+
+        final Set<DepartmentsForm> departments = user.getDepartmentsForms();
+
+        // workaround:
+
+        // List<DepartmentsForm> realDepts = departmentsFormRepository.findAll();
+/*
+        final List<DepartmentsForm> departmentsList = new ArrayList<>();
+
+        for (DepartmentsForm d : departments) {
+            if (!departmentsList.contains(d)) {
+                departmentsList.add(d);
+            }
+        }*/
+
+
+        LOGGER.info("User departments:" + departments.toString());
+
+        final List<SsasForm> ssas = ssarepo.findAll();
+
+        LOGGER.info("SSAS:" + ssas.toString());
+
+        // Buggy:
+
+        for (final DepartmentsForm df : departments) {
+
+            LOGGER.info("Considering department (in the loop):" + df.toString());
+
+            final int departmentId = df.getId();
+
+            for (final SsasForm ssa : ssas) {
+                final DepartmentsForm sd = ssa.getDepartmentForm();
+                if (sd.getId() == departmentId) {
+                    userSubmissionAgreements.add(ssa);
                 }
             }
         }
 
-        LOGGER.info("Retrieved SSAs:" + usersssas.toString());
+        LOGGER.info("Retrieved SSAs for user:" + userSubmissionAgreements.toString());
 
 
-        if (usersssas != null && usersssas.size() > 0) {
+        if (userSubmissionAgreements.size() > 0) {
             model.addAttribute("departments", 1);
-            model.addAttribute("ssaForms", usersssas);
+            model.addAttribute("ssaForms", userSubmissionAgreements);
         }
 
         return "SubmitRecords";

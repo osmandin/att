@@ -18,9 +18,7 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -72,22 +70,24 @@ public class DatabaseInitializer {
 
             // done to take care of hiberante exception
 
-            List<DepartmentsForm> d = new ArrayList<>();
+            Set<DepartmentsForm> d = new HashSet<>();
             for (DepartmentsForm dept : depts) {
                 d.add(dept);
             }
-            //usersForm.setDepartmentsForms(d);
+            usersForm.setDepartmentsForms(d);
             usersFormService.create(usersForm, depts);
+            //usersFormService.create(usersForm);
 
-            SsasForm ssasForm = new SsasForm();
-            ssasForm.setId(1);
+            /*SsasForm ssasForm = new SsasForm();
+            //ssasForm.setId(1);
             ssasForm.setApproved(true);
             ssasForm.setSsaCopyrightsForms(Collections.emptyList());
             ssasForm.setSsaAccessRestrictionsForms(Collections.emptyList());
             ssasForm.setSsaContactsForms(Collections.emptyList());
             ssasForm.setSsaFormatTypesForms(Collections.emptyList());
-            List<DepartmentsForm> departmentsForms = new ArrayList<>();
             ssasFormService.create(ssasForm, departmentsForm, null, null);
+
+            // what is this?
 
             ssasForm.setApproved(true);
             ssasForm.setSsaCopyrightsForms(Collections.emptyList());
@@ -95,7 +95,7 @@ public class DatabaseInitializer {
             ssasForm.setSsaContactsForms(Collections.emptyList());
             ssasForm.setSsaFormatTypesForms(Collections.emptyList());
             ssasFormService.saveFormTest(ssasForm, null);
-
+*/
         } catch (Exception e) {
             logger.error("Error saving test item:{}", e);
         }

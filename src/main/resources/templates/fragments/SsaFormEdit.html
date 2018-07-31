@@ -87,7 +87,6 @@
                             <div class="form-group row">
                                 <label for="ssacontactemail" class="col-sm-2 col-form-label">Email</label>
                                 <div class="col-sm-7">
-
                                     <input type="text" class="form-control" id="ssacontactemail"
                                            name="ssaContactsForms[0].email"/>
 
@@ -103,9 +102,9 @@
                                 </div>
 
                             </div>
-                            <div>
+<!--                            <div>
                                 <input type="button" value="-" onclick="removeit( this, 'contact' )"/>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <div id="contacts" th:case="*">
@@ -154,15 +153,15 @@
                                            th:field="*{ssaContactsForms[__${stat.index}__].address}"/>
 
                                 </div>
-                            </div>
+                            </div><!--
                             <div>
                                 <input type="button" value="-" onclick="removeit( this, 'contact'  )"/>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
-                    <div>
+<!--                    <div>
                         <input type="button" value="+" onclick="createit( this, 'contact' )"/>
-                    </div>
+                    </div>-->
                 </fieldset>
 
                 <p></p>
@@ -193,7 +192,9 @@
 
                                 <input type="text" id="copyright" name="ssaCopyrightsForms[0].copyright"/>
                             </div>
+<!--
                             <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
+-->
                         </div>
                     </div>
                     <div id="copyrights" th:case="*">
@@ -210,12 +211,14 @@
                                 <input type="text" id="copyright"
                                        th:field="*{ssaCopyrightsForms[__${stat.index}__].copyright}"/>
                             </div>
+<!--
                             <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
+-->
                         </div>
                     </div>
-                    <div>
+<!--                    <div>
                         <input type="button" value="+" onclick="createit( this, 'copyright' )"/>
-                    </div>
+                    </div>-->
                 </fieldset>
 
                 <p></p>
@@ -237,7 +240,9 @@
                                     </div>
 		</span>
                             <span>
+<!--
 		  <input type="button" value="-" onclick="removeit( this, 'restriction' )"/>
+-->
 		</span>
                         </div>
                     </div>
@@ -253,12 +258,14 @@
                                 <input type="text" id="restriction"
                                        th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
                             </div>
+<!--
                             <span><input type="button" value="-" onclick="removeit( this, 'restriction' )"/></span>
+-->
                         </div>
                     </div>
-                    <div>
+<!--                    <div>
                         <input type="button" value="+" onclick="createit( this, 'restriction' )"/>
-                    </div>
+                    </div>-->
                 </fieldset>
 
                 <p></p>
@@ -357,7 +364,9 @@
 		    <div class="col-sm-7">
 		    <input type="text" class="form-control" name="ssaFormatTypesForms[0].formattype"/>
 		    </div>
+<!--
 		    <span><input type="button" value="-" onclick="removeit( this, 'format' )"/></span>
+-->
 		  </span>
                             </div>
                         </div>
@@ -371,12 +380,14 @@
                                     <input type="text" class="form-control"
                                            th:field="*{ssaFormatTypesForms[__${stat.index}__].formattype}"/>
                                 </div>
+<!--
                                 <span><input type="button" value="-" onclick="removeit( this, 'format' )"/></span>
+-->
                             </div>
                         </div>
-                        <div>
+       <!--                 <div>
                             <input type="button" value="+" onclick="createit( this, 'format' )"/>
-                        </div>
+                        </div>-->
                     </fieldset>
 
                 </fieldset>

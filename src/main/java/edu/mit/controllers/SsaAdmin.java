@@ -88,6 +88,9 @@ public class SsaAdmin {
     @Autowired
     private DepartmentsFormService departmentservice;
 
+    @Autowired
+    private UsersFormService usersFormService;
+
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/ListSsas", method = RequestMethod.GET)
     public String ListSsas(ModelMap model, HttpSession session) {
@@ -183,7 +186,7 @@ public class SsaAdmin {
             LOGGER.log(Level.INFO, "Null SSAForm object");
         }
 
-        session.setAttribute("name", "osman"); //FIXME. change to user logged in
+        //session.setAttribute("name", "osman"); //FIXME. change to user logged in
 
         LOGGER.log(Level.INFO, "Saving (pre1):" + selectedDepartmentsForm);
 
@@ -192,18 +195,33 @@ public class SsaAdmin {
         LOGGER.log(Level.INFO, "Saving (pre2):" + selectedDepartmentsForm);
 
 
+        DepartmentsForm d = departmentrepo.findById(selectedDepartmentsForm.getId());
 
-        ssaservice.create(ssasForm, selectedDepartmentsForm, session, request);
+        ssaservice.create(ssasForm, d, session, request);
 
         LOGGER.info("Saved object:" + ssarepo.findAll().toString());
 
+        // TODO: workaround for user multiple department problem:
+
+
+        List<UsersForm> u = usersFormService.findAll();
+
+        for (UsersForm user : u) {
+            LOGGER.info("User departments (post):" + user.getDepartmentsForms().toString());
+        }
 
         final ModelAndView mav = new ModelAndView();
-        String message = "New SSA " + ssasForm.getRecordid() + " was successfully created.";
+        //String message = "New SSA " + ssasForm.getRecordid() + " was successfully created.";
 
         final List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
         //final List<SsasForm> ssas = ssarepo.findAll();
         model.addAttribute("ssasForm", ssas);
+
+
+        List<SsasForm> ssasFormsUser = ssarepo.findAllSsasForUsername(u.get(0).getUsername());
+
+        LOGGER.info("All SSA for user:" + ssasFormsUser.toString());
+
 
         LOGGER.log(Level.INFO, "Now returning to the main page");
 
