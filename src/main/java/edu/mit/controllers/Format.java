@@ -1,5 +1,7 @@
 package edu.mit.controllers;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -74,8 +76,10 @@ public class Format {
 
     // ------------------------------------------------------------------------
     public String displayInGB(long bytes) {
-        DecimalFormat df = new DecimalFormat("0.##");
-        return df.format((float) bytes / 1000000000L);
+        //DecimalFormat df = new DecimalFormat("0.##");
+        // return df.format((float) bytes / 1000000000L);
+
+        return FileUtils.byteCountToDisplaySize(bytes);
     }
 
     // ------------------------------------------------------------------------
@@ -192,7 +196,7 @@ public class Format {
                     fileinfodata.add(info);
                 }
             }
-            totalfilesizestr = displayInGB(totalfilesize) + "GB";
+            totalfilesizestr = displayInGB(totalfilesize);
         }
         return fileinfodata;
     }

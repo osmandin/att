@@ -40,7 +40,9 @@
                 <div th:switch="*{ssasForm != null and ssasForm.rsasForms != null and ssasForm.rsasForms.size() > 0}">
                     <div th:case="true">
                         <h4>This Agreement cannot be deleted due to dependencies.</h4>
+<!--
                         <p><a th:href="@{/SsaDeleteWarning(ssaid=${ssasForm.id})}">See dependencies</a></p>
+-->
                     </div>
                     <div th:case="*">
                         <p th:if="*{ssasForm != null}"><a onclick="return confirm_delete()"

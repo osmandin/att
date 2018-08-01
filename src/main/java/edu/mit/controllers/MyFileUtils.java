@@ -50,7 +50,9 @@ public class MyFileUtils {
             filedata.setSetmoddatetimestatus("");
 
             try {
-                file.transferTo(new File(dropoffdirfull + "/" + filename)); //TODO zip here or later?
+                final File file1 = new File(dropoffdirfull + "/" + filename);
+                file.transferTo(file1); //TODO zip here or later?
+                filedata.setPath(file1.getPath());
             } catch (IOException ex) {
                 filedata.setStatus("Error: IOException: " + ex.toString());
                 fileinfo.add(filedata);

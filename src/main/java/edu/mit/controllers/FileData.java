@@ -10,4 +10,5 @@ public class FileData {
     private String nicesize;
     private String status;
     private String setmoddatetimestatus;
+    private String path;
 }

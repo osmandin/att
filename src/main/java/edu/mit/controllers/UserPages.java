@@ -3,6 +3,7 @@ package edu.mit.controllers;
 import edu.mit.EmailUtil;
 import edu.mit.authz.Role;
 import edu.mit.authz.Subject;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -25,10 +26,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Null;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 
 @Controller
 public class UserPages {
@@ -423,16 +430,35 @@ public class UserPages {
 
             // Copy files:
 
-            final List<FileData> uploadfileinfo = fileutils.uploadFiles(files, DROP_OFF_DIR, fileData);
+            final List<FileData> uploadFileInfo = fileutils.uploadFiles(files, DROP_OFF_DIR, fileData);
 
             // Create a bag:
 
-            //fileutils.bagit(uploadfileinfo, DROP_OFF_DIR);
+            // fileutils.bagit(uploadfileinfo, DROP_OFF_DIR);
 
-            for (final FileData fileinfo : uploadfileinfo) {
+
+            // Create metadata
+
+            final Map<String, String> metadata = new HashMap<>();
+            metadata.put("SSA Id:", String.valueOf(ssa.getId()));
+            metadata.put("Department Id:", String.valueOf(ssa.getDepartmentForm().getId()));
+            metadata.put("Department Name:", ssa.getDepartmentForm().getName());
+            metadata.put("RSA Id:", String.valueOf(rsa.getId()));
+            metadata.put("User Email:", (String) request.getAttribute("mail"));
+            metadata.put("Transfer Date:", Instant.now().toString());
+            metadata.put("Inventory Documents:", String.valueOf(uploadFileInfo.size()));
+
+            final Map<String, String> checksums = new HashMap<>();
+
+            for (final FileData fileinfo : uploadFileInfo) {
 
                 LOGGER.log(Level.INFO, "Processing file:" + fileinfo.getName());
                 fileList.add(fileinfo.getName()); //TODO we need more than file name!
+
+
+                final String md5 = getMD5(fileinfo.getPath());
+                checksums.put(fileinfo.getPath(), md5);
+
 
                 if (fileinfo.getName().equals("")) { // ignore cases where filename is empty... happens when file tag is created in page but not populated
                     LOGGER.log(Level.INFO, "for rsa={0} filename is blank as happens when file tag used but not populated", new Object[]{rsa.getId()});
@@ -460,6 +486,25 @@ public class UserPages {
                 fileDataForms.add(fd);
             }
 
+            // write the checksums to file:
+
+            try {
+                LOGGER.info("Checksums:" + checksums);
+                FileUtils.writeStringToFile(new File(DROP_OFF_DIR + "/" + "att-manifest-md5.txt"), formattedChecksum(checksums) );
+            } catch (IOException e) {
+                LOGGER.info("Error writing checksum file" + e);
+            }
+
+            // write other metadata to file:
+
+
+            try {
+                LOGGER.info("Metadata:" + metadata);
+                FileUtils.writeStringToFile(new File(DROP_OFF_DIR + "/" + "att-metadata.txt"), formattedMetadata(metadata) );
+            } catch (IOException e) {
+                LOGGER.info("Error writing checksum file" + e);
+            }
+
             rsa.setRsaFileDataForms(fileDataForms);
             rsa = rsarepo.saveAndFlush(rsa);
             LOGGER.log(Level.INFO, "Saved RSA:" + rsa.getId());
@@ -472,6 +517,56 @@ public class UserPages {
         // notifyUser(fileList);
 
         return "UploadComplete";
+    }
+
+    // convert hashmap to
+
+    private String formattedChecksum(Map<String, String> checksums) {
+        final StringBuffer sb = new StringBuffer();
+        Set<String> keys = checksums.keySet();
+
+        for (String k : keys) {
+            String v = checksums.get(k);
+            sb.append(v);
+            sb.append(" ");
+            sb.append(k);
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+
+    private String formattedMetadata(Map<String, String> checksums) {
+        final StringBuffer sb = new StringBuffer();
+        Set<String> keys = checksums.keySet();
+
+        for (String k : keys) {
+            String v = checksums.get(k);
+            sb.append(k);
+            sb.append(" ");
+            sb.append(v);
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    public String getMD5(final String path) {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(path);
+            return md5Hex(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fis.close();
+
+            } catch (NullPointerException | IOException e) {
+            }
+        }
+        return "";
     }
 
     /**
