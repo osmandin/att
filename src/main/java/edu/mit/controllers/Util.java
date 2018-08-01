@@ -10,7 +10,7 @@ public class Util {
     public static Map<Integer, String> getRoles() {
         final Map<Integer, String> formats = new HashMap<>();
 
-        final String[] formatsStr = new String[] {"siteadmin", "visitor"};
+        final String[] formatsStr = new String[] {"siteadmin", "visitor", "deptadmin", "donor"};
         //
         int i = 0;
 

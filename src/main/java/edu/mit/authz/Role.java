@@ -2,7 +2,7 @@ package edu.mit.authz;
 
 public enum Role {
 
-    siteadmin(Constants.SITEADMIN), DEPT_ADMIN (Constants.DEPTADMIN), VISITOR (Constants.VISITOR), DONOR (Constants.DONOR);
+    siteadmin(Constants.SITEADMIN), deptadmin (Constants.DEPTADMIN), visitor (Constants.VISITOR), donor (Constants.DONOR);
 
     final String role;
 

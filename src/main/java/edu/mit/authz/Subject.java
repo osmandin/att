@@ -40,7 +40,7 @@ public class Subject {
        List<UsersForm> users = usersFormService.findByEmail(principal);
 
        if (users.isEmpty()) {
-           return Role.VISITOR;
+           return Role.visitor;
        }
 
        final String principal_role = users.get(0).getRole();
@@ -48,15 +48,14 @@ public class Subject {
        logger.debug("Found role:{} for:{}", principal_role, principal);
 
         if (principal_role == null) {
-            return Role.VISITOR;
+            return Role.visitor;
         }
 
         logger.debug("Principal role:{}", principal_role);
         logger.info("Principal role:{}", principal_role);
 
 
-        Role r = Role.valueOf(principal_role);
-        return r;
+        return Role.valueOf(principal_role);
     }
 
     boolean hasRole(final Role role) {
