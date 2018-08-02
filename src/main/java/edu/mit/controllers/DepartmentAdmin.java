@@ -1,5 +1,6 @@
 package edu.mit.controllers;
 
+import edu.mit.authz.Role;
 import edu.mit.entity.DepartmentsForm;
 import edu.mit.entity.SsasForm;
 import edu.mit.entity.UsersForm;
@@ -21,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -50,10 +53,17 @@ public class DepartmentAdmin {
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/AddDepartment", method = RequestMethod.GET)
     public ModelAndView AddDepartment(
-            ModelMap model1) {
+            ModelMap model1, HttpServletRequest request) {
         LOGGER.info( "AddDepartment GET");
 
-        DepartmentsForm item = new DepartmentsForm();
+        final DepartmentsForm item = new DepartmentsForm();
+
+        final String userAttrib = (String) request.getAttribute("mail");
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
+        if (!user.getRole().equals(Role.siteadmin.name())) {
+            return new ModelAndView("Permissions");
+        }
 
         final ModelAndView model = new ModelAndView("AddDepartment");
         model.addObject("departmentForm", item);
@@ -167,11 +177,6 @@ public class DepartmentAdmin {
     ) {
         LOGGER.info( "ListDepartments Get");
 
-       /* Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-*/
         List<DepartmentsForm> departmentsForms = departmentrepo.findAllOrderByNameAsc();
         model.addAttribute("departmentsForms", departmentsForms);
 
@@ -183,14 +188,16 @@ public class DepartmentAdmin {
     public String EditDepartment(
             ModelMap model,
             @RequestParam("departmentid") int departmentid,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest request
     ) {
         LOGGER.info( "EditDepartment Get");
 
-        /*Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }*/
+        final String userAttrib = (String) request.getAttribute("mail");
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
+        final Set<DepartmentsForm> departmentsForms = user.getDepartmentsForms();
+
 
         if (departmentid <= 0) {
             LOGGER.error("departmentid <= 0");
@@ -198,8 +205,13 @@ public class DepartmentAdmin {
             return "ListDepartments";
         }
 
-        DepartmentsForm departmentsForm = departmentrepo.findById(departmentid);
-        model.addAttribute("departmentsForm", departmentsForm);
+        final DepartmentsForm departmentToEdit = departmentrepo.findById(departmentid);
+
+        if (!departmentsForms.contains(departmentToEdit)) {
+            return "Permissions";
+        }
+
+        model.addAttribute("departmentsForm", departmentToEdit);
 
         return "EditDepartment";
     }

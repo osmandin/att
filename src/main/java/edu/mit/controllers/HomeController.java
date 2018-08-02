@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
@@ -70,9 +72,9 @@ public class HomeController {
 
     // ------------------------------------------------------------------------
     @RequestMapping("/Logout")
-    public String Logout(ModelMap model) {
+    public String Logout(ModelMap model, HttpSession session) {
+        session.invalidate();
         return "Logout";
     }
-
 
 }

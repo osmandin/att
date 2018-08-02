@@ -3,6 +3,7 @@ package edu.mit.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.mit.entity.*;
 
@@ -22,4 +23,6 @@ public interface UsersFormRepository extends JpaRepository<UsersForm, Integer> {
     List<UsersForm> findByEmail(String email);
 
     List<UsersForm> findAllByIdAfter(int id);
+
+    List<UsersForm> findByDepartmentsForms(Set depts);
 }

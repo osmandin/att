@@ -62,8 +62,7 @@ public class AdminController {
         Role role = null;
         role = subject.getRole(principal);
 
-        if ((!role.equals(Role.siteadmin))) {
-
+        if ((!role.equals(Role.siteadmin)) && !role.equals(Role.deptadmin)) { //TODO restrict further dept admin
             logger.debug("User does not have permissions to access the admin page");
             return new ModelAndView("Permissions");
         }

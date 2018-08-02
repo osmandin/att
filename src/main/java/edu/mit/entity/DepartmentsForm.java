@@ -53,4 +53,8 @@ public class DepartmentsForm {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
+
+    public int getId() {
+        return id;
+    }
 }

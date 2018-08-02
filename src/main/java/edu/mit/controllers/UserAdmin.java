@@ -1,5 +1,6 @@
 package edu.mit.controllers;
 
+import edu.mit.authz.Role;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -58,7 +59,8 @@ public class UserAdmin {
     @RequestMapping(value = "/ListUsers", method = RequestMethod.GET)
     public String ListUsers(
             ModelMap model,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest request
     ) {
 
         logger.info("ListUsers GET");
@@ -66,19 +68,40 @@ public class UserAdmin {
 
         Map<Integer, Map<Integer, Boolean>> adminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
         // List<UsersForm> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
-        List<UsersForm> adminusersForms = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
-
-        logger.info("Found users:{}", adminusersForms.toString());
-
-        for (UsersForm uf : adminusersForms) {
-            Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
-
-            logger.debug("Found departments for user:{}", dfs);
+        List<UsersForm> allUsers = new ArrayList<>();
 
 
-            if (dfs != null) {
+        // TODO authz -- filter by what users the admin can see
+
+        final String email = (String) request.getAttribute("mail");
+        logger.info("User:{}"+ email);
+        List<UsersForm> currentUsers = userrepo.findByEmail(email);
+        UsersForm currentUser = currentUsers.get(0);
+
+        if (currentUser.getRole().equals(Role.deptadmin.name())) {
+            final Set dept = currentUser.getDepartmentsForms();
+            // find only users who belong to the same department
+            // Note that the user may belong to different departments
+            allUsers = userrepo.findByDepartmentsForms(dept);
+            logger.info("Corresponding users:" + allUsers);
+        } else if (currentUser.getRole().equals(Role.siteadmin.name())){
+            allUsers = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
+            logger.info("Found users:{}", allUsers.toString());
+        } else {
+            logger.info("Improper access");
+            return ("Permissions");
+        }
+
+
+        for (final UsersForm uf : allUsers) {
+            final Set<DepartmentsForm> departments = uf.getDepartmentsForms();
+
+            logger.debug("Found departments for user:{}", departments);
+
+
+            if (departments != null) {
                 Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
-                for (DepartmentsForm df : dfs) {
+                for (DepartmentsForm df : departments) {
                     IdKey ik = new IdKey();
                     ik.userid = uf.getId();
                     ik.departmentid = df.getId();
@@ -89,10 +112,12 @@ public class UserAdmin {
                 adminactivemap.put(uf.getId(), dmap);
             }
         }
-        model.addAttribute("adminactivemap", adminactivemap);
-        model.addAttribute("adminusersForms", adminusersForms);
+        model.addAttribute("adminactivemap", adminactivemap); //TODO ?
+        model.addAttribute("adminusersForms", allUsers);
 
-       /* Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
+        // TODO remove
+       /*
+       Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
         List<UsersForm> nonadminusersForms = userrepo.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
         for (UsersForm uf : nonadminusersForms) {
             List<DepartmentsForm> dfs = uf.getDepartmentsForms();
@@ -120,7 +145,8 @@ public class UserAdmin {
     public String EditUser(
             ModelMap model,
             @RequestParam(value = "userid", required = false) int userid,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest request
     ) {
 
 
@@ -128,8 +154,14 @@ public class UserAdmin {
 
         final UsersForm usersForm = userrepo.findById(userid);
 
+        // Authz: if the user is not a siteadmin or a department admin don't let him change the role;
+
+        final String userAttrib = (String) request.getAttribute("mail");
+
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
         // First find all departments user is not associated with
-        Set<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
+        final Set<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
 
         // Now find the existing bindings:
         final Set<DepartmentsForm> existing = usersForm.getDepartmentsForms();
@@ -143,7 +175,28 @@ public class UserAdmin {
         // add roles:
 
         final Map<Integer, String> roles = Util.getRoles();
-        model.addAttribute("roles", roles);
+
+        final Map<Integer, String> rolesToDisplay = new HashMap<>();
+
+        // A dept admin shouldn't be able to set a role to siteadmin
+
+        if (user.getRole().equals(Role.deptadmin.name())) {
+
+            final Set<Integer> keys = roles.keySet();
+
+            for (final Integer k : keys) {
+                String s = roles.get(k);
+                if (!s.equals(Role.siteadmin.name())) {
+                    rolesToDisplay.put(k, s);
+                }
+            }
+            model.addAttribute("roles", rolesToDisplay);
+
+        } else if (user.getRole().equals(Role.siteadmin.name())) {
+            model.addAttribute("roles", roles);
+        } else {
+            return "Permissions";
+        }
 
         model.addAttribute("usersForm", usersForm);
 
@@ -155,6 +208,10 @@ public class UserAdmin {
     public ModelAndView EditUser(UsersForm user) {
 
         logger.info("Editing user:{}", user.toString());
+
+        // Check role:
+
+
 
         // This is done to prevent a IllegalStateException from JPA.
         // Assign a new list TODO: check any side effects

@@ -3,6 +3,7 @@ package edu.mit.controllers;
 //import org.apache.commons.io.FileUtils;
 //import org.apache.velocity.app.VelocityEngine;
 
+import edu.mit.authz.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 //import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -91,24 +92,50 @@ public class SsaAdmin {
     @Autowired
     private UsersFormService usersFormService;
 
+    @Autowired
+    private UsersFormRepository userrepo;
+
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/ListSsas", method = RequestMethod.GET)
-    public String ListSsas(ModelMap model, HttpSession session) {
+    public String ListSsas(ModelMap model, HttpSession session, HttpServletRequest request) {
         LOGGER.log(Level.INFO, "ListSsas Get");
 
-/*
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-*/
+
 
         model.addAttribute("alldeleted", "0");
         model.addAttribute("somenotdeleted", "0");
         model.addAttribute("newssa", "1");
 
-        List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
         //List<SsasForm> ssas = ssarepo.findAll(); // TODO
+
+        List<DepartmentsForm> departmentsForms = Collections.emptyList();
+
+        // authz logic:
+
+        final String userAttrib = (String) request.getAttribute("mail");
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
+        if (user.getRole().equals(Role.deptadmin.name())) {
+            final Set<DepartmentsForm> userDepartments = user.getDepartmentsForms();
+            departmentsForms = new ArrayList<>(userDepartments);
+        } else if (user.getRole().equals(Role.siteadmin.name())){
+            departmentsForms = departmentrepo.findAllOrderByNameAsc();
+        } else {
+            return "Permissions";
+        }
+
+        //List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+
+        List<SsasForm> ssas = new ArrayList<>();
+
+
+        for (DepartmentsForm d : departmentsForms) {
+            List<SsasForm> ssasForms = ssarepo.findAllForDepartmentId(d.getId()); //TODO does this include deleted ones?
+            ssas.addAll(ssasForms);
+        }
+
+        LOGGER.info("Found SSAs:" + ssas.toString());
+
         model.addAttribute("ssasForm", ssas);
 
         return "ListSsas";

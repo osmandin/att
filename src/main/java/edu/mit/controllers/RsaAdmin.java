@@ -1,5 +1,6 @@
 package edu.mit.controllers;
 
+import edu.mit.authz.Role;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,22 +60,28 @@ public class RsaAdmin {
     @Autowired
     ApprovedRsasFormService approvedrsaservice;
 
+    @Autowired
+    UsersFormRepository userrepo;
+
     // ------------------------------------------------------------------------
     @RequestMapping("/ListDraftRsas")
     public String ListDraftRsas(
             ModelMap model,
             @RequestParam(value = "rsaid", required = false) String rsaid,
             @RequestParam(value = "downloadfailed", required = false) String downloadfailed,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest request
     ) {
         LOGGER.log(Level.INFO, "ListDraftRsas");
 
-/*
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
+        // authz logic:
+
+        final String userAttrib = (String) request.getAttribute("mail");
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
+        if (!user.getRole().equals(Role.siteadmin.name())) {
+            return "Permissions";
         }
-*/
 
         model.addAttribute("rsaid", rsaid);
         model.addAttribute("downloadfailed", downloadfailed);
@@ -90,16 +98,18 @@ public class RsaAdmin {
             ModelMap model,
             @RequestParam(value = "rsaid", required = false) String rsaid,
             @RequestParam(value = "downloadfailed", required = false) String downloadfailed,
-            HttpSession session
+            HttpSession session, HttpServletRequest request
     ) {
         LOGGER.log(Level.INFO, "ListAppovedRsas");
 
-/*
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
+        // authz logic:
+
+        final String userAttrib = (String) request.getAttribute("mail");
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
+        if (!user.getRole().equals(Role.siteadmin.name())) {
+            return "Permissions";
         }
-*/
 
         model.addAttribute("rsaid", rsaid);
         model.addAttribute("downloadfailed", downloadfailed);
@@ -575,14 +585,21 @@ public class RsaAdmin {
     @RequestMapping("/ApprovedRsaLog")
     public String ApprovedRsaLog(
             ModelMap model,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest request
     ) {
         LOGGER.log(Level.INFO, "ApprovedRsaLog");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
+        // authz logic:
+
+        final String userAttrib = (String) request.getAttribute("mail");
+        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+
+        if (!user.getRole().equals(Role.siteadmin.name())) {
+            return "Permissions";
         }
+
+
 
         List<ApprovedRsasForm> rsas = approvedrsarepo.findAllOrderByDatetimeAsc();
         model.addAttribute("data", rsas);
