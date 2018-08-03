@@ -95,6 +95,9 @@ The FAQ page provides background information on the submission materials.
 Project Management
 ------------------
 
+The project was developed by Osman Din and Frances Botsford. It is based on a tool developed by the 
+Michigan State University.
+
 If you encounter an issue, please file a bug on GitHub (or MIT's JIRA website, if you are an internal user):
 
 https://mitlibraries.atlassian.net/projects/ATT
