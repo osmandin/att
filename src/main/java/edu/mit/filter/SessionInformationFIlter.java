@@ -32,7 +32,7 @@ public class SessionInformationFIlter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(SessionInformationFIlter.class);
 
     // TODO: for testing
-    //@Resource
+    @Resource
     private Environment env;
 
 
