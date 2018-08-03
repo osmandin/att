@@ -1,9 +1,37 @@
-# Archives Transfer Tool
+# Digital Transfer Tool
 
-Build (with Docker)
--------------------
+Transfer Tool
+-----------------------
 
-The project can be launched with Docker
+The application enables secure and reliable transfer of records, archives, research data, or other digital content to Libraries’
+Collections staff as a step in the digital curation workflow. There is currently no web-based tool available at MIT to 
+donors or creators of digital material that they can use to securely and reliably transfer digital files and 
+metadata to the Libraries in a consistent and agreed upon way and that aligns with the PAIMAS standard and PAIS protocol.
+
+
+Installation (Maven)
+----------------------
+
+This is a Maven based project:
+
+```sh
+
+# from the folder, run the build, and package it:
+
+mvn clean install -P dev
+
+# to test it:
+
+java -jar target/att-0.0.1-SNAPSHOT.war
+
+```
+
+Visit `http://localhost:8080/att`.
+
+Installation (Docker)
+-----------------------
+
+For convenience, the project can be launched with Docker
 
 ```sh
 # first time only:
@@ -28,36 +56,45 @@ Now if you want to make a change to the app:
 - Run the image build command (```docker build```), as described above (it should take a second now).
 - Run the image again (```docker run```).
 
-Build
---------------
 
-The project can be built using Apache Maven, and the resulting .war file can just be dropped into Tomcat 
-(or just launched with `java -jar`).
+Installation (Production Server)
+-------------------------------
+
+Adjust application.properties to:
+
+- point to the correct share directory on the server.
+- change testing to false
+- update with SMTP password
+
+
+Build using Maven and copy the result .war file to the Tomcat instance.
+
 
 ```sh
 
 # from the folder, run the build, and package it:
 
-mvn clean install -P dev
+mvn clean package -P dev
 
-# to test it:
-
-java -jar target/att-0.0.1-SNAPSHOT.war
+# scp target/att-0.0.1-SNAPSHOT.war user@server:/tomcat/webapps
 
 ```
 
-Test
---------
+Server Architecture
+---------------------
 
-Visit `http://localhost:8080/att`.
+Currently, the application is live on https:lib-arc-5 mit.edu/att.
 
-Data Model
------------
+Server set up: Apache httpd (for Shibboleth), Apache Tomcat, Embedded database (to be migrated)
 
-- A user can be associated with multiple departments.
-- A department can have multiple users.
-- A department can have multiple submission agreements.
-- A submission agreement is tied to a department.
+Documentation
+--------------
 
+The FAQ page provides background information on the submission materials.
 
+Project Management
+------------------
 
+If you encounter an issue, please file a bug on GitHub (or MIT's JIRA website, if you are an internal user):
+
+https://mitlibraries.atlassian.net/projects/ATT
