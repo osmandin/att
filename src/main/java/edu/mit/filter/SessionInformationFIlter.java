@@ -32,7 +32,7 @@ public class SessionInformationFIlter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(SessionInformationFIlter.class);
 
     // TODO: for testing
-    @Resource
+    //@Resource
     private Environment env;
 
 
@@ -122,7 +122,7 @@ public class SessionInformationFIlter implements Filter {
 
         session.setAttribute("mail", httpServletRequest.getAttribute("mail"));
 
-        if (env.getRequiredProperty("testing.status").equals("true")) {
+        if (env != null && env.getRequiredProperty("testing.status").equals("true")) {
             httpServletRequest.setAttribute("mail", "osmandin@mit.edu");        }
 
         if (httpServletRequest.getAttribute("mail") == null) { //TODO
