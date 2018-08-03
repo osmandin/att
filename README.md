@@ -8,6 +8,11 @@ Collections staff as a step in the digital curation workflow. There is currently
 donors or creators of digital material that they can use to securely and reliably transfer digital files and 
 metadata to the Libraries in a consistent and agreed upon way and that aligns with the PAIMAS standard and PAIS protocol.
 
+Software Requirements
+----------------------
+
+Docker or Apache Maven
+
 
 Installation (Maven)
 ----------------------
@@ -18,9 +23,9 @@ This is a Maven based project:
 
 # from the folder, run the build, and package it:
 
-mvn clean install -P dev
+mvn clean package -P dev
 
-# to test it:
+# after building, test it:
 
 java -jar target/att-0.0.1-SNAPSHOT.war
 
@@ -79,6 +84,14 @@ mvn clean package -P dev
 # scp target/att-0.0.1-SNAPSHOT.war user@server:/tomcat/webapps
 
 ```
+Testing
+---------
+
+To run a single test:
+
+```sh 
+mvn surefire:test -Dtest=DepartmentHttpRequestTest#testAddPage -Pdev
+```
 
 Server Architecture
 ---------------------
@@ -90,14 +103,30 @@ Server set up: Apache httpd (for Shibboleth), Apache Tomcat, Embedded database (
 Documentation
 --------------
 
-The FAQ page provides background information on the submission materials.
+The FAQ page provides background information on the submission process.
+
+
+Contributors
+-------------
+
+The project was developed by Osman Din and Frances Botsford. 
+
+
+Acknowledgements
+-----------------
+It is based on a tool developed by the 
+Michigan State University.
+
+
 
 Project Management
 ------------------
 
-The project was developed by Osman Din and Frances Botsford. It is based on a tool developed by the 
-Michigan State University.
-
 If you encounter an issue, please file a bug on GitHub (or MIT's JIRA website, if you are an internal user):
 
 https://mitlibraries.atlassian.net/projects/ATT
+
+License
+-------
+
+This project is licensed under AGPL. See the license file for details.
