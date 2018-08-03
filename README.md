@@ -1,5 +1,7 @@
 # Digital Transfer Tool
 
+[![Build Status](https://travis-ci.org/osmandin/att.svg?branch=master)](https://travis-ci.org/osmandin/att)
+
 Transfer Tool
 -----------------------
 
