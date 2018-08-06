@@ -41,7 +41,7 @@
                     <h3 class="title-page">Add Digital Content Files</h3>
 
                     <form method="post" th:action="@{/UploadComplete}" enctype="multipart/form-data" id="form">
-                        <p>Please select the files you would like to upload below. An inventory will be automatically generated for you. Alternatively, you can create and upload an inventory document to submit. </p>
+                        <p>Please select the file you would like to upload below. An inventory will be automatically generated for you. Alternatively, you can create and upload an inventory document to submit. </p>
                         <p class="tip" id="maxuploadsize">The total size of all files to be uploaded must be less than <span th:text="${avail_bytes}"></span>.</p>
 
                         <input type="hidden" name="filedata" id="filedata"/>
@@ -56,7 +56,12 @@
                                 <div class="field-wrap">
 
                                     <label for="file" class="field-label">Select a file to upload</label>
+<!--
                                     <input class="field-upload" type="file" name="file" id="file" multiple="multiple" onchange="gatherdisplayfiledata('1')"/>
+-->
+
+                                    <input class="field-upload" type="file" name="file" id="file"/>
+
 
                                 </div>
 
@@ -65,7 +70,9 @@
                             </div>
 
 
+<!--
                             <input class="btn button-secondary button-add" type="button" value="Add another file" onclick="addit( this  )"/>
+-->
 
                             <input class="btn button-secondary warn" type="button" value="Remove all files" onclick="clearfiles()"/>
 
@@ -74,10 +81,15 @@
                         <div id="displayfiledata"></div>
 
                         <p>
-                            When you have added <strong>all of the files</strong> you wish to attach to this record submission form, please click the button below to complete your submission.
+                            When you have added the file you wish to attach to this record submission form, please click the button below to complete your submission.
                         </p>
 
-                        <button type="submit" class="btn button-primary" onclick="gatherfiledata_validate_and_submit()">Upload and submit</button>
+<!--
+                        <input type="submit" class="btn button-primary" onclick="gatherfiledata_validate_and_submit()">Upload and submit</input>
+-->
+
+                        <input type="submit" class="btn button-primary">Upload and submit</input>
+
 
                     </form>
 

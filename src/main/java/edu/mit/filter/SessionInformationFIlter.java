@@ -32,7 +32,7 @@ public class SessionInformationFIlter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(SessionInformationFIlter.class);
 
     // TODO: for testing
-    @Resource
+    //@Resource
     private Environment env;
 
 
@@ -58,22 +58,22 @@ public class SessionInformationFIlter implements Filter {
         HttpSession session = httpServletRequest.getSession(false);
 
         if (session == null) {
-            logger.info("Session null. Creating session");
-            session = httpServletRequest.getSession();
+            //logger.info("Session null. Creating session");
+            //session = httpServletRequest.getSession();
         } else {
-            logger.debug("Retrieved mail from session:{}", session.getAttribute("mail"));
-            logger.info("Retrieved mail from session:{}", session.getAttribute("mail"));
-            session.setAttribute("mail", null);
+            //logger.debug("Retrieved mail from session:{}", session.getAttribute("mail"));
+            //logger.info("Retrieved mail from session:{}", session.getAttribute("mail"));
+            //session.setAttribute("mail", null);
         }
 
 
-        logger.info("Header Information:");
+        //logger.info("Header Information:");
 
         if (headerNames != null) {
             while (headerNames.hasMoreElements()) {
                 String s = headerNames.nextElement();
                 String v = ((HttpServletRequest) servletRequest).getHeader(s);
-                logger.info("Header: {} Value:{}", s, v);
+                //logger.info("Header: {} Value:{}", s, v);
 
                 /*if (httpServletRequest.getRequestURL().toString().contains("https://")) { // To get around the referrer problem
                     session.setAttribute("safe", "true");
@@ -111,16 +111,16 @@ public class SessionInformationFIlter implements Filter {
 
         // Information from TouchStone:
 
-        logger.info("Touchstone Attrib {}: {}", "displayName", httpServletRequest.getAttribute("displayName"));
+        //logger.info("Touchstone Attrib {}: {}", "displayName", httpServletRequest.getAttribute("displayName"));
         logger.info("Touchstone Attrib {}: {}", "mail", httpServletRequest.getAttribute("mail"));
-        logger.info("Touchstone Attrib {}: {}", "nickname", httpServletRequest.getAttribute("nickname"));
+        //logger.info("Touchstone Attrib {}: {}", "nickname", httpServletRequest.getAttribute("nickname"));
 
 
 /*        logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("displayName"));
         logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("mail"));
         logger.debug("Touchstone Attrib:{}", httpServletRequest.getAttribute("nickname"));*/
 
-        session.setAttribute("mail", httpServletRequest.getAttribute("mail"));
+        //session.setAttribute("mail", httpServletRequest.getAttribute("mail"));
 
         if (env != null && env.getRequiredProperty("testing.status").equals("true")) {
             httpServletRequest.setAttribute("mail", "osmandin@mit.edu");        }

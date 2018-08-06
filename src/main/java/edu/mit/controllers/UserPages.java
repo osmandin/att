@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.mit.repository.*;
 import edu.mit.service.*;
 import edu.mit.entity.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -299,10 +300,10 @@ public class UserPages {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "UploadComplete GET");
+        //LOGGER.log(Level.INFO, "UploadComplete GET");
 
         String ssaid = (String) session.getAttribute("ssaid");
-        LOGGER.log(Level.INFO, "SSAID: {0}", ssaid);
+        //LOGGER.log(Level.INFO, "SSAID: {0}", ssaid);
 
         model.addAttribute("ssaid", ssaid);
 
@@ -316,18 +317,37 @@ public class UserPages {
             ModelMap model,
             HttpServletRequest request,
             @RequestParam(value = "filedata", required = false) String myfiledatastring,
-            HttpSession session) {
+            MultipartFile  file,
+            HttpSession session,
+            MultipartHttpServletRequest mrequest) {
 
         LOGGER.log(Level.INFO, "UploadComplete POST");
 
+        LOGGER.log(Level.INFO, "File uploaded:" + file.getOriginalFilename());
+
         LOGGER.log(Level.INFO, "FileDataString:", myfiledatastring); // TODO remove
 
-        LOGGER.log(Level.INFO, "Number of files uploaded:"+ files.length);
-        LOGGER.log(Level.INFO, "fileinfodata" + myfiledatastring);
+        LOGGER.log(Level.INFO, "Number of files uploaded: "+ files.length);
+        LOGGER.log(Level.INFO, "fileinfodata param: " + myfiledatastring);
+
+        if (file == null || file.getOriginalFilename().isEmpty()) {
+            return "FileError";
+        }
+
 
         if (myfiledatastring == null || myfiledatastring.isEmpty()) {
             // Not doing this results in files getting submitted again and again.
-            return "UploadComplete";
+
+            LOGGER.info("EMPTY");
+
+
+            LOGGER.info("Hidden value null");
+            String v = mrequest.getParameter("filedata");
+            LOGGER.info("Multipart value:" + v);
+
+            //return "UploadComplete";
+        } else {
+            LOGGER.info("NOT EMPTY. NOT EMPTY. NOT EMPTY");
         }
 
 
@@ -375,9 +395,20 @@ public class UserPages {
         // Add info for file size (for web side):
 
         final Format format = new Format();
-        final List<FileData> fileData = format.parseFileInfo(myfiledatastring);
+
+        final List<FileData> fileData = new ArrayList<>(); //format.parseFileInfo(myfiledatastring);
+        //final List<FileData> fileData = format.parseFileInfo(file.getOriginalFilename());
+
+
+        FileData fileData1 = new FileData();
+        fileData1.setName(file.getOriginalFilename());
+        fileData1.setSize(file.getSize());
+        fileData1.setNicesize(FileUtils.byteCountToDisplaySize(file.getSize()));
+        fileData1.setLastmoddatetime("122");
+        fileData.add(fileData1);
+
         model.addAttribute("filedata", fileData);
-        model.addAttribute("totalfilesize", format.getTotalfilesizestr());
+        model.addAttribute("totalfilesize", FileUtils.byteCountToDisplaySize(file.getSize()));
 
         // Details for each file ?
 

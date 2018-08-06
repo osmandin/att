@@ -1,0 +1,41 @@
+<!-- base template for each page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title></title>
+
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+
+<body>
+
+<div th:replace="mit/header :: header"/>
+
+<div class="wrap-page">
+
+    <div class="wrap-outer-content layout-band">
+        <div class="wrap-content">
+            <main id="content-main" class="content-main" role="main">
+
+                <div class="details">
+                    <h3 class="title-page">Upload Error</h3>
+                </div>
+
+                    Please add a file.
+            </main>
+        </div>
+
+    </div> <!-- end wrap outercontent -->
+
+    <div th:replace="mit/site_footer :: footer"/>
+
+</div> <!-- end wrap page -->
+
+
+</body>
+</html>

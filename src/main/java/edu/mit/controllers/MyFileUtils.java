@@ -78,7 +78,7 @@ public class MyFileUtils {
 
                 Format format = new Format();
 
-                boolean success = format.changeFileLastModDateTime(dropoffdirfull + "/" + filename, lastmoddatetime);
+         /*       boolean success = format.changeFileLastModDateTime(dropoffdirfull + "/" + filename, lastmoddatetime);
                 if (success) {
                     String setmoddatetime = format.returnLastModifiedDateTime(dropoffdirfull + "/" + filename);
                     filedata.setLastmoddatetime(setmoddatetime);
@@ -89,7 +89,7 @@ public class MyFileUtils {
                     }
                     fileinfo.add(filedata);
                     continue;
-                }
+                }*/
 
                 filedata.setSetmoddatetimestatus("Error: set of modtime=" + lastmoddatetime + " failed");
                 fileinfo.add(filedata);
