@@ -545,7 +545,8 @@ public class UserPages {
         }
 
         // Send mail
-        // notifyUser(fileList);
+        notifyUser(rsa.getId(), ssa.getDepartmentForm().getName(), fileList);
+
 
         return "UploadComplete";
     }
@@ -612,9 +613,15 @@ public class UserPages {
     }
 
     // TODO Policy - what happens if the file is copied but the mail is never sent?
-    private void notifyUser(List<String> fileList) {
+    // TODO extract email builiding logic
+    private void notifyUser(Integer rsaId, String department, List<String> fileList) {
+
+        emailSubject += " #" + rsaId + " (" + department + ")";
+        emailPrefix += "\n\n";
+        emailPrefix += fileList.toString();
+
         try {
-            emailUtil.notify(adminEmail, emailSubject, emailPrefix + fileList.toString());
+            emailUtil.notify(adminEmail, emailSubject, emailPrefix);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error sending mail:{}", e);
         }
