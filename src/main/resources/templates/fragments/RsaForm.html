@@ -147,9 +147,9 @@
 
                         </div>
                     </div>
-                    <div class="form-group row">
+                 <!--   <div class="form-group row">
                         <input type="button" value="-" onclick="removeit( this, 'contact' )"/>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -196,14 +196,14 @@
                                th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].address}"/>
                         </div>
                     </div>
-                    <div>
+                   <!-- <div>
                         <input type="button" value="-" onclick="removeit( this, 'contact'  )"/>
-                    </div>
+                    </div>-->
                 </div>
             </div>
-            <div>
+            <!--<div>
                 <input type="button" value="+" onclick="createit( this, 'contact' )"/>
-            </div>
+            </div>-->
         </fieldset>
 
         <p></p>
@@ -253,7 +253,9 @@
 
                     <input type="text" id="copyright" name="ssasForm.ssaCopyrightsForms[0].copyright"/>
                     </div>
+<!--
                     <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
+-->
                 </div>
             </div>
             <div id="copyrights" th:case="*">
@@ -267,12 +269,14 @@
                     <input type="text" id="copyright"
                            th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].copyright}"/>
                     </div>
+<!--
                     <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
+-->
                 </div>
             </div>
-            <div>
+           <!-- <div>
                 <input type="button" value="+" onclick="createit( this, 'copyright' )"/>
-            </div>
+            </div>-->
         </fieldset>
 
         <p></p>
@@ -295,7 +299,9 @@
                                           </div>
 	      </span>
                     <span>
+<!--
 		<input type="button" value="-" onclick="removeit( this, 'restriction' )"/>
+-->
 	      </span>
                 </div>
             </div>
@@ -311,13 +317,15 @@
 
                     <input type="text" id="restriction"
                            th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
+<!--
                     <span><input type="button" value="-" onclick="removeit( this, 'restriction' )"/></span>
+-->
                     </div>
                 </div>
             </div>
-            <div>
+           <!-- <div>
                 <input type="button" value="+" onclick="createit( this, 'restriction' )"/>
-            </div>
+            </div>-->
         </fieldset>
 
         <p></p>
