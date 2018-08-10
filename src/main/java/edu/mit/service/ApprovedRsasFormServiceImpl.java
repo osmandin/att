@@ -96,8 +96,7 @@ public class ApprovedRsasFormServiceImpl implements ApprovedRsasFormService {
         arf.setSendername(sendername);
         arf.setSenderemail(senderemail);
 
-        /*arf.setApprovername(session.getAttribute("name").toString());
-        arf.setApproveremail(session.getAttribute("name").toString() + " <" + session.getAttribute("email").toString() + ">");*/
+        // FIXME -- who's approved it?
 
         arf.setApprovername("test");
         arf.setApproveremail("test@mit.edu");
