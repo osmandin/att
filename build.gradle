@@ -1,0 +1,62 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+    }
+    repositories
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'edu.mit'
+version = '0.0.1-SNAPSHOT'
+
+description = """ATT"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+        
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'2.0.4.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version:'2.0.4.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.0.4.RELEASE'
+    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.1.11'
+    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.4') {
+exclude(module: 'commons-logging')
+    }
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version:'1.1.1'
+    compile group: 'commons-configuration', name: 'commons-configuration', version:'1.10'
+    compile group: 'org.projectlombok', name: 'lombok', version:'1.16.8'
+    compile group: 'commons-io', name: 'commons-io', version:'2.6'
+    compile group: 'org.apache.velocity', name: 'velocity', version:'1.7'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version:'2.0.1.RELEASE'
+    compile group: 'commons-codec', name: 'commons-codec', version:'1.11'
+    compile group: 'gov.loc', name: 'bagit', version:'5.2.0'
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.7.RELEASE') {
+exclude(module: 'commons-logging')
+    }
+    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
+    providedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version:'1.5.7.RELEASE'
+}
