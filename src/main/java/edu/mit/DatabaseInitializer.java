@@ -1,17 +1,12 @@
 package edu.mit;
 
-import edu.mit.api.Departments;
 import edu.mit.entity.DepartmentsForm;
-import edu.mit.entity.SsasForm;
 import edu.mit.entity.UsersForm;
+import edu.mit.entity.UsersFormBuilder;
 import edu.mit.repository.DepartmentsFormRepository;
-import edu.mit.repository.SsasFormRepository;
-import edu.mit.repository.UsersFormRepository;
 import edu.mit.service.SsasFormService;
 import edu.mit.service.UsersFormService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -59,11 +54,8 @@ public class DatabaseInitializer {
 
             //TODO load from properties file
 
-            UsersForm usersForm = new UsersForm();
-            usersForm.setUsername("osmandin");
-            usersForm.setEmail("osmandin@mit.edu");
-            usersForm.setFirstname("Osman");
-            usersForm.setLastname("Din");
+            UsersForm usersForm = new UsersFormBuilder().
+                    setUsername("osmandin").setEmail("osmandin@mit.edu").setFirstname("Osman").setLastname("Din").createUsersForm();
             usersForm.setIsadmin(true); //TODO CHECK -- WHAT DOES THIS DO?
             usersForm.setRole("siteadmin");
             List<DepartmentsForm> depts = departmentrepo.findAll();

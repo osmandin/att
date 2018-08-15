@@ -21,23 +21,9 @@ public class Subject {
     private UsersFormService usersFormService;
 
 
-    // TODO replace with a database:
-    Map<String, String> realm =  new HashMap<>();
-
-
-    //TODO replace static lookup:
-    {
-        //realm.put("osmandin@mit.edu",  Role.Constants.SITEADMIN);
-        realm.put("karismith@mit.edu",  Role.Constants.SITEADMIN);
-        realm.put("joecarrano@mit.edu",  Role.Constants.SITEADMIN);
-    }
-
    public Role getRole(final String principal) {
 
-
-        // final String principal_role = realm.get(principal);
-
-       List<UsersForm> users = usersFormService.findByEmail(principal);
+       final List<UsersForm> users = usersFormService.findByEmail(principal);
 
        if (users.isEmpty()) {
            return Role.visitor;
@@ -47,22 +33,11 @@ public class Subject {
 
        logger.debug("Found role:{} for:{}", principal_role, principal);
 
-        if (principal_role == null) {
+        if (principal_role == null || principal_role.isEmpty()) {
             return Role.visitor;
         }
 
-        logger.debug("Principal role:{}", principal_role);
-        logger.info("Principal role:{}", principal_role);
-
-
         return Role.valueOf(principal_role);
     }
-
-    boolean hasRole(final Role role) {
-      // TODO
-        return false;
-    }
-
-
 
 }

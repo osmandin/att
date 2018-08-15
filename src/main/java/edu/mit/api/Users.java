@@ -2,9 +2,9 @@ package edu.mit.api;
 
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import edu.mit.entity.UsersForm;
+import edu.mit.entity.UsersFormBuilder;
 import edu.mit.repository.UsersFormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class Users {
         final List<UsersForm> userList = userrepo.findByUsername(name);
 
         if (userList.isEmpty()) {
-            return new UsersForm();
+            return new UsersFormBuilder().createUsersForm();
         }
         return userList.get(0);
     }

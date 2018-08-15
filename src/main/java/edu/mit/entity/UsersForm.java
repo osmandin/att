@@ -138,4 +138,16 @@ public class UsersForm {
         result = 31 * result + id;
         return result;
     }
+
+    public UsersForm(String username, String firstname, String lastname, boolean isadmin, String email, String role) {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.isadmin = isadmin;
+        this.email = email;
+        this.role = role;
+    }
+
+    public UsersForm() {
+    }
 }

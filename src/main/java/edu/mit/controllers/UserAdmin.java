@@ -7,7 +7,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +22,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.logging.Level;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -259,7 +257,7 @@ public class UserAdmin {
 
         List<DepartmentAdmin> selectedDepartments = new ArrayList<>();
 
-        final UsersForm item = new UsersForm();
+        final UsersForm item = new UsersFormBuilder().createUsersForm();
         item.setDepartmentsForms(dfs);
 
         final ModelAndView model = new ModelAndView("AddUser");

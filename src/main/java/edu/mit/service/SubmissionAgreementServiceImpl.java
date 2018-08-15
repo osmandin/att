@@ -159,11 +159,8 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         }
 
         if (!duplicateusername && !duplicateuser) {
-            uf = new UsersForm();
-            uf.setUsername(username);
-            uf.setFirstname(firstname);
-            uf.setLastname(lastname);
-            uf.setEmail(submitData.getEmail());
+            uf = new UsersFormBuilder().setUsername(username).setFirstname(firstname).setLastname(lastname).
+                    setEmail(submitData.getEmail()).createUsersForm();
             uf.setIsadmin(false);
             uf.setEnabled(false);
             uf = userrepo.save(uf);
