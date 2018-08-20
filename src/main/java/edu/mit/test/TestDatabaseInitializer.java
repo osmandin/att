@@ -1,4 +1,4 @@
-package edu.mit;
+package edu.mit.test;
 
 import edu.mit.entity.DepartmentsForm;
 import edu.mit.entity.UsersForm;
