@@ -3,6 +3,7 @@ package edu.mit.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class TouchStoneDiagnosticFilter implements Filter {
     @Resource
     private Environment env;
 
+    @Value("${testing.mail:osmandin@mit.edu}")
+    private String email;
+
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -52,7 +56,8 @@ public class TouchStoneDiagnosticFilter implements Filter {
 
 
         if (env != null && env.getRequiredProperty("testing.status").equals("true")) {
-            httpServletRequest.setAttribute("mail", "osmandin@mit.edu");
+            logger.debug("Set mail value:{}", email);
+            httpServletRequest.setAttribute("mail", email);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
