@@ -40,3 +40,5 @@ tmp/
 9/
 
 out/
+.gradle/
+build/
