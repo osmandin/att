@@ -81,11 +81,6 @@ public class FileOps {
     ) {
         LOGGER.log(Level.INFO, "ListApprovedFiles Get");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         model.addAttribute("rsaid", rsaid);
 
         model.addAttribute("downloadfailed", downloadfailed);
@@ -111,11 +106,6 @@ public class FileOps {
     ) {
         LOGGER.log(Level.INFO, "ListDraftFiles Get");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         model.addAttribute("rsaid", rsaid);
 
         model.addAttribute("downloadfailed", downloadfailed);
@@ -138,11 +128,6 @@ public class FileOps {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DownloadFiles Get");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return;
-        }
 
         if (rsaid != null) {
             MyFileUtils fileutils = new MyFileUtils();
@@ -198,11 +183,6 @@ public class FileOps {
     ) {
         LOGGER.log(Level.INFO, "DeleteApprovedInventory");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         String dropoff = env.getRequiredProperty("dropoff.dir");
         if (dropoff == null || dropoff.equals("")) {
             LOGGER.log(Level.SEVERE, "dropoff is null");
@@ -243,11 +223,6 @@ public class FileOps {
     ) {
         LOGGER.log(Level.INFO, "DeleteDraftInventory");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         String dropoff = env.getRequiredProperty("dropoff.dir");
         if (dropoff == null || dropoff.equals("")) {
             LOGGER.log(Level.SEVERE, "dropoff is null");
@@ -287,11 +262,6 @@ public class FileOps {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DownloadApprovedRsaCSV");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return;
-        }
 
         String fullcsvstring = approvedrsaservice.findAllApprovedTransfersCSV();
 
@@ -443,11 +413,6 @@ public class FileOps {
     ) {
         LOGGER.log(Level.INFO, "CreateATImportFile");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         if (rsaid <= 0) {
             LOGGER.log(Level.SEVERE, "rsaid <= 0");
             return "Home";
@@ -472,11 +437,6 @@ public class FileOps {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DownloadATImportFile");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return;
-        }
 
         if (rsaid <= 0) {
             LOGGER.log(Level.SEVERE, "rsaid <= 0");

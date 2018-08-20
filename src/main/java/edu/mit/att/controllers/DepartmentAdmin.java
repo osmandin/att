@@ -100,11 +100,6 @@ public class DepartmentAdmin {
     ) {
         LOGGER.info( "DeleteDepartment Post");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         model.addAttribute("departmentid", departmentid);
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);

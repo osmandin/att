@@ -1,5 +1,6 @@
 package edu.mit.att.controllers;
 
+import edu.mit.att.Utils;
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.DepartmentsFormRepository;
@@ -174,7 +175,7 @@ public class UserAdmin {
 
         // add roles:
 
-        final Map<Integer, String> roles = Util.getRoles();
+        final Map<Integer, String> roles = Utils.getRoles();
 
         final Map<Integer, String> rolesToDisplay = new HashMap<>();
 
@@ -319,10 +320,6 @@ public class UserAdmin {
             HttpSession session
     ) {
         logger.info("Post");
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return new ModelAndView("/Home");
-        }
 
         UsersForm usersForm = userrepo.findById(userid);
 
@@ -353,11 +350,6 @@ public class UserAdmin {
             HttpSession session
     ) {
         logger.info("DeleteUserDepartment Get");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         model.addAttribute("userid", userid);
 

@@ -1,4 +1,4 @@
-package edu.mit.att.controllers;
+package edu.mit.att;
 
 import org.springframework.core.env.Environment;
 import org.springframework.ui.ModelMap;
@@ -7,14 +7,29 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Utils {
 
     private final static Logger LOGGER = Logger.getLogger(Utils.class.getCanonicalName());
+
+    public static Map<Integer, String> getRoles() {
+        final Map<Integer, String> formats = new HashMap<>();
+
+        final String[] formatsStr = new String[] {"siteadmin", "visitor", "deptadmin", "donor"};
+        //
+        int i = 0;
+
+        for (String f : formatsStr) {
+            formats.put(i, f);
+            i++;
+        }
+
+        return formats;
+    }
 
     // ------------------------------------------------------------------------
     public boolean setupAuthdHandler(ModelMap model, HttpSession session, Environment env) {
@@ -32,22 +47,6 @@ public class Utils {
     }
 
     // ------------------------------------------------------------------------
-    public boolean setupAdminHandler(ModelMap model, HttpSession session, Environment env) {
-        /*if (session.isNew()) {
-            return false;
-        }
-
-        int sessiontimeout = Integer.parseInt(env.getRequiredProperty("session.timeout"));
-        session.setMaxInactiveInterval(sessiontimeout);
-
-        if (session.getAttribute("loggedin") == null || session.getAttribute("loggedin").toString().equals("0") || session.getAttribute("isadmin") == null || session.getAttribute("isadmin").toString().equals("0")) {
-            return false;
-        }*/
-
-        return true;
-    }
-
-    // ------------------------------------------------------------------------
     public boolean isAcceptedAddress(HttpServletRequest request, String addressmatch) {
         String remoteAddr = request.getRemoteAddr();
         if (!remoteAddr.matches(addressmatch)) {
@@ -57,14 +56,6 @@ public class Utils {
         return true;
     }
 
-    // ------------------------------------------------------------------------
-    public String getHostname() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ex) {
-            return "unknown";
-        }
-    }
 
     // ------------------------------------------------------------------------
     public void redirectToRoot(

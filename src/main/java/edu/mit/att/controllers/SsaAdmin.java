@@ -516,11 +516,6 @@ public class SsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "DeleteContact Get");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         if (id == 0) {
             LOGGER.log(Level.SEVERE, "DeleteContact Get: contactid={0}", new Object[]{id});
             model.addAttribute("action", "EditSsa");
@@ -565,11 +560,6 @@ public class SsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DeleteCopyright Get");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         if (id == 0) {
             LOGGER.log(Level.SEVERE, "DeleteCopyright Get id={0}", new Object[]{id});
@@ -617,11 +607,6 @@ public class SsaAdmin {
                                    HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DeleteRsasForSsa");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         if (ssaid > 0) {
             session.setAttribute("ssaid", ssaid);
@@ -710,11 +695,6 @@ public class SsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "DownloadSubmissionAgreementFormPDF");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return;
-        }
-
         if (ssaid <= 0) {
             LOGGER.log(Level.SEVERE, "DownloadSubmissionAgreementFormPDF Error: ssaid <= 0");
             return;
@@ -781,12 +761,6 @@ public class SsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "CheckIfSsaApproved");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            LOGGER.log(Level.INFO, "CheckIfSsaApproved: not a admin user");
-            return "invalid";
-        }
-
         if (ssaid <= 0) {
             LOGGER.log(Level.INFO, "CheckIfSsaApproved: ssaid problem ssaid={0}", new Object[]{ssaid});
             return "invalid";
@@ -813,11 +787,6 @@ public class SsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DepartmentDeleteWarningDeleteSsas Post");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         if (departmentid <= 0) {
             departmentid = (Integer) session.getAttribute("departmentid");
@@ -926,12 +895,6 @@ public class SsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DepartmentDeleteWarningDeleteSsas");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
 
         if (departmentid <= 0) {
             departmentid = (Integer) session.getAttribute("departmentid");

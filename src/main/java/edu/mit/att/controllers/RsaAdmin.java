@@ -132,11 +132,6 @@ public class RsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "EditDraftRsa Get");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         if (rsaid <= 0) {
             return "Home";
         }
@@ -163,11 +158,6 @@ public class RsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "EditDraftRsa Post");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         if (session == null) {
             LOGGER.log(Level.SEVERE, "null session");
@@ -257,11 +247,6 @@ public class RsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "EditAppovedRsas Get");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         if (rsaid <= 0) {
             LOGGER.log(Level.SEVERE, "rsaid <= 0");
             return "Home";
@@ -285,11 +270,6 @@ public class RsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "EditAppovedRsas Post");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         if (rsasForm == null) {
             LOGGER.log(Level.SEVERE, "rsasForm is null");
@@ -324,11 +304,6 @@ public class RsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DeleteDraftRsa");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         if (rsaid <= 0) {
             LOGGER.log(Level.SEVERE, "rsaid <= 0");
@@ -383,11 +358,6 @@ public class RsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "DeleteApprovedRsa");
 
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-
         if (rsaid <= 0) {
             LOGGER.log(Level.SEVERE, "rsaid <= 0");
             return "Home";
@@ -430,11 +400,6 @@ public class RsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DeleteDraftRsas");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         String dropoff = env.getRequiredProperty("dropoff.dir");
         if (dropoff == null || dropoff.equals("")) {
@@ -522,11 +487,6 @@ public class RsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "DeleteApprovedRsas");
-
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
 
         String dropoff = env.getRequiredProperty("dropoff.dir");
         if (dropoff == null || dropoff.equals("")) {
