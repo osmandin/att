@@ -11,7 +11,7 @@ import lombok.*;
 @Entity
 @Table(name = "rsas")
 @Data
-@EqualsAndHashCode(exclude = {"ssasForm", "rsaFileDataForms"})
+@EqualsAndHashCode(exclude = {"submissionAgreement", "rsaFileDataForms"})
 public class RsasForm {
 
     @Transient
@@ -60,9 +60,9 @@ public class RsasForm {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ssaid")
     @NotFound(action = NotFoundAction.IGNORE)
-    private SsasForm ssasForm;
+    private SubmissionAgreement submissionAgreement;
 
-    public int hashCode(SsasForm ssa) {
+    public int hashCode(SubmissionAgreement ssa) {
         return ssa.getId();
     }
 

@@ -4,7 +4,7 @@ import edu.mit.att.entity.RsaFileDataForm;
 import edu.mit.att.entity.RsasForm;
 import edu.mit.att.repository.RsaFileDataFormRepository;
 import edu.mit.att.repository.RsasFormRepository;
-import edu.mit.att.repository.SsasFormRepository;
+import edu.mit.att.repository.SubmissionAgreementRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ public class RsasFormServiceImpl implements RsasFormService {
     private RsasFormRepository repo;
 
     @Resource
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     @Resource
     private SsasFormService ssaservice;
@@ -31,7 +31,7 @@ public class RsasFormServiceImpl implements RsasFormService {
     @Transactional
     public void saveForm(RsasForm rsa) {
 
-        ssaservice.saveSsaFormForRsa(rsa.getSsasForm());
+        ssaservice.saveSsaFormForRsa(rsa.getSubmissionAgreement());
 
         List<RsaFileDataForm> fds = rsa.getRsaFileDataForms();
         filedatarepo.save(fds);

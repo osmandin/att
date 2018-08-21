@@ -13,6 +13,6 @@ public interface SsaFormatTypesFormRepository extends JpaRepository<SsaFormatTyp
     @Query(value = "SELECT f FROM SsaFormatTypesForm f order by formattype asc")
     List<SsaFormatTypesForm> findAllOrderByFormattypeAsc();
 
-    @Query(value = "SELECT f FROM SsaFormatTypesForm f where f.ssasForm.id=?1 order by formattype asc")
+    @Query(value = "SELECT f FROM SsaFormatTypesForm f where f.submissionAgreement.id=?1 order by formattype asc")
     List<SsaFormatTypesForm> findAllBySsaIdOrderByFormattypeAsc(int ssaid);
 }

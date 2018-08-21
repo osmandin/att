@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 @Controller
 public class SsaAdmin {
     private final static Logger LOGGER = Logger.getLogger(SsaAdmin.class.getCanonicalName());
+    public static final String SSAS_FORM = "submissionAgreement";
 
     @Resource
     private Environment env;
@@ -59,7 +60,7 @@ public class SsaAdmin {
     private DepartmentRepository departmentrepo;
 
     @Autowired
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     @Autowired
     private RsasFormRepository rsarepo;
@@ -105,7 +106,7 @@ public class SsaAdmin {
         model.addAttribute("somenotdeleted", "0");
         model.addAttribute("newssa", "1");
 
-        //List<SsasForm> ssas = ssarepo.findAll(); // TODO
+        //List<SubmissionAgreement> ssas = ssarepo.findAll(); // TODO
 
         List<Department> departments = Collections.emptyList();
 
@@ -123,19 +124,19 @@ public class SsaAdmin {
             return "Permissions";
         }
 
-        //List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+        //List<SubmissionAgreement> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
 
-        List<SsasForm> ssas = new ArrayList<>();
+        List<SubmissionAgreement> ssas = new ArrayList<>();
 
 
         for (Department d : departments) {
-            List<SsasForm> ssasForms = ssarepo.findAllForDepartmentId(d.getId()); //TODO does this include deleted ones?
-            ssas.addAll(ssasForms);
+            List<SubmissionAgreement> submissionAgreements = ssarepo.findAllForDepartmentId(d.getId()); //TODO does this include deleted ones?
+            ssas.addAll(submissionAgreements);
         }
 
         LOGGER.info("Found SSAs:" + ssas.toString());
 
-        model.addAttribute("ssasForm", ssas);
+        model.addAttribute(SSAS_FORM, ssas);
 
         return "ListSsas";
     }
@@ -164,22 +165,22 @@ public class SsaAdmin {
         crf.setCopyright(env.getRequiredProperty("defaults.copyrightstatement"));
         newcrfs.add(crf);
 
-        SsasForm ssasForm = new SsasForm();
+        SubmissionAgreement submissionAgreement = new SubmissionAgreement();
 
-        ssasForm.setRecordstitle(env.getRequiredProperty("defaults.recordstitle"));
-        ssasForm.setSsaCopyrightsForms(newcrfs);
-        ssasForm.setRetentionschedule(env.getRequiredProperty("defaults.retentionschedule"));
-        ssasForm.setDescriptionstandards(env.getRequiredProperty("defaults.archivedescriptionstandards"));
-        ssasForm.setCreationdate(todayssqldate);
+        submissionAgreement.setRecordstitle(env.getRequiredProperty("defaults.recordstitle"));
+        submissionAgreement.setSsaCopyrightsForms(newcrfs);
+        submissionAgreement.setRetentionschedule(env.getRequiredProperty("defaults.retentionschedule"));
+        submissionAgreement.setDescriptionstandards(env.getRequiredProperty("defaults.archivedescriptionstandards"));
+        submissionAgreement.setCreationdate(todayssqldate);
 
         // access restrictions... None... not an entry
 
         List<Department> dfs = departmentrepo.findAllOrderByNameAsc();
-        ssasForm.setDropdownDepartments(dfs);
+        submissionAgreement.setDropdownDepartments(dfs);
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
-        model.addAttribute("ssasForm", ssasForm);
+        model.addAttribute(SSAS_FORM, submissionAgreement);
 
         model.addAttribute("action", "CreateSsa");
         return "CreateSsa";
@@ -188,7 +189,7 @@ public class SsaAdmin {
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/CreateSsa", method = RequestMethod.POST)
     public ModelAndView CreateSsa(
-            final SsasForm ssasForm,
+            final SubmissionAgreement submissionAgreement,
             BindingResult result,
             @RequestParam(value = "departmentid", required = false) Department selectedDepartment,
             final RedirectAttributes redirectAttributes,
@@ -208,7 +209,7 @@ public class SsaAdmin {
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
-        if (ssasForm == null) {
+        if (submissionAgreement == null) {
             LOGGER.log(Level.INFO, "Null SSAForm object");
         }
 
@@ -216,14 +217,14 @@ public class SsaAdmin {
 
         LOGGER.log(Level.INFO, "Saving (pre1):" + selectedDepartment);
 
-        ssasForm.setSsaCopyrightsForms(Collections.emptyList());
+        submissionAgreement.setSsaCopyrightsForms(Collections.emptyList());
 
         LOGGER.log(Level.INFO, "Saving (pre2):" + selectedDepartment);
 
 
         Department d = departmentrepo.findById(selectedDepartment.getId());
 
-        ssaservice.create(ssasForm, d, session, request);
+        ssaservice.create(submissionAgreement, d, session, request);
 
         LOGGER.info("Saved object:" + ssarepo.findAll().toString());
 
@@ -237,14 +238,14 @@ public class SsaAdmin {
         }
 
         final ModelAndView mav = new ModelAndView();
-        //String message = "New SSA " + ssasForm.getRecordid() + " was successfully created.";
+        //String message = "New SSA " + submissionAgreement.getRecordid() + " was successfully created.";
 
-        final List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
-        //final List<SsasForm> ssas = ssarepo.findAll();
-        model.addAttribute("ssasForm", ssas);
+        final List<SubmissionAgreement> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+        //final List<SubmissionAgreement> ssas = ssarepo.findAll();
+        model.addAttribute(SSAS_FORM, ssas);;
 
 
-        List<SsasForm> ssasFormsUser = ssarepo.findAllSsasForUsername(u.get(0).getUsername());
+        List<SubmissionAgreement> ssasFormsUser = ssarepo.findAllSsasForUsername(u.get(0).getUsername());
 
         LOGGER.info("All SSA for user:" + ssasFormsUser.toString());
 
@@ -272,7 +273,7 @@ public class SsaAdmin {
             return "Home";
         }*/
 
-        SsasForm ssa = ssarepo.findById(ssaid);
+        SubmissionAgreement ssa = ssarepo.findById(ssaid);
         model.addAttribute("ssa", ssa);
 
         return "SsaDeleteWarning";
@@ -297,7 +298,7 @@ public class SsaAdmin {
             return "Home";
         }
 
-        SsasForm ssaform = ssarepo.findById(ssaid);
+        SubmissionAgreement ssaform = ssarepo.findById(ssaid);
         if (ssaform != null) {
             ssaform.setDeleted(true);
             ssarepo.save(ssaform);
@@ -307,8 +308,8 @@ public class SsaAdmin {
         model.addAttribute("alldeleted", "0");
         model.addAttribute("somenotdeleted", "0");
 
-        List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
-        model.addAttribute("ssasForm", ssas);
+        List<SubmissionAgreement> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+        model.addAttribute(SSAS_FORM, ssas);
 
         return "ListSsas";
     }
@@ -333,9 +334,8 @@ public class SsaAdmin {
         if (ssaids == null || ssaids.length == 0) {
             model.addAttribute("nodeletes", "1");
 
-            List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
-            model.addAttribute("ssasForm", ssas);
-
+            List<SubmissionAgreement> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+            model.addAttribute(SSAS_FORM, ssas);
             return "ListSsas";
         }
 
@@ -346,7 +346,7 @@ public class SsaAdmin {
 
             List<RsasForm> rsas = rsarepo.findAllForSsaOrderByTransferdateAsc(ssaid);
             if (rsas == null || rsas.size() == 0) {
-                SsasForm ssa = ssarepo.findById(ssaid);
+                SubmissionAgreement ssa = ssarepo.findById(ssaid);
                 ssa.setDeleted(true);
                 ssarepo.save(ssa);
                 //ssarepo.delete(ssa);
@@ -390,8 +390,8 @@ public class SsaAdmin {
             model.addAttribute("rejectedssas", rejectedssas);
         }
 
-        List<SsasForm> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
-        model.addAttribute("ssasForm", ssas);
+        List<SubmissionAgreement> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
+        model.addAttribute(SSAS_FORM, ssas);
 
         return "ListSsas";
     }
@@ -408,7 +408,7 @@ public class SsaAdmin {
 
         model.addAttribute("newssa", "0");
 
-        SsasForm ssasForm = ssarepo.findById(ssaid);
+        SubmissionAgreement submissionAgreement = ssarepo.findById(ssaid);
 
         LOGGER.log(Level.INFO, "All objects:" + ssarepo.findAll());
 
@@ -417,8 +417,8 @@ public class SsaAdmin {
         }
 
         List<Department> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
-        ssasForm.setDropdownDepartments(df);
-        model.addAttribute("ssasForm", ssasForm);
+        submissionAgreement.setDropdownDepartments(df);
+        model.addAttribute(SSAS_FORM, submissionAgreement);
 
         model.addAttribute("action", "EditSsa");
         return "EditSsa";
@@ -428,7 +428,7 @@ public class SsaAdmin {
     @RequestMapping(value = "/EditSsa", method = RequestMethod.POST)
     public String EditSsa(
             ModelMap model,
-            SsasForm ssasForm,
+            SubmissionAgreement submissionAgreement,
             @RequestParam("id") int ssaid,
             @RequestParam(value = "departmentid", required = false) Department selectedDepartment,
             HttpServletRequest request,
@@ -441,8 +441,8 @@ public class SsaAdmin {
             return "Home";
         }*/
 
-        if (ssasForm == null) {
-            model.addAttribute("ssasForm", ssasForm);
+        if (submissionAgreement == null) {
+            model.addAttribute("submssionAgreement", submissionAgreement);
             return "EditSsa";
         }
 
@@ -455,15 +455,15 @@ public class SsaAdmin {
             model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
         }
 
-        ssaservice.saveForm(ssasForm, selectedDepartment);
+        ssaservice.saveForm(submissionAgreement, selectedDepartment);
 
         List<Department> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
-        ssasForm.setDropdownDepartments(df);
+        submissionAgreement.setDropdownDepartments(df);
 
-        model.addAttribute("ssasForm", ssasForm);
+        model.addAttribute(SSAS_FORM, submissionAgreement);
 
-        /*if (ssasForm.isApproved()) {
-            List<SsaContactsForm> contactinfo = ssasForm.getSsaContactsForms();
+        /*if (submissionAgreement.isApproved()) {
+            List<SsaContactsForm> contactinfo = submissionAgreement.getSsaContactsForms();
 
             if (contactinfo != null && contactinfo.size() > 0) {
                 LOGGER.log(Level.INFO, "sending approved email");
@@ -490,13 +490,13 @@ public class SsaAdmin {
                 if (numrecipts > 0) {
 
                     EmailSetup emailsetup = new EmailSetup();
-                    emailsetup.setSubject("Submission Agreement approved: " + ssasForm.getId());
+                    emailsetup.setSubject("Submission Agreement approved: " + submissionAgreement.getId());
                     emailsetup.setToarray(emailrecipts);
                     emailsetup.setFrom(env.getRequiredProperty("submit.from"));
                     emailsetup.setUsername(session.getAttribute("username").toString());
 
                     Email email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-                    email.EditSsaApprovedSendToCreators(ssasForm);
+                    email.EditSsaApprovedSendToCreators(submissionAgreement);
 
                 }
             }
@@ -527,25 +527,25 @@ public class SsaAdmin {
             return "EditSsa";
         }
 
-        SsasForm ssasForm = ssarepo.findById(ssaid);
+        SubmissionAgreement submissionAgreement = ssarepo.findById(ssaid);
 
-        List<SsaContactsForm> cs = ssasForm.getSsaContactsForms();
+        List<SsaContactsForm> cs = submissionAgreement.getSsaContactsForms();
         List<SsaContactsForm> newcs = new ArrayList<SsaContactsForm>();
         for (SsaContactsForm cf : cs) {
             if (cf.getId() != id) {
                 newcs.add(cf);
             }
         }
-        ssasForm.setSsaContactsForms(newcs);
+        submissionAgreement.setSsaContactsForms(newcs);
 
         SsaContactsForm con = contactrepo.findById(id);
         LOGGER.log(Level.INFO, "delete ssaContactsForms id={0} name={1}", new Object[]{con.getId(), con.getName()});
         contactrepo.delete(con);
 
         List<Department> df = departmentrepo.findAllOrderByNameAsc();
-        ssasForm.setDropdownDepartments(df);
+        submissionAgreement.setDropdownDepartments(df);
 
-        model.addAttribute("ssasForm", ssasForm);
+        model.addAttribute(SSAS_FORM, submissionAgreement);
 
         model.addAttribute("action", "EditSsa");
         return "EditSsa";
@@ -577,20 +577,20 @@ public class SsaAdmin {
 
         LOGGER.log(Level.INFO, "delete ssaCopyrightsForms: copyrightid={0}", new Object[]{id});
 
-        SsasForm ssasForm = ssarepo.findById(ssaid);
+        SubmissionAgreement submissionAgreement = ssarepo.findById(ssaid);
 
-        List<SsaCopyrightsForm> crs = ssasForm.getSsaCopyrightsForms();
+        List<SsaCopyrightsForm> crs = submissionAgreement.getSsaCopyrightsForms();
         List<SsaCopyrightsForm> newcrs = new ArrayList<SsaCopyrightsForm>();
         for (SsaCopyrightsForm crf : crs) {
             if (crf.getId() != id) {
                 newcrs.add(crf);
             }
         }
-        ssasForm.setSsaCopyrightsForms(newcrs);
+        submissionAgreement.setSsaCopyrightsForms(newcrs);
 
         List<Department> df = departmentrepo.findAllOrderByNameAsc();
-        ssasForm.setDropdownDepartments(df);
-        model.addAttribute("ssasForm", ssasForm);
+        submissionAgreement.setDropdownDepartments(df);
+        model.addAttribute(SSAS_FORM, submissionAgreement);
 
 
         model.addAttribute("action", "EditSsa");
@@ -666,14 +666,14 @@ public class SsaAdmin {
 
         }
 
-        SsasForm ssa = ssarepo.findById(ssaid);
+        SubmissionAgreement ssa = ssarepo.findById(ssaid);
         if (ssa != null) {
             List<RsasForm> rsas = ssa.getRsasForms();
 
             model.addAttribute("rsas", rsas);
 
             if (rsas.size() == 0) {
-                model.addAttribute("ssasForm", ssa);
+                model.addAttribute(SSAS_FORM, ssa);
             }
 
             model.addAttribute("action", "EditSsa");
@@ -766,7 +766,7 @@ public class SsaAdmin {
             return "invalid";
         }
 
-        SsasForm ssa = ssarepo.findById(ssaid);
+        SubmissionAgreement ssa = ssarepo.findById(ssaid);
         if (ssa == null) {
             return "invalid";
         }
@@ -807,7 +807,7 @@ public class SsaAdmin {
             int rejectedcnt = 0;
             for (int ssaid : ssaids) {
 
-                SsasForm ssa = ssarepo.findById(ssaid);
+                SubmissionAgreement ssa = ssarepo.findById(ssaid);
                 if (ssa != null) {
                     List<RsasForm> rsas = ssa.getRsasForms();
 
@@ -873,7 +873,7 @@ public class SsaAdmin {
         List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(departmentid);
         model.addAttribute("ssas", ssas);
 
         if (users.isEmpty() && ssas.isEmpty()) {
@@ -908,7 +908,7 @@ public class SsaAdmin {
         List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(departmentid);
         model.addAttribute("ssas", ssas);
 
         if (users.isEmpty() && ssas.isEmpty()) {

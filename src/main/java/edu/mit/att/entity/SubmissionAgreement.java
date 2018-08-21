@@ -13,8 +13,8 @@ import lombok.*;
 @Entity
 @Table(name = "ssas")
 @EqualsAndHashCode(exclude = {"ssaContactsForms", "ssaCopyrightsForms", "ssaAccessRestrictionsForms", "ssaFormatTypesForms"})
-public class SsasForm {
-    private final static Logger LOGGER = Logger.getLogger(SsasForm.class.getCanonicalName());
+public class SubmissionAgreement {
+    private final static Logger LOGGER = Logger.getLogger(SubmissionAgreement.class.getCanonicalName());
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -90,7 +90,7 @@ public class SsasForm {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ssasForm", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "submissionAgreement", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
     private List<SsaContactsForm> ssaContactsForms;
@@ -110,7 +110,7 @@ public class SsasForm {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ssasForm", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "submissionAgreement", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
     private List<SsaCopyrightsForm> ssaCopyrightsForms;
@@ -130,7 +130,7 @@ public class SsasForm {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ssasForm", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "submissionAgreement", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
     private List<SsaAccessRestrictionsForm> ssaAccessRestrictionsForms;
@@ -150,7 +150,7 @@ public class SsasForm {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ssasForm", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "submissionAgreement", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
     private List<SsaFormatTypesForm> ssaFormatTypesForms;
@@ -170,7 +170,7 @@ public class SsasForm {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ssasForm", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "submissionAgreement", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
     private List<RsasForm> rsasForms;
@@ -192,7 +192,7 @@ public class SsasForm {
     // Done due to: https://stackoverflow.com/questions/23973347/jpa-java-lang-stackoverflowerror-on-adding-tostring-method-in-entity-classes
     @Override
     public String toString() {
-        return "SsasForm{" +
+        return "SubmissionAgreement{" +
                 "id=" + id +
                 ", departmenthead='" + departmenthead + '\'' +
                 ", recordid='" + recordid + '\'' +

@@ -18,5 +18,5 @@ public class SsaCopyrightsForm {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ssaid")
-    private SsasForm ssasForm;
+    private SubmissionAgreement submissionAgreement;
 }

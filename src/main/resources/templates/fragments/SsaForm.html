@@ -19,7 +19,7 @@
     -->
 
 
-    <form id="form" th:object="${ssasForm}" method="post" th:action="@{/CreateSsa}">
+    <form id="form" th:object="${submissionAgreement}" method="post" th:action="@{/CreateSsa}">
 
         <fieldset>
             <legend>DLC or Doner and Record information</legend>
@@ -67,8 +67,8 @@
                 <div class="contact">
                     <input type="hidden" value="0" id="contactcnt"/>
                     <input type="hidden" name="ssaContactsForms[0].idx" value="0"/>
-                    <input th:if="${newssa ne '1'}" type="hidden" name="ssaContactsForms[0].ssasForm.id"
-                           th:value="${ssasForm.id}"/>
+                    <input th:if="${newssa ne '1'}" type="hidden" name="ssaContactsForms[0].submissionAgreement.id"
+                           th:value="${submissionAgreement.id}"/>
                     <div class="field-wrap">
                         <label for="ssacontactname" class="field-label" >Name</label>
                         <input type="text" class="field field-text" id="ssacontactname"
@@ -97,7 +97,7 @@
                 <div class="contact" th:each="con, stat : *{ssaContactsForms}">
                     <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].id}"/>
                     <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].idx}"/>
-                    <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].ssasForm.id}"/>
+                    <input type="hidden" th:field="*{ssaContactsForms[__${stat.index}__].submissionAgreement.id}"/>
                     <div class="field-wrap">
                         <label for="ssacontactname" class="field-label" >Name</label>
                         <input type="text" class="field field-text" id="name"
@@ -133,8 +133,8 @@
                 <input type="hidden" id="copyrightcnt" value="0"/>
                 <div class="copyright">
                     <div class="field-wrap">                               
-                        <input th:if="${newssa ne '1'}" type="hidden" name="ssaCopyrightsForms[0].ssasForm.id"
-                           th:value="${ssasForm.id}"/>
+                        <input th:if="${newssa ne '1'}" type="hidden" name="ssaCopyrightsForms[0].submissionAgreement.id"
+                           th:value="${submissionAgreement.id}"/>
                         <label for="copyright" class="field-label" >Copyright statement</label>
                         <input class="field field-text" type="text" id="copyright" name="ssaCopyrightsForms[0].copyright" />
                         <span><input class="btn button-secondary warn" type="button" value="Remove this statement" onclick="removeit( this, 'copyright' )"/></span>
@@ -149,7 +149,7 @@
                                th:field="*{ssaCopyrightsForms[__${stat.index}__].id}"/>
                         <input type="hidden" th:field="*{ssaCopyrightsForms[__${stat.index}__].idx}"/>
                         <input th:if="${newssa ne '1'}" type="hidden"
-                               th:field="*{ssaCopyrightsForms[__${stat.index}__].ssasForm.id}"/>
+                               th:field="*{ssaCopyrightsForms[__${stat.index}__].submissionAgreement.id}"/>
 
                         <label for="copyright" class="field-label" >Copyright statement</label>
                         <input class="field field-text" type="text" id="copyright"
@@ -171,8 +171,8 @@
                 <div class="restriction">
                     <div class="field-wrap">                               
                         <span>
-                            <input th:if="${newssa ne '1'}" type="hidden" name="ssaAccessRestrictionsForms[0].ssasForm.id"
-                    th:value="${ssasForm.id}"/>
+                            <input th:if="${newssa ne '1'}" type="hidden" name="ssaAccessRestrictionsForms[0].submissionAgreement.id"
+                    th:value="${submissionAgreement.id}"/>
                             <input type="hidden" name="ssaAccessRestrictionsForms[0].idx" value="0"/>
 
                             <label for="restriction" class="field-label" >Access restriction form</label>
@@ -193,7 +193,7 @@
                         <input type="hidden" th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].id}"/>
                         <input type="hidden" th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].idx}"/>
                         <input type="hidden"
-                               th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].ssasForm.id}"/>
+                               th:field="*{ssaAccessRestrictionsForms[__${stat.index}__].submissionAgreement.id}"/>
 
                         <label for="restriction" class="field-label" >Copyright statement</label>
                         <input type="text" id="restriction"
@@ -258,8 +258,8 @@
             <legend>Format types</legend>
             <div id="formats" th:case="true">
                 <input type="hidden" id="formatcnt" value="0"/>
-                <input th:if="${newssa ne '1'}" type="hidden" name="ssaFormatTypesForms[0].ssasForm.id"
-                       th:value="${ssasForm.id}"/>
+                <input th:if="${newssa ne '1'}" type="hidden" name="ssaFormatTypesForms[0].submissionAgreement.id"
+                       th:value="${submissionAgreement.id}"/>
                 <div class="format">
         		  <span>
         		    <input type="text" class="field field-text" name="ssaFormatTypesForms[0].formattype"/>
@@ -272,7 +272,7 @@
                 <div class="format" th:each="cr, stat : *{ssaFormatTypesForms}">
                     <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].id}"/>
                     <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].idx}"/>
-                    <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].ssasForm.id}"/>
+                    <input type="hidden" th:field="*{ssaFormatTypesForms[__${stat.index}__].submissionAgreement.id}"/>
                     <input type="text" class="field field-text"
                                th:field="*{ssaFormatTypesForms[__${stat.index}__].formattype}"/>
                 </div>

@@ -28,7 +28,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
     ServletContext context;
 
     @Resource
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     @Resource
     private SsaContactsFormRepository contactrepo;
@@ -265,7 +265,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
 
         String sqldate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
 
-        SsasForm ssa = new SsasForm();
+        SubmissionAgreement ssa = new SubmissionAgreement();
         ssa.setDepartmenthead(submitData.getDepartmenthead());
         ssa.setCreatedby(submitData.getSignature());
         ssa.setIP(remoteip);
@@ -296,7 +296,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         contact.setEmail(submitData.getEmail());
         contact.setAddress(submitData.getAddress());
         contact = contactrepo.save(contact);
-        contact.setSsasForm(ssa);
+        contact.setSubmissionAgreement(ssa);
         newcs.add(contact);
         ssa.setSsaContactsForms(newcs);
 
@@ -306,7 +306,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         SsaCopyrightsForm cr = new SsaCopyrightsForm();
         cr.setCopyright(copyrightstatement);
         cr = copyrightrepo.save(cr);
-        cr.setSsasForm(ssa);
+        cr.setSubmissionAgreement(ssa);
         newcr.add(cr);
         ssa.setSsaCopyrightsForms(newcr);
 
@@ -315,7 +315,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
 	SsaFormatTypesForm f = new SsaFormatTypesForm();
 	f.setFormattype("None");
 	f = formattyperepo.save(f);
-	f.setSsasForm(ssa);
+	f.setSubmissionAgreement(ssa);
 	newfs.add(f);
 	ssa.setSsaFormatTypesForms(newfs);
 	*/

@@ -13,6 +13,6 @@ public interface SsaCopyrightsFormRepository extends JpaRepository<SsaCopyrights
     @Query(value = "SELECT c FROM SsaCopyrightsForm c order by copyright asc")
     List<SsaCopyrightsForm> findAllOrderByCopyrightAsc();
 
-    @Query(value = "SELECT c FROM SsaCopyrightsForm c where c.ssasForm.id=?1 and c.ssasForm.id != 0 order by copyright asc")
+    @Query(value = "SELECT c FROM SsaCopyrightsForm c where c.submissionAgreement.id=?1 and c.submissionAgreement.id != 0 order by copyright asc")
     List<SsaCopyrightsForm> findAllBySsaIdOrderByCopyrightAsc(int ssaid);
 }

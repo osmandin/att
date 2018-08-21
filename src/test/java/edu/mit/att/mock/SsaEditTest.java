@@ -2,12 +2,12 @@ package edu.mit.att.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mit.att.entity.Department;
+import edu.mit.att.entity.SubmissionAgreement;
 import edu.mit.att.repository.DepartmentRepository;
-import edu.mit.att.repository.SsasFormRepository;
+import edu.mit.att.repository.SubmissionAgreementRepository;
 import edu.mit.att.service.DepartmentService;
 import edu.mit.att.service.SsasFormService;
 import edu.mit.att.controllers.SsaAdmin;
-import edu.mit.att.entity.SsasForm;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -50,7 +50,7 @@ public class SsaEditTest {
     private DepartmentService departmentservice;
 
     @Mock
-    private SsasFormRepository ssasFormRepository;
+    private SubmissionAgreementRepository submissionAgreementRepository;
 
     @Mock
     private SsasFormService ssasFormService;
@@ -78,9 +78,9 @@ public class SsaEditTest {
         List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
-        when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
+        when(submissionAgreementRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
 
-        SsasForm s = new SsasForm();
+        SubmissionAgreement s = new SubmissionAgreement();
 
 
         // see: https://stackoverflow.com/questions/4339207/http-post-with-request-content-type-form-not-working-in-spring-mvc-3/31083802#31083802
@@ -102,7 +102,7 @@ public class SsaEditTest {
         List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
-        when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
+        when(submissionAgreementRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
         when(departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(1)).thenReturn(Collections.emptyList());
         mockMvc.perform(post("/EditSsa?id=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

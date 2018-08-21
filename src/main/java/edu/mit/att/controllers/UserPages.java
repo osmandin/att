@@ -64,7 +64,7 @@ public class UserPages {
     DepartmentService departmentservice;
 
     @Autowired
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     @Autowired
     private RsasFormRepository rsarepo;
@@ -149,7 +149,7 @@ public class UserPages {
 
 /*        try {
             if (isadmin) {
-                List<SsasForm> ssas = ssarepo.findAll();
+                List<SubmissionAgreement> ssas = ssarepo.findAll();
                 LOGGER.info("ssas for admin user:" + ssas.toString());
                 if (ssas != null && !ssas.isEmpty() && ssas.size() != 0) {
                     model.addAttribute("departments", 1);
@@ -169,7 +169,7 @@ public class UserPages {
 
         LOGGER.info("Retrieved user:" + user.toString());
 
-        final List<SsasForm> userSubmissionAgreements = new ArrayList<>();
+        final List<SubmissionAgreement> userSubmissionAgreements = new ArrayList<>();
 
         // FIXME: BUG - extra departments are created when a new SSA is created
 
@@ -190,7 +190,7 @@ public class UserPages {
 
         LOGGER.info("User departments:" + departments.toString());
 
-        final List<SsasForm> ssas = ssarepo.findAll();
+        final List<SubmissionAgreement> ssas = ssarepo.findAll();
 
         LOGGER.info("SSAS:" + ssas.toString());
 
@@ -202,7 +202,7 @@ public class UserPages {
 
             final int departmentId = df.getId();
 
-            for (final SsasForm ssa : ssas) {
+            for (final SubmissionAgreement ssa : ssas) {
                 final Department sd = ssa.getDepartment();
                 if (sd.getId() == departmentId) {
                     userSubmissionAgreements.add(ssa);
@@ -242,13 +242,13 @@ public class UserPages {
 
         if (ssaid != 0) {
             LOGGER.log(Level.INFO, "ssaid={0}", new Object[]{ssaid});
-            SsasForm ssaform = ssarepo.findById(ssaid);
+            SubmissionAgreement ssaform = ssarepo.findById(ssaid);
 
             model.addAttribute("ssa", ssaform);
         } else {
             LOGGER.log(Level.INFO, "ssaid is zero!!!");
-            SsasForm ssasForm = new SsasForm();
-            model.addAttribute("ssasForm", ssasForm);
+            SubmissionAgreement submissionAgreement = new SubmissionAgreement();
+            model.addAttribute("ssasForm", submissionAgreement);
         }
 
         return "RecordsSubmissionForm";
@@ -354,9 +354,9 @@ public class UserPages {
         final int ssaid = (Integer) session.getAttribute("ssaid");
         model.addAttribute("ssaid", ssaid);
 
-        SsasForm ssasForm = ssarepo.findById(ssaid);
-        LOGGER.log(Level.INFO, "Associated Department form:" + ssasForm.getDepartment());
-        final String DEPARTMENT_ID = ssasForm.getDepartment().getName();
+        SubmissionAgreement submissionAgreement = ssarepo.findById(ssaid);
+        LOGGER.log(Level.INFO, "Associated Department form:" + submissionAgreement.getDepartment());
+        final String DEPARTMENT_ID = submissionAgreement.getDepartment().getName();
 
 
         final String description = (String) session.getAttribute("generalRecordsDescription");
@@ -383,11 +383,11 @@ public class UserPages {
         final String sqlDate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
         rsa.setTransferdate(sqlDate);
 
-        final SsasForm ssa = ssarepo.findById(ssaid);
+        final SubmissionAgreement ssa = ssarepo.findById(ssaid);
         if (ssa == null || ssaid == 0) {
             LOGGER.log(Level.SEVERE, "ssa is null or ssaid is zero: ssaid={0}", new Object[]{ssaid});
         } else {
-            rsa.setSsasForm(ssa);
+            rsa.setSubmissionAgreement(ssa);
         }
 
         rsa = rsarepo.save(rsa);

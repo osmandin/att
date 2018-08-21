@@ -452,7 +452,7 @@ public class FileOps {
         rsa.setAccessionnumber(accessionnumber);
         rsa = rsarepo.save(rsa);
 
-        SsasForm ssa = rsa.getSsasForm();
+        SubmissionAgreement ssa = rsa.getSubmissionAgreement();
 
         List<SsaCopyrightsForm> crs = ssa.getSsaCopyrightsForms();
 
@@ -489,7 +489,7 @@ public class FileOps {
         }
 
         boolean departvalid = true;
-        if (rsa.getSsasForm().getDepartment() == null) {
+        if (rsa.getSubmissionAgreement().getDepartment() == null) {
             departvalid = false;
         }
 

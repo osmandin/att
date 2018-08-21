@@ -17,6 +17,6 @@ public class SsaFormatTypesForm {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ssaid")
-    private SsasForm ssasForm;
+    private SubmissionAgreement submissionAgreement;
 
 }

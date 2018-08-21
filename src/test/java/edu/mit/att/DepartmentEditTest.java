@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mit.att.controllers.DepartmentAdmin;
 import edu.mit.att.entity.Department;
 import edu.mit.att.repository.DepartmentRepository;
-import edu.mit.att.repository.SsasFormRepository;
+import edu.mit.att.repository.SubmissionAgreementRepository;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -47,7 +47,7 @@ public class DepartmentEditTest {
     private DepartmentRepository departmentsService;
 
     @Mock
-    private SsasFormRepository ssasFormRepository;
+    private SubmissionAgreementRepository submissionAgreementRepository;
 
     @Before
     public void setup(){
@@ -67,7 +67,7 @@ public class DepartmentEditTest {
         List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
-        when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
+        when(submissionAgreementRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
 
         // see: https://stackoverflow.com/questions/4339207/http-post-with-request-content-type-form-not-working-in-spring-mvc-3/31083802#31083802
 

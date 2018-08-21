@@ -6,7 +6,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Data
-@ToString(exclude = {"ssasForm"})
+@ToString(exclude = {"submissionAgreement"})
 @Entity
 @Table(name = "ssaContacts")
 public class SsaContactsForm {
@@ -23,5 +23,5 @@ public class SsaContactsForm {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ssaid")
-    private SsasForm ssasForm;
+    private SubmissionAgreement submissionAgreement;
 }

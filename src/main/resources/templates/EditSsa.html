@@ -37,16 +37,16 @@
                     will be indicated. The delete option is only available when dependencies have been removed.
                 </p>
 
-                <div th:switch="*{ssasForm != null and ssasForm.rsasForms != null and ssasForm.rsasForms.size() > 0}">
+                <div th:switch="*{submissionAgreement != null and submissionAgreement.rsasForms != null and submissionAgreement.rsasForms.size() > 0}">
                     <div th:case="true">
                         <h4>This Agreement cannot be deleted due to dependencies.</h4>
 <!--
-                        <p><a th:href="@{/SsaDeleteWarning(ssaid=${ssasForm.id})}">See dependencies</a></p>
+                        <p><a th:href="@{/SsaDeleteWarning(ssaid=${submissionAgreement.id})}">See dependencies</a></p>
 -->
                     </div>
                     <div th:case="*">
-                        <p th:if="*{ssasForm != null}"><a onclick="return confirm_delete()"
-                                                          th:href="@{/DeleteSsa(ssaid=${ssasForm.id})}">Delete
+                        <p th:if="*{submissionAgreement != null}"><a onclick="return confirm_delete()"
+                                                          th:href="@{/DeleteSsa(ssaid=${submissionAgreement.id})}">Delete
                             Submission
                             Agreement</a></p>
                     </div>

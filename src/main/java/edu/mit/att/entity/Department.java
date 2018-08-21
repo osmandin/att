@@ -8,8 +8,8 @@ import lombok.*;
 @Data
 @Entity
 @Table(name = "departments")
-@EqualsAndHashCode(exclude = {"ssasForm", "users"})
-@ToString(exclude = {"users", "ssasForm"})
+@EqualsAndHashCode(exclude = {"submissionAgreement", "users"})
+@ToString(exclude = {"users", "submissionAgreement"})
 public class Department {
 
     @Id
@@ -22,9 +22,9 @@ public class Department {
     //private boolean active = true; // used for usersForm
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "department")
-    private SsasForm ssasForm;
+    private SubmissionAgreement submissionAgreement;
 
-    public int hashCode(SsasForm sf) {
+    public int hashCode(SubmissionAgreement sf) {
         return sf.getId();
     }
 

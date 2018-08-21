@@ -19,7 +19,7 @@ public class SsasFormServiceImpl implements SsasFormService {
     private int ssaid = -1;
 
     @Resource
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     @Resource
     private SsaContactsFormRepository contactrepo;
@@ -38,19 +38,19 @@ public class SsasFormServiceImpl implements SsasFormService {
 
     // ------------------------------------------------------------------------
     @Transactional
-    public void saveForm(SsasForm ssasForm, Department selectedDepartment) {
+    public void saveForm(SubmissionAgreement submissionAgreement, Department selectedDepartment) {
 
-        int ssaid = ssasForm.getId();
+        int ssaid = submissionAgreement.getId();
 
 
-        ssasForm.setDepartment(selectedDepartment);
+        submissionAgreement.setDepartment(selectedDepartment);
 
         // in form
-        //ssasForm.setCreatedby(session.getAttribute("name").toString());
-        //ssasForm.setIP(request.getRemoteAddr());
-        //ssasForm.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
+        //submissionAgreement.setCreatedby(session.getAttribute("name").toString());
+        //submissionAgreement.setIP(request.getRemoteAddr());
+        //submissionAgreement.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
 
-        SsasForm ssa = ssarepo.findById(ssaid);
+        SubmissionAgreement ssa = ssarepo.findById(ssaid);
 
         List<SsaContactsForm> repocontacts = ssa.getSsaContactsForms();
         if (repocontacts != null) {
@@ -73,23 +73,23 @@ public class SsasFormServiceImpl implements SsasFormService {
         }
 
         // added contacts, copyrights, ... works just by saving, but deleted content does not delete just by saving, hence the above
-        ssarepo.save(ssasForm);
+        ssarepo.save(submissionAgreement);
     }
 
     @Transactional
-    public void saveFormTest(SsasForm ssasForm, Department selectedDepartment) {
+    public void saveFormTest(SubmissionAgreement submissionAgreement, Department selectedDepartment) {
 
-        int ssaid = ssasForm.getId();
+        int ssaid = submissionAgreement.getId();
 
 
-        ssasForm.setDepartment(departmentRepository.findAll().get(0));
+        submissionAgreement.setDepartment(departmentRepository.findAll().get(0));
 
         // in form
-        //ssasForm.setCreatedby(session.getAttribute("name").toString());
-        //ssasForm.setIP(request.getRemoteAddr());
-        //ssasForm.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
+        //submissionAgreement.setCreatedby(session.getAttribute("name").toString());
+        //submissionAgreement.setIP(request.getRemoteAddr());
+        //submissionAgreement.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
 
-        SsasForm ssa = ssarepo.findById(ssaid);
+        SubmissionAgreement ssa = ssarepo.findById(ssaid);
 
         List<SsaContactsForm> repocontacts = ssa.getSsaContactsForms();
         if (repocontacts != null) {
@@ -112,58 +112,58 @@ public class SsasFormServiceImpl implements SsasFormService {
         }
 
         // added contacts, copyrights, ... works just by saving, but deleted content does not delete just by saving, hence the above
-        ssarepo.save(ssasForm);
+        ssarepo.save(submissionAgreement);
 
     }
 
     // ------------------------------------------------------------------------
     @Transactional
-    public void create(SsasForm ssasForm, Department selectedDepartment, HttpSession session, HttpServletRequest request) {
-        ssasForm.setCreatedby("osman"); //TODO
+    public void create(SubmissionAgreement submissionAgreement, Department selectedDepartment, HttpSession session, HttpServletRequest request) {
+        submissionAgreement.setCreatedby("osman"); //TODO
 
-        //ssasForm.setIP(request.getRemoteAddr());
-        ssasForm.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
+        //submissionAgreement.setIP(request.getRemoteAddr());
+        submissionAgreement.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
 
-        ssasForm.setDepartment(selectedDepartment);
-        List<SsaCopyrightsForm> crs = ssasForm.getSsaCopyrightsForms();
-        List<SsaFormatTypesForm> fts = ssasForm.getSsaFormatTypesForms();
-        List<SsaAccessRestrictionsForm> ars = ssasForm.getSsaAccessRestrictionsForms();
-        ssasForm.setSsaCopyrightsForms(null);
-        ssasForm.setSsaFormatTypesForms(null);
-        ssasForm.setSsaAccessRestrictionsForms(null);
-        ssasForm = ssarepo.save(ssasForm);
+        submissionAgreement.setDepartment(selectedDepartment);
+        List<SsaCopyrightsForm> crs = submissionAgreement.getSsaCopyrightsForms();
+        List<SsaFormatTypesForm> fts = submissionAgreement.getSsaFormatTypesForms();
+        List<SsaAccessRestrictionsForm> ars = submissionAgreement.getSsaAccessRestrictionsForms();
+        submissionAgreement.setSsaCopyrightsForms(null);
+        submissionAgreement.setSsaFormatTypesForms(null);
+        submissionAgreement.setSsaAccessRestrictionsForms(null);
+        submissionAgreement = ssarepo.save(submissionAgreement);
 
         if (crs != null) {
             for (SsaCopyrightsForm cr : crs) {
-                cr.setSsasForm(ssasForm);
+                cr.setSubmissionAgreement(submissionAgreement);
             }
             copyrightrepo.save(crs);
-            ssasForm.setSsaCopyrightsForms(crs);
+            submissionAgreement.setSsaCopyrightsForms(crs);
         }
 
         if (fts != null) {
             for (SsaFormatTypesForm ft : fts) {
-                ft.setSsasForm(ssasForm);
+                ft.setSubmissionAgreement(submissionAgreement);
             }
             formattyperepo.save(fts);
-            ssasForm.setSsaFormatTypesForms(fts);
+            submissionAgreement.setSsaFormatTypesForms(fts);
         }
 
         if (ars != null) {
             for (SsaAccessRestrictionsForm ar : ars) {
-                ar.setSsasForm(ssasForm);
+                ar.setSubmissionAgreement(submissionAgreement);
             }
             accessrestrictionrepo.save(ars);
-            ssasForm.setSsaAccessRestrictionsForms(ars);
+            submissionAgreement.setSsaAccessRestrictionsForms(ars);
         }
 
-        ssasForm = ssarepo.save(ssasForm);
+        submissionAgreement = ssarepo.save(submissionAgreement);
     }
 
     // ------------------------------------------------------------------------
     @Transactional
-    public void saveSsaFormForRsa(SsasForm ssasForm) {
-        SsasForm ssa = ssarepo.findById(ssasForm.getId());
+    public void saveSsaFormForRsa(SubmissionAgreement submissionAgreement) {
+        SubmissionAgreement ssa = ssarepo.findById(submissionAgreement.getId());
 
         List<SsaContactsForm> repocontacts = ssa.getSsaContactsForms();
         contactrepo.delete(repocontacts);
@@ -174,7 +174,7 @@ public class SsasFormServiceImpl implements SsasFormService {
         List<SsaAccessRestrictionsForm> reporestrictions = ssa.getSsaAccessRestrictionsForms();
         accessrestrictionrepo.delete(reporestrictions);
 
-        ssarepo.save(ssasForm);
+        ssarepo.save(submissionAgreement);
     }
 
     // ------------------------------------------------------------------------
@@ -190,9 +190,9 @@ public class SsasFormServiceImpl implements SsasFormService {
 
         username = emailparts[0];
 
-        List<SsasForm> ssas = ssarepo.findAllSsasForUsername(username);
+        List<SubmissionAgreement> ssas = ssarepo.findAllSsasForUsername(username);
         if (ssas.size() == 1) {
-            SsasForm ssa = ssas.get(0);
+            SubmissionAgreement ssa = ssas.get(0);
             if (ssa.getDepartmenthead().equals(submitData.getDepartmenthead()) && ssa.getCreatedby().equals(submitData.getSignature())) {
                 Department df = ssa.getDepartment();
                 if (df.getName().equals(submitData.getDepartment())) {

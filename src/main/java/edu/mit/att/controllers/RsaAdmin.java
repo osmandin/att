@@ -197,7 +197,7 @@ public class RsaAdmin {
         if (rsasForm.isApproved()) {
             LOGGER.log(Level.INFO, "draft RSA approved");
 
-            List<SsaContactsForm> contactinfo = rsasForm.getSsasForm().getSsaContactsForms();
+            List<SsaContactsForm> contactinfo = rsasForm.getSubmissionAgreement().getSsaContactsForms();
 
             if (contactinfo != null && contactinfo.size() > 0) {
                 LOGGER.log(Level.INFO, "sending approved email");

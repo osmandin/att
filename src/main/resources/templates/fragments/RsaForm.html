@@ -13,14 +13,14 @@
         <input type="hidden" th:field="*{id}"/>
         <input type="hidden" th:field="*{createdby}"/>
         <input type="hidden" th:field="*{idx}"/>
-        <input type="hidden" th:field="*{ssasForm.id}"/>
-        <input type="hidden" th:field="*{ssasForm.enabled}"/>
-        <input type="hidden" th:field="*{ssasForm.approved}"/>
-        <input type="hidden" th:field="*{ssasForm.department.id}"/>
-        <input type="hidden" th:field="*{ssasForm.createdby}"/>
-        <input type="hidden" th:field="*{ssasForm.editdate}"/>
-        <input type="hidden" th:field="*{ssasForm.IP}"/>
-        <input type="hidden" th:field="*{ssasForm.onlinesubmission}"/>
+        <input type="hidden" th:field="*{submissionAgreement.id}"/>
+        <input type="hidden" th:field="*{submissionAgreement.enabled}"/>
+        <input type="hidden" th:field="*{submissionAgreement.approved}"/>
+        <input type="hidden" th:field="*{submissionAgreement.department.id}"/>
+        <input type="hidden" th:field="*{submissionAgreement.createdby}"/>
+        <input type="hidden" th:field="*{submissionAgreement.editdate}"/>
+        <input type="hidden" th:field="*{submissionAgreement.IP}"/>
+        <input type="hidden" th:field="*{submissionAgreement.onlinesubmission}"/>
 
         <div>
             <label for="id">Transfer Request ID</label>
@@ -48,7 +48,7 @@
         <div class="form-group row">
             <label for="ssaid" class="col-sm-2 col-form-label">Submission Agreement ID</label>
             <input name="ssaid" class="id" type="text" size="4" readonly="readonly" id="ssaid"
-                   th:field="*{ssasForm.id}"/>
+                   th:field="*{submissionAgreement.id}"/>
         </div>
 
         <p></p>
@@ -89,7 +89,7 @@
                         <label for="hdu" class="col-sm-2 col-form-label">Head of Department/Unit</label>
                         <div class="col-sm-7">
                         <input name="departmenthead" type="text" class="form-control" id="departmenthead"
-                               th:field="${rsasForm.ssasForm.departmenthead}"/>
+                               th:field="${rsasForm.submissionAgreement.departmenthead}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -97,7 +97,7 @@
                         <div class="col-sm-7">
 
                         <input name="recordid" type="text" id="recordid" class="form-control"
-                               th:field="*{ssasForm.recordid}"/>
+                               th:field="*{submissionAgreement.recordid}"/>
                         </div>
                     </div>
                 </div>
@@ -107,34 +107,34 @@
         <p></p>
 
         <fieldset class="repeatable"
-                  th:switch="*{ssasForm == null or ssasForm.ssaContactsForms == null or ssasForm.ssaContactsForms.size() == 0}">
+                  th:switch="*{submissionAgreement == null or submissionAgreement.ssaContactsForms == null or submissionAgreement.ssaContactsForms.size() == 0}">
             <legend>Department/Unit or Donor Contact Information</legend>
             <p>Supply a name, phone number and email address.</p>
             <div id="contacts" th:case="true">
                 <div class="contact">
                     <input type="hidden" value="0" id="contactcnt"/>
-                    <input type="hidden" name="ssasForm.ssaContactsForms[0].idx" value="0"/>
-                    <input type="hidden" name="ssasForm.ssaContactsForms[0].ssasForm.id"
-                           th:value="${rsasForm.ssasForm.id}"/>
+                    <input type="hidden" name="submissionAgreement.ssaContactsForms[0].idx" value="0"/>
+                    <input type="hidden" name="submissionAgreement.ssaContactsForms[0].submissionAgreement.id"
+                           th:value="${rsasForm.submissionAgreement.id}"/>
                     <div class="form-group row">
                         <label for="ssacontactname" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-7">
 
-                        <input type="text" class="form-control" id="name" name="ssasForm.ssaContactsForms[0].name"/>
+                        <input type="text" class="form-control" id="name" name="submissionAgreement.ssaContactsForms[0].name"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="ssacontactphone" class="col-sm-2 col-form-label">Phone Number</label>
                         <div class="col-sm-7">
 
-                        <input type="text" class="form-control" id="phone" name="ssasForm.ssaContactsForms[0].phone"/>
+                        <input type="text" class="form-control" id="phone" name="submissionAgreement.ssaContactsForms[0].phone"/>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="ssacontactemail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-7">
 
-                        <input type="text" class="form-control" id="email" name="ssasForm.ssaContactsForms[0].email"/>
+                        <input type="text" class="form-control" id="email" name="submissionAgreement.ssaContactsForms[0].email"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -143,7 +143,7 @@
                         <div class="col-sm-7">
 
                         <input type="text" class="form-control" id="address"
-                               name="ssasForm.ssaContactsForms[0].address"/>
+                               name="submissionAgreement.ssaContactsForms[0].address"/>
 
                         </div>
                     </div>
@@ -155,17 +155,17 @@
 
 
             <div id="contacts" th:case="*">
-                <input type="hidden" id="contactcnt" th:value="*{ssasForm.ssaContactsForms.size()}"/>
-                <div class="contact" th:each="con, stat : *{ssasForm.ssaContactsForms}">
-                    <input type="hidden" th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].id}"/>
-                    <input type="hidden" th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].idx}"/>
-                    <input type="hidden" th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].ssasForm.id}"/>
+                <input type="hidden" id="contactcnt" th:value="*{submissionAgreement.ssaContactsForms.size()}"/>
+                <div class="contact" th:each="con, stat : *{submissionAgreement.ssaContactsForms}">
+                    <input type="hidden" th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].idx}"/>
+                    <input type="hidden" th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].submissionAgreement.id}"/>
                     <div>
                         <label for="ssacontactname" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-7">
 
                         <input type="text" class="form-control" id="name"
-                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].name}"/>
+                               th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].name}"/>
 
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                         <div class="col-sm-7">
 
                         <input type="text" class="form-control" id="phone"
-                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].phone}"/>
+                               th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].phone}"/>
 
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                         <div class="col-sm-7">
 
                         <input type="text" class="form-control" id="email"
-                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].email}"/>
+                               th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].email}"/>
                         </div>
                     </div>
                     <div>
@@ -193,7 +193,7 @@
                         <div class="col-sm-7">
 
                         <input type="text" class="form-control" id="address"
-                               th:field="*{ssasForm.ssaContactsForms[__${stat.index}__].address}"/>
+                               th:field="*{submissionAgreement.ssaContactsForms[__${stat.index}__].address}"/>
                         </div>
                     </div>
                    <!-- <div>
@@ -214,7 +214,7 @@
                                             <div class="col-sm-7">
 
 	        <input type="text" class="form-control" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
-                   th:field="*{ssasForm.creationdate}"/>
+                   th:field="*{submissionAgreement.creationdate}"/>
                                             </div>
 	  </span>
         </div>
@@ -225,7 +225,7 @@
             <label for="rt" class="col-sm-2 col-form-label">Records Title</label>
             <div class="col-sm-7">
 
-            <input id="recordstitle" type="text" class="form-control" th:field="*{ssasForm.recordstitle}"/>
+            <input id="recordstitle" type="text" class="form-control" th:field="*{submissionAgreement.recordstitle}"/>
             </div>
         </div>
 
@@ -242,16 +242,16 @@
         <p></p>
 
         <fieldset class="repeatable"
-                  th:switch="*{ssasForm == null or ssasForm.ssaCopyrightsForms == null or ssasForm.ssaCopyrightsForms.size() == 0}">
+                  th:switch="*{submissionAgreement == null or submissionAgreement.ssaCopyrightsForms == null or submissionAgreement.ssaCopyrightsForms.size() == 0}">
             <legend>Copyright Statement</legend>
             <div id="copyrights" th:case="true">
                 <input type="hidden" id="copyrightcnt" value="0"/>
                 <div class="copyright">
-                    <input type="hidden" name="ssasForm.ssaCopyrightsForms[0].ssasForm.id"
-                           th:value="${rsasForm.ssasForm.id}"/>
+                    <input type="hidden" name="submissionAgreement.ssaCopyrightsForms[0].submissionAgreement.id"
+                           th:value="${rsasForm.submissionAgreement.id}"/>
                     <div class="col-sm-7">
 
-                    <input type="text" id="copyright" name="ssasForm.ssaCopyrightsForms[0].copyright"/>
+                    <input type="text" id="copyright" name="submissionAgreement.ssaCopyrightsForms[0].copyright"/>
                     </div>
 <!--
                     <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
@@ -259,15 +259,15 @@
                 </div>
             </div>
             <div id="copyrights" th:case="*">
-                <input type="hidden" th:value="*{ssasForm.ssaCopyrightsForms.size()}" id="copyrightcnt"/>
-                <div class="copyright" th:each="cr, stat : *{ssasForm.ssaCopyrightsForms}">
-                    <input type="hidden" th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].id}"/>
-                    <input type="hidden" th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].idx}"/>
-                    <input type="hidden" th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].ssasForm.id}"/>
+                <input type="hidden" th:value="*{submissionAgreement.ssaCopyrightsForms.size()}" id="copyrightcnt"/>
+                <div class="copyright" th:each="cr, stat : *{submissionAgreement.ssaCopyrightsForms}">
+                    <input type="hidden" th:field="*{submissionAgreement.ssaCopyrightsForms[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{submissionAgreement.ssaCopyrightsForms[__${stat.index}__].idx}"/>
+                    <input type="hidden" th:field="*{submissionAgreement.ssaCopyrightsForms[__${stat.index}__].submissionAgreement.id}"/>
                     <div class="col-sm-7">
 
                     <input type="text" id="copyright"
-                           th:field="*{ssasForm.ssaCopyrightsForms[__${stat.index}__].copyright}"/>
+                           th:field="*{submissionAgreement.ssaCopyrightsForms[__${stat.index}__].copyright}"/>
                     </div>
 <!--
                     <span><input type="button" value="-" onclick="removeit( this, 'copyright' )"/></span>
@@ -282,19 +282,19 @@
         <p></p>
 
         <fieldset class="repeatable"
-                  th:switch="*{ssasForm == null} or *{ssasForm.ssaAccessRestrictionsForms == null} or *{ssasForm.ssaAccessRestrictionsForms.size() == 0}">
+                  th:switch="*{submissionAgreement == null} or *{submissionAgreement.ssaAccessRestrictionsForms == null} or *{submissionAgreement.ssaAccessRestrictionsForms.size() == 0}">
             <legend>Access Restrictions</legend>
             <div id="restrictions" th:case="true">
                 <input type="hidden" id="restrictioncnt" value="1"/>
                 <div class="restriction">
 	      <span>
-		<input type="hidden" name="ssasForm.ssaAccessRestrictionsForms[0].ssasForm.id"
-               th:value="${rsasForm.ssasForm.id}"/>
-		<input type="hidden" name="ssasForm.ssaAccessRestrictionsForms[0].idx" value="0"/>
+		<input type="hidden" name="submissionAgreement.ssaAccessRestrictionsForms[0].submissionAgreement.id"
+               th:value="${rsasForm.submissionAgreement.id}"/>
+		<input type="hidden" name="submissionAgreement.ssaAccessRestrictionsForms[0].idx" value="0"/>
 
                                           <div class="col-sm-7">
 
-		<input type="text" id="restriction" name="ssasForm.ssaAccessRestrictionsForms[0].restriction"
+		<input type="text" id="restriction" name="submissionAgreement.ssaAccessRestrictionsForms[0].restriction"
                th:value="${defaultaccessrestriction}"/>
                                           </div>
 	      </span>
@@ -306,17 +306,17 @@
                 </div>
             </div>
             <div id="restrictions" th:case="*">
-                <input type="hidden" th:value="*{ssasForm.ssaAccessRestrictionsForms.size()}" id="restrictioncnt"/>
-                <div class="restriction" th:each="cr, stat : *{ssasForm.ssaAccessRestrictionsForms}">
-                    <input type="hidden" th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].id}"/>
-                    <input type="hidden" th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].idx}"/>
+                <input type="hidden" th:value="*{submissionAgreement.ssaAccessRestrictionsForms.size()}" id="restrictioncnt"/>
+                <div class="restriction" th:each="cr, stat : *{submissionAgreement.ssaAccessRestrictionsForms}">
+                    <input type="hidden" th:field="*{submissionAgreement.ssaAccessRestrictionsForms[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{submissionAgreement.ssaAccessRestrictionsForms[__${stat.index}__].idx}"/>
                     <input type="hidden"
-                           th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].ssasForm.id}"/>
+                           th:field="*{submissionAgreement.ssaAccessRestrictionsForms[__${stat.index}__].submissionAgreement.id}"/>
 
                     <div class="col-sm-7">
 
                     <input type="text" id="restriction"
-                           th:field="*{ssasForm.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
+                           th:field="*{submissionAgreement.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"/>
 <!--
                     <span><input type="button" value="-" onclick="removeit( this, 'restriction' )"/></span>
 -->
@@ -347,7 +347,7 @@
 
         <div class="form-group row">
             <label for="rp2" class="col-sm-2 col-form-label">Retention Period</label>
-            <div th:switch="*{ssasForm != null} and *{ssasForm.retentionperiod != null} and *{ssasForm.retentionperiod.length() eq '0'}">
+            <div th:switch="*{submissionAgreement != null} and *{submissionAgreement.retentionperiod != null} and *{submissionAgreement.retentionperiod.length() eq '0'}">
                 <div th:case="true">
                     <div class="col-sm-7">
 
@@ -359,7 +359,7 @@
                     <div class="col-sm-7">
 
                     <input type="text" class="form-control" name="retentionperiod"
-                           th:field="*{ssasForm.retentionperiod}"/>
+                           th:field="*{submissionAgreement.retentionperiod}"/>
                     </div>
                 </div>
             </div>
@@ -369,7 +369,7 @@
 
         <div class="form-group row">
             <label for="ads" class="col-sm-2 col-form-label">Archival Description Standards</label>
-            <div th:switch="*{ssasForm != null} and *{ssasForm.descriptionstandards != null} and *{ssasForm.descriptionstandards.length() eq '0'}">
+            <div th:switch="*{submissionAgreement != null} and *{submissionAgreement.descriptionstandards != null} and *{submissionAgreement.descriptionstandards.length() eq '0'}">
                 <div th:case="true">
                     <div class="col-sm-7">
 
@@ -381,7 +381,7 @@
                     <div class="col-sm-7">
 
                     <input type="text" id="descriptionstandards" class="form-control"
-                           th:field="*{ssasForm.descriptionstandards}"/>
+                           th:field="*{submissionAgreement.descriptionstandards}"/>
                     </div>
                 </div>
             </div>
@@ -411,7 +411,7 @@
                                                 <div class="col-sm-7">
 
 	      <input type="text" class="formcontrol" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
-                 th:field="*{ssasForm.effectivedate}"/>
+                 th:field="*{submissionAgreement.effectivedate}"/>
                                                 </div>
 	    </span>
             </div>
@@ -428,7 +428,7 @@
                                                     <div class="col-sm-7">
 
 		<input type="text" class="form-control" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
-               th:field="*{ssasForm.expirationdate}"/>
+               th:field="*{submissionAgreement.expirationdate}"/>
                                                     </div>
 	      </span>
                 </div>
@@ -441,7 +441,7 @@
                                                     <div class="col-sm-7">
 
 		<input type="text" class="form-control" data-format="YYYY-MM-DD" data-template="YYYY MMM D"
-               th:field="*{ssasForm.retentionalertdate}"/>
+               th:field="*{submissionAgreement.retentionalertdate}"/>
                                                     </div>
 	      </span>
                 </div>

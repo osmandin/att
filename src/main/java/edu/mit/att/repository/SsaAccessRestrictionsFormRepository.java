@@ -13,6 +13,6 @@ public interface SsaAccessRestrictionsFormRepository extends JpaRepository<SsaAc
     @Query(value = "SELECT a FROM SsaAccessRestrictionsForm a order by restriction asc")
     List<SsaAccessRestrictionsForm> findAllOrderByRestrictionAsc();
 
-    @Query(value = "SELECT a FROM SsaAccessRestrictionsForm a where a.ssasForm.id=?1 order by restriction asc")
+    @Query(value = "SELECT a FROM SsaAccessRestrictionsForm a where a.submissionAgreement.id=?1 order by restriction asc")
     List<SsaAccessRestrictionsForm> findAllBySsaIdOrderByRestrictionAsc(int ssaid);
 }

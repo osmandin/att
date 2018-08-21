@@ -54,22 +54,22 @@ public class ApprovedRsasFormServiceImpl implements ApprovedRsasFormService {
     // ------------------------------------------------------------------------
     @Transactional
     public void recordDeletedRsa(RsasForm rsa, HttpSession session) {
-        if (rsa == null || rsa.getSsasForm() == null || rsa.getSsasForm().getDepartment() == null || rsa.getSsasForm().getDepartment().getName() == null) {
+        if (rsa == null || rsa.getSubmissionAgreement() == null || rsa.getSubmissionAgreement().getDepartment() == null || rsa.getSubmissionAgreement().getDepartment().getName() == null) {
             return;
         }
 
         String sqldatetimenow = String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance());
 
-        String departmentname = rsa.getSsasForm().getDepartment().getName();
+        String departmentname = rsa.getSubmissionAgreement().getDepartment().getName();
 
         String sendername = "";
-        if (rsa.getSsasForm() != null && rsa.getSsasForm().getDepartmenthead() != null) {
-            sendername = rsa.getSsasForm().getDepartmenthead();
+        if (rsa.getSubmissionAgreement() != null && rsa.getSubmissionAgreement().getDepartmenthead() != null) {
+            sendername = rsa.getSubmissionAgreement().getDepartmenthead();
         }
 
         String senderemail = "";
 
-        int ssaid = rsa.getSsasForm().getId();
+        int ssaid = rsa.getSubmissionAgreement().getId();
         if (ssaid > 0) {
 
             List<SsaContactsForm> cs = contactrepo.findAllBySsaIdOrderByNameAsc(ssaid);

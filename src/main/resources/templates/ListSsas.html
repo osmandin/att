@@ -40,7 +40,7 @@
                             <th align="center" style="min-width:80px;">Status</th>
                             <th align="center">Enabled</th>
                         </tr>
-                        <tr th:each="ssa : ${ssasForm}">
+                        <tr th:each="ssa : ${submissionAgreement}">
                             <td align="center"><input name="ssa" type="checkbox" th:value="${ssa.id}"
                                                       th:checked="${false}"/></td>
                             <td align="center"><a th:href="@{/EditSsa(id=${ssa.id})}">Edit</a></td>

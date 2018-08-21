@@ -2,10 +2,10 @@ package edu.mit.att.controllers;
 
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.Department;
-import edu.mit.att.entity.SsasForm;
+import edu.mit.att.entity.SubmissionAgreement;
 import edu.mit.att.entity.User;
 import edu.mit.att.repository.DepartmentRepository;
-import edu.mit.att.repository.SsasFormRepository;
+import edu.mit.att.repository.SubmissionAgreementRepository;
 import edu.mit.att.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -42,7 +42,7 @@ public class DepartmentAdmin {
     private DepartmentRepository departmentrepo;
 
     @Autowired
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     @Resource
     private Environment env;
@@ -106,7 +106,7 @@ public class DepartmentAdmin {
 
         model.addAttribute("departmentid", departmentid);
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(departmentid);
 
         Department df = departmentrepo.findById(departmentid);
         List<User> users = df.getUsers();
@@ -117,7 +117,7 @@ public class DepartmentAdmin {
             int dependentssacnt = 0;
             String sep = "";
             if (ssas.size() > 0) {
-                for (SsasForm ssa : ssas) {
+                for (SubmissionAgreement ssa : ssas) {
                     sb.append(sep + ssa.getId());
                     sep = ", ";
                     dependentssacnt++;
@@ -242,7 +242,7 @@ public class DepartmentAdmin {
 
         List<User> users = department.getUsers();
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(department.getId());
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(department.getId());
 
         if (ssas == null) {
             ssas = Collections.emptyList();
@@ -303,7 +303,7 @@ public class DepartmentAdmin {
 
         model.addAttribute("users", users);
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(departmentid);
         model.addAttribute("ssas", ssas);
 
         if (users.isEmpty() && ssas.isEmpty()) {
@@ -365,7 +365,7 @@ public class DepartmentAdmin {
         List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(departmentid);
         model.addAttribute("ssas", ssas);
 
         if (users.isEmpty() && ssas.isEmpty()) {
@@ -405,7 +405,7 @@ public class DepartmentAdmin {
         List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
+        List<SubmissionAgreement> ssas = ssarepo.findAllForDepartmentId(departmentid);
         model.addAttribute("ssas", ssas);
 
         if (users.isEmpty() && ssas.isEmpty()) {

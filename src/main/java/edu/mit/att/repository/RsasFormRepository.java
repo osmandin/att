@@ -10,7 +10,7 @@ import java.util.List;
 public interface RsasFormRepository extends JpaRepository<RsasForm, Integer> {
     RsasForm findById(int id);
 
-    @Query(value = "SELECT r FROM RsasForm r where r.ssasForm.id=?1 order by transferdate asc")
+    @Query(value = "SELECT r FROM RsasForm r where r.submissionAgreement.id=?1 order by transferdate asc")
     List<RsasForm> findAllForSsaOrderByTransferdateAsc(int ssaid);
 
     List<RsasForm> findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();  // approved

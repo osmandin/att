@@ -1,10 +1,10 @@
 package edu.mit.att.service;
 
 import edu.mit.att.entity.Department;
-import edu.mit.att.entity.SsasForm;
+import edu.mit.att.entity.SubmissionAgreement;
 import edu.mit.att.entity.User;
 import edu.mit.att.repository.DepartmentRepository;
-import edu.mit.att.repository.SsasFormRepository;
+import edu.mit.att.repository.SubmissionAgreementRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentRepository departmentrepo;
 
     @Resource
-    private SsasFormRepository ssarepo;
+    private SubmissionAgreementRepository ssarepo;
 
     // ------------------------------------------------------------------------
     @Transactional
@@ -113,20 +113,20 @@ public class DepartmentServiceImpl implements DepartmentService {
             return dfs;
         }
 
-        List<SsasForm> ssas = ssarepo.findAll();
+        List<SubmissionAgreement> ssas = ssarepo.findAll();
 
         List<Department> newdfs = new ArrayList<Department>();
         for (Department df : dfs) {
-            //LOGGER.log(Level.INFO, "checking: thisssaid={0} depart ssaid={1}", new Object[]{thisssaid, df.getSsasForm().getId()});
+            //LOGGER.log(Level.INFO, "checking: thisssaid={0} depart ssaid={1}", new Object[]{thisssaid, df.getSubmissionAgreement().getId()});
 
-            if (df == null || df.getSsasForm() == null) {
+            if (df == null || df.getSubmissionAgreement() == null) {
 
-            } else if (df.getSsasForm().getId() == thisssaid) {
-                //LOGGER.log(Level.INFO, "adding the department for this ssaid={0}", new Object[]{df.getSsasForm().getId()});
+            } else if (df.getSubmissionAgreement().getId() == thisssaid) {
+                //LOGGER.log(Level.INFO, "adding the department for this ssaid={0}", new Object[]{df.getSubmissionAgreement().getId()});
                 newdfs.add(df);
             } else {
                 boolean found = false;
-                for (SsasForm ssa : ssas) {
+                for (SubmissionAgreement ssa : ssas) {
                     if (ssa.getDepartment().getId() == df.getId()) {
                         //LOGGER.log(Level.INFO, "found for ssaid={0}", new Object[]{ssa.getId()});
                         found = true;
