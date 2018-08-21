@@ -14,17 +14,17 @@ public interface SsasFormRepository extends JpaRepository<SsasForm, Integer> {
 
     List<SsasForm> findByDepartmenthead(String departmenthead);
 
-    @Query(value = "SELECT s FROM User u JOIN u.departmentsForms, SsasForm s JOIN s.departmentForm where u.username=?1")
+    @Query(value = "SELECT s FROM User u JOIN u.departments, SsasForm s JOIN s.department where u.username=?1")
     List<SsasForm> findAllSsasForUsername(String username);
 
-    @Query(value = "SELECT distinct s FROM User u JOIN u.departmentsForms d, SsasForm s JOIN s.departmentForm where u.username=?1 and s.approved=true and s.enabled=true order by d.name")
-    List<SsasForm> findAllActiveApprovedEnabledDepartmentsForUsername(String username);
+    /*@Query(value = "SELECT distinct s FROM User u JOIN u.departments d, SsasForm s JOIN s.departmentForm where u.username=?1 and s.approved=true and s.enabled=true order by d.name")
+    List<SsasForm> findAllActiveApprovedEnabledDepartmentsForUsername(String username);*/
 
-    @Query(value = "SELECT distinct s FROM SsasForm s JOIN s.departmentForm d where s.enabled=true order by d.name")
-        //@Query(value = "SELECT distinct s FROM User u JOIN u.departmentsForms, SsasForm s JOIN s.departmentForm d where s.enabled=true order by d.name")
-    List<SsasForm> findAllEnabledDepartments();
+    /*@Query(value = "SELECT distinct s FROM SsasForm s JOIN s.department d where s.enabled=true order by d.name")
+        //@Query(value = "SELECT distinct s FROM User u JOIN u.departmentsForms, SsasForm s JOIN s.department d where s.enabled=true order by d.name")
+    List<SsasForm> findAllEnabledDepartments();*/
 
-    @Query(value = "SELECT distinct s FROM SsasForm s JOIN s.departmentForm d where d.id=?1 order by s.effectivedate")
+    @Query(value = "SELECT distinct s FROM SsasForm s JOIN s.department d where d.id=?1 order by s.effectivedate")
     List<SsasForm> findAllForDepartmentId(int departmentid);
 
 }

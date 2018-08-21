@@ -43,10 +43,10 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
     private SsaFormatTypesFormRepository formattyperepo;
 
     @Resource
-    DepartmentsFormRepository departmentrepo;
+    DepartmentRepository departmentrepo;
 
     @Resource
-    DepartmentsFormService departmentservice;
+    DepartmentService departmentservice;
 
     @Resource
     OnlineSubmissionRequestFormRepository onlinesubmissionrequestrepo;
@@ -231,7 +231,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         }
 
 
-        DepartmentsForm depart = new DepartmentsForm();
+        Department depart = new Department();
         depart.setName(submitData.getDepartment());
         depart = departmentrepo.save(depart);
         int departmentid = depart.getId();
@@ -285,7 +285,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         ssa.setOnlinesubmission(true);
 
 
-        ssa.setDepartmentForm(depart);
+        ssa.setDepartment(depart);
 
         ssa = ssarepo.save(ssa); // for id
 

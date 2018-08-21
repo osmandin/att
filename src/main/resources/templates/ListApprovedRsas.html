@@ -123,12 +123,12 @@
                                                         <span th:text="*{rsasForms[__${stat.index}__].ssasForm.ssaContactsForms[__${cstat.index}__].name}"></span><br/>
                                                     </div>
                                                 </td>
-                                                <td th:switch="*{rsasForms[__${stat.index}__].ssasForm.departmentForm == null}">
+                                                <td th:switch="*{rsasForms[__${stat.index}__].ssasForm.department == null}">
                                                     <div th:case="true">
                                                         &nbsp;
                                                     </div>
                                                     <div th:case="*">
-                                                        <span th:text="*{rsasForms[__${stat.index}__].ssasForm.departmentForm.name}"></span>
+                                                        <span th:text="*{rsasForms[__${stat.index}__].ssasForm.department.name}"></span>
                                                     </div>
                                                 </td>
                                                 <td th:switch="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}">

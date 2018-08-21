@@ -1,12 +1,12 @@
 package edu.mit.att.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.entity.Department;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.SsasFormRepository;
-import edu.mit.att.service.DepartmentsFormService;
+import edu.mit.att.service.DepartmentService;
 import edu.mit.att.service.SsasFormService;
 import edu.mit.att.controllers.SsaAdmin;
-import edu.mit.att.entity.DepartmentsForm;
 import edu.mit.att.entity.SsasForm;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -44,10 +44,10 @@ public class SsaEditTest {
     private MockMvc mockMvc;
 
     @Mock
-    private DepartmentsFormRepository departmentsService;
+    private DepartmentRepository departmentsService;
 
     @Mock
-    private DepartmentsFormService departmentservice;
+    private DepartmentService departmentservice;
 
     @Mock
     private SsasFormRepository ssasFormRepository;
@@ -72,10 +72,10 @@ public class SsaEditTest {
     @Ignore
     @Test
     public void test() throws Exception {
-        final DepartmentsForm dept = new DepartmentsForm();
+        final Department dept = new Department();
         dept.setName("test123");
         when(departmentsService.save(dept)).thenReturn(dept);
-        List<DepartmentsForm> testList = new ArrayList<>();
+        List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
         when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
@@ -96,10 +96,10 @@ public class SsaEditTest {
 
     @Test
     public void testEdit() throws Exception {
-        final DepartmentsForm dept = new DepartmentsForm();
+        final Department dept = new Department();
         dept.setName("test123");
         when(departmentsService.save(dept)).thenReturn(dept);
-        List<DepartmentsForm> testList = new ArrayList<>();
+        List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
         when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());

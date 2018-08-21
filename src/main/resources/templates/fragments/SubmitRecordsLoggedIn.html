@@ -75,16 +75,16 @@
 
                     <select class="field field-select" name="ssaid" id="ssaid">
 <!--                    <option th:each="s, stat: *{ssaForms}"
-                                th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].departmentForm} != null and *{ssaForms[__${stat.index}__].id} != '0')"
+                                th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].department} != null and *{ssaForms[__${stat.index}__].id} != '0')"
                                 th:value="*{ssaForms[__${stat.index}__].id}"
-                                th:text="*{ssaForms[__${stat.index}__].departmentForm.name} + ': ' + *{ssaForms[__${stat.index}__].recordstitle}"></option>-->
+                                th:text="*{ssaForms[__${stat.index}__].department.name} + ': ' + *{ssaForms[__${stat.index}__].recordstitle}"></option>-->
 
                         <!-- add submission agreement information -->
 
                         <option th:each="s, stat: *{ssaForms}"
-                                th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].departmentForm} != null and *{ssaForms[__${stat.index}__].id} != '0')"
+                                th:if="(*{ssaForms} != null and *{ssaForms[__${stat.index}__]} != null and *{ssaForms[__${stat.index}__].department} != null and *{ssaForms[__${stat.index}__].id} != '0')"
                                 th:value="*{ssaForms[__${stat.index}__].id}"
-                                th:text="*{ssaForms[__${stat.index}__].departmentForm.name + ' (' + ssaForms[__${stat.index}__] + ')'}"></option>
+                                th:text="*{ssaForms[__${stat.index}__].department.name + ' (' + ssaForms[__${stat.index}__] + ')'}"></option>
                     </select>
 
                 </div>

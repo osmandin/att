@@ -1,10 +1,10 @@
 package edu.mit.att.test;
 
+import edu.mit.att.entity.Department;
 import edu.mit.att.entity.User;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.service.UserService;
-import edu.mit.att.entity.DepartmentsForm;
 import edu.mit.att.entity.UserBuilder;
-import edu.mit.att.repository.DepartmentsFormRepository;
 import edu.mit.att.service.SsasFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,7 @@ public class TestDatabaseInitializer {
     }
 
     @Autowired
-    private DepartmentsFormRepository departmentrepo;
+    private DepartmentRepository departmentrepo;
 
     @Autowired
     private UserService userService;
@@ -68,7 +68,7 @@ public class TestDatabaseInitializer {
         //FIXME this is only for testing purposes. remvoe later.
 
         try {
-            final DepartmentsForm dept = new DepartmentsForm();
+            final Department dept = new Department();
             dept.setName(department);
             departmentrepo.save(dept);
 
@@ -77,12 +77,12 @@ public class TestDatabaseInitializer {
             user.setRole(role);
             user.setIsadmin(true); //FIXME CHECK -- WHAT DOES THIS DO?
 
-            final List<DepartmentsForm> departments = departmentrepo.findAll();
+            final List<Department> departments = departmentrepo.findAll();
 
             // done to take care of Hibernate exception
 
-            final Set<DepartmentsForm> departmentsSet = new HashSet<>(departments);
-            user.setDepartmentsForms(departmentsSet);
+            final Set<Department> departmentsSet = new HashSet<>(departments);
+            user.setDepartments(departmentsSet);
             userService.create(user, departments);
             logger.debug("Saved user:{}", userService.findAll());
         } catch (Exception e) {

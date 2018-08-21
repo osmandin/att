@@ -60,10 +60,10 @@
 
                             <!-- department logic -->
 
-                            <td th:switch="${item.departmentsForms.size()}">
+                            <td th:switch="${item.departments.size()}">
 		                        <span th:case="0"> </span>
                                 <span th:case="*">
-			                        <div th:each="dep : ${item.departmentsForms}">
+			                        <div th:each="dep : ${item.departments}">
 			                              <span th:text="${dep.name}">department name</span>
                                         <!--
 			                                 <div th:switch="${adminactivemap[__${user.id}__][__${dep.id}__]}">

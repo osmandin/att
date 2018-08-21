@@ -10,7 +10,7 @@ import lombok.*;
 @Table(name = "departments")
 @EqualsAndHashCode(exclude = {"ssasForm", "users"})
 @ToString(exclude = {"users", "ssasForm"})
-public class DepartmentsForm {
+public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +21,7 @@ public class DepartmentsForm {
     //@Transient
     //private boolean active = true; // used for usersForm
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "departmentForm")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "department")
     private SsasForm ssasForm;
 
     public int hashCode(SsasForm sf) {
@@ -41,7 +41,7 @@ public class DepartmentsForm {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DepartmentsForm that = (DepartmentsForm) o;
+        Department that = (Department) o;
 
         if (id != that.id) return false;
         return name != null ? name.equals(that.name) : that.name == null;

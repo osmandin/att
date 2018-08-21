@@ -4,7 +4,7 @@ import edu.mit.att.EmailUtil;
 import edu.mit.att.Utils;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.*;
-import edu.mit.att.service.DepartmentsFormService;
+import edu.mit.att.service.DepartmentService;
 import edu.mit.att.service.UserService;
 import edu.mit.att.authz.Role;
 import edu.mit.att.authz.Subject;
@@ -55,13 +55,13 @@ public class UserPages {
     private UserRepository userrepo;
 
     @Autowired
-    private DepartmentsFormRepository departmentsFormRepository;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
     private UserService userFormService;
 
     @Autowired
-    DepartmentsFormService departmentservice;
+    DepartmentService departmentservice;
 
     @Autowired
     private SsasFormRepository ssarepo;
@@ -173,15 +173,15 @@ public class UserPages {
 
         // FIXME: BUG - extra departments are created when a new SSA is created
 
-        final Set<DepartmentsForm> departments = user.getDepartmentsForms();
+        final Set<Department> departments = user.getDepartments();
 
         // workaround:
 
-        // List<DepartmentsForm> realDepts = departmentsFormRepository.findAll();
+        // List<Department> realDepts = departmentRepository.findAll();
 /*
-        final List<DepartmentsForm> departmentsList = new ArrayList<>();
+        final List<Department> departmentsList = new ArrayList<>();
 
-        for (DepartmentsForm d : departments) {
+        for (Department d : departments) {
             if (!departmentsList.contains(d)) {
                 departmentsList.add(d);
             }
@@ -196,14 +196,14 @@ public class UserPages {
 
         // Buggy:
 
-        for (final DepartmentsForm df : departments) {
+        for (final Department df : departments) {
 
             LOGGER.info("Considering department (in the loop):" + df.toString());
 
             final int departmentId = df.getId();
 
             for (final SsasForm ssa : ssas) {
-                final DepartmentsForm sd = ssa.getDepartmentForm();
+                final Department sd = ssa.getDepartment();
                 if (sd.getId() == departmentId) {
                     userSubmissionAgreements.add(ssa);
                 }
@@ -355,8 +355,8 @@ public class UserPages {
         model.addAttribute("ssaid", ssaid);
 
         SsasForm ssasForm = ssarepo.findById(ssaid);
-        LOGGER.log(Level.INFO, "Associated Department form:" + ssasForm.getDepartmentForm());
-        final String DEPARTMENT_ID = ssasForm.getDepartmentForm().getName();
+        LOGGER.log(Level.INFO, "Associated Department form:" + ssasForm.getDepartment());
+        final String DEPARTMENT_ID = ssasForm.getDepartment().getName();
 
 
         final String description = (String) session.getAttribute("generalRecordsDescription");
@@ -472,8 +472,8 @@ public class UserPages {
 
             final Map<String, String> metadata = new HashMap<>();
             metadata.put("SSA Id:", String.valueOf(ssa.getId()));
-            metadata.put("Department Id:", String.valueOf(ssa.getDepartmentForm().getId()));
-            metadata.put("Department Name:", ssa.getDepartmentForm().getName());
+            metadata.put("Department Id:", String.valueOf(ssa.getDepartment().getId()));
+            metadata.put("Department Name:", ssa.getDepartment().getName());
             metadata.put("RSA Id:", String.valueOf(rsa.getId()));
             metadata.put("User Email:", (String) request.getAttribute("mail"));
             metadata.put("Transfer Date:", Instant.now().toString());
@@ -545,7 +545,7 @@ public class UserPages {
         }
 
         // Send mail
-        notifyUser(rsa.getId(), ssa.getDepartmentForm().getName(), fileList);
+        notifyUser(rsa.getId(), ssa.getDepartment().getName(), fileList);
 
 
         return "UploadComplete";

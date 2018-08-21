@@ -1,7 +1,7 @@
 package edu.mit.att.service;
 
-import edu.mit.att.entity.DepartmentsForm;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.entity.Department;
+import edu.mit.att.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
@@ -11,17 +11,17 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 @Component
-public class DepartmentsFormFormatter implements Formatter<DepartmentsForm> {
+public class DepartmentsFormFormatter implements Formatter<Department> {
     private final static Logger LOGGER = Logger.getLogger(DepartmentsFormFormatter.class.getCanonicalName());
 
     @Autowired
-    DepartmentsFormRepository departmentsFormRepository;
+    DepartmentRepository departmentRepository;
 
-    public String print(DepartmentsForm object, Locale locale) {
+    public String print(Department object, Locale locale) {
         return (object != null ? Integer.toString(object.getId()) : "");
     }
 
-    public DepartmentsForm parse(String text, Locale locale) throws ParseException {
+    public Department parse(String text, Locale locale) throws ParseException {
         //LOGGER.log(Level.INFO, "parse: text={0}", new Object[]{text});
         if (text.equals("")) {
             return null;
@@ -34,6 +34,6 @@ public class DepartmentsFormFormatter implements Formatter<DepartmentsForm> {
         if (id == -1) {
             return null;
         }
-        return departmentsFormRepository.findById(id);
+        return departmentRepository.findById(id);
     }
 }

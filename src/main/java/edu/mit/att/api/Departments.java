@@ -1,8 +1,8 @@
 package edu.mit.att.api;
 
 
-import edu.mit.att.entity.DepartmentsForm;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.entity.Department;
+import edu.mit.att.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,20 +14,20 @@ import java.util.List;
 public class Departments {
 
     @Autowired
-    private DepartmentsFormRepository repo;
+    private DepartmentRepository repo;
 
     @RequestMapping("/departments")
-    public DepartmentsForm getusers(@RequestParam(value = "name", defaultValue = "test") String name) {
-        final List<DepartmentsForm> departmentList = repo.findByName(name);
+    public Department getusers(@RequestParam(value = "name", defaultValue = "test") String name) {
+        final List<Department> departmentList = repo.findByName(name);
         if (departmentList.isEmpty()) {
-            return new DepartmentsForm();
+            return new Department();
         }
         return departmentList.get(0);
     }
 
     @RequestMapping("/departments/all")
-    public List<DepartmentsForm> getDepartmentsAll() {
-        final List<DepartmentsForm> departmentList = repo.findAll();
+    public List<Department> getDepartmentsAll() {
+        final List<Department> departmentList = repo.findAll();
         return departmentList;
     }
 }

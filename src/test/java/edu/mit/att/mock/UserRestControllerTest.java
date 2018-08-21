@@ -74,7 +74,7 @@ public class UserRestControllerTest {
         // create a test user object:
 
         User user = new UserBuilder().setUsername(userName).createUsersForm();
-        user.setDepartmentsForms(Collections.emptySet());
+        user.setDepartments(Collections.emptySet());
         this.userRepository.save(user);
 
         // samples:

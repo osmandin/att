@@ -1,10 +1,10 @@
 package edu.mit.att.controllers;
 
 import edu.mit.att.authz.Role;
-import edu.mit.att.entity.DepartmentsForm;
+import edu.mit.att.entity.Department;
 import edu.mit.att.entity.SsasForm;
 import edu.mit.att.entity.User;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.SsasFormRepository;
 import edu.mit.att.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class DepartmentAdmin {
     private UserRepository userrepo;
 
     @Autowired
-    private DepartmentsFormRepository departmentrepo;
+    private DepartmentRepository departmentrepo;
 
     @Autowired
     private SsasFormRepository ssarepo;
@@ -53,7 +53,7 @@ public class DepartmentAdmin {
             ModelMap model1, HttpServletRequest request) {
         LOGGER.info( "AddDepartment GET");
 
-        final DepartmentsForm item = new DepartmentsForm();
+        final Department item = new Department();
 
         final String userAttrib = (String) request.getAttribute("mail");
         final User user = userrepo.findByEmail(userAttrib).get(0);
@@ -63,7 +63,7 @@ public class DepartmentAdmin {
         }
 
         final ModelAndView model = new ModelAndView("AddDepartment");
-        model.addObject("departmentForm", item);
+        model.addObject("department", item);
         return model;
     }
 
@@ -76,17 +76,21 @@ public class DepartmentAdmin {
             HttpSession session) {
         LOGGER.info( "AddDepartment Post");
 
+        LOGGER.info("Saving:{}", departmentname);
+
        /* Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
         }*/
 
-        DepartmentsForm df = new DepartmentsForm();
+        Department df = new Department();
         df.setName(departmentname);
         departmentrepo.save(df);
 
-        List<DepartmentsForm> departmentsForms = departmentrepo.findAllOrderByNameAsc();
-        model.addAttribute("departmentsForms", departmentsForms);
+        LOGGER.debug("Saved:{}", departmentrepo.findAll());
+
+        List<Department> departments = departmentrepo.findAllOrderByNameAsc();
+        model.addAttribute("department", departments);
 
         return "ListDepartments";
     }
@@ -104,7 +108,7 @@ public class DepartmentAdmin {
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
         List<User> users = df.getUsers();
 
         if (ssas.size() > 0 || users.size() > 0) {
@@ -155,8 +159,8 @@ public class DepartmentAdmin {
             model.addAttribute("deleted", "1");
         }
 
-        List<DepartmentsForm> departmentsForms = departmentrepo.findAllOrderByNameAsc();
-        model.addAttribute("departmentsForms", departmentsForms);
+        List<Department> departments = departmentrepo.findAllOrderByNameAsc();
+        model.addAttribute("department", departments);
 
         return "ListDepartments";
     }
@@ -169,8 +173,8 @@ public class DepartmentAdmin {
     ) {
         LOGGER.info( "ListDepartments Get");
 
-        List<DepartmentsForm> departmentsForms = departmentrepo.findAllOrderByNameAsc();
-        model.addAttribute("departmentsForms", departmentsForms);
+        List<Department> departments = departmentrepo.findAllOrderByNameAsc();
+        model.addAttribute("department", departments);
 
         return "ListDepartments";
     }
@@ -188,7 +192,7 @@ public class DepartmentAdmin {
         final String userAttrib = (String) request.getAttribute("mail");
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
-        final Set<DepartmentsForm> departmentsForms = user.getDepartmentsForms();
+        final Set<Department> departments = user.getDepartments();
 
 
         if (departmentid <= 0) {
@@ -197,13 +201,13 @@ public class DepartmentAdmin {
             return "ListDepartments";
         }
 
-        final DepartmentsForm departmentToEdit = departmentrepo.findById(departmentid);
+        final Department departmentToEdit = departmentrepo.findById(departmentid);
 
-        if (!departmentsForms.contains(departmentToEdit)) {
+        if (!departments.contains(departmentToEdit)) {
             return "Permissions";
         }
 
-        model.addAttribute("departmentsForm", departmentToEdit);
+        model.addAttribute("department", departmentToEdit);
 
         return "EditDepartment";
     }
@@ -211,7 +215,7 @@ public class DepartmentAdmin {
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditDepartment", method = RequestMethod.POST)
     public String EditDepartment(
-            DepartmentsForm departmentsForm,
+            Department department,
             BindingResult result,
             final RedirectAttributes redirectAttributes,
             ModelMap model,
@@ -219,26 +223,26 @@ public class DepartmentAdmin {
     ) {
         LOGGER.info( "EditDepartment Post");
 
-        LOGGER.info("Object:{}", departmentsForm.toString());
+        LOGGER.info("Object:{}", department.toString());
 
        /* Utils utils = new Utils();
         if (!utils.setupAdminHandler(model, session, env)) {
             return "Home";
         }
 */
-        departmentsForm = departmentrepo.save(departmentsForm);
+        department = departmentrepo.save(department);
 
 
         LOGGER.info("Saved:{}", departmentrepo.findAll().toString());
-        LOGGER.info("Saved object:{}", departmentsForm);
+        LOGGER.info("Saved object:{}", department);
 
 
-        model.addAttribute("departmentsForm", departmentsForm);
-        model.addAttribute("departmentid", departmentsForm.getId());
+        model.addAttribute("department", department);
+        model.addAttribute("departmentid", department.getId());
 
-        List<User> users = departmentsForm.getUsers();
+        List<User> users = department.getUsers();
 
-        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentsForm.getId());
+        List<SsasForm> ssas = ssarepo.findAllForDepartmentId(department.getId());
 
         if (ssas == null) {
             ssas = Collections.emptyList();
@@ -273,7 +277,7 @@ public class DepartmentAdmin {
             return "Home";
         }*/
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
 
         if (departmentid == 0) {
             departmentid = Integer.parseInt(session.getAttribute("departmentid").toString());
@@ -282,7 +286,7 @@ public class DepartmentAdmin {
         }
         model.addAttribute("departmentid", departmentid);
 
-        model.addAttribute("departmentsForm", df);
+        model.addAttribute("department", df);
 
         String departmentname = df.getName();
         model.addAttribute("departmentname", departmentname);
@@ -291,8 +295,8 @@ public class DepartmentAdmin {
 
         for (User uf : users) {
             LOGGER.info( "  userid={0}", new Object[]{uf.getId()});
-            Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
-            for (DepartmentsForm dfi : dfs) {
+            Set<Department> dfs = uf.getDepartments();
+            for (Department dfi : dfs) {
                 LOGGER.info( "     df id={0}", new Object[]{dfi.getId()});
             }
         }
@@ -356,7 +360,7 @@ public class DepartmentAdmin {
             model.addAttribute("deletedcnt", deletedcnt);
         }
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
 
         List<User> users = df.getUsers();
         model.addAttribute("users", users);
@@ -396,7 +400,7 @@ public class DepartmentAdmin {
         }
         model.addAttribute("departmentid", departmentid);
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
 
         List<User> users = df.getUsers();
         model.addAttribute("users", users);

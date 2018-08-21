@@ -2,8 +2,8 @@ package edu.mit.att;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mit.att.controllers.DepartmentAdmin;
-import edu.mit.att.entity.DepartmentsForm;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.entity.Department;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.SsasFormRepository;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -44,7 +44,7 @@ public class DepartmentEditTest {
     private MockMvc mockMvc;
 
     @Mock
-    private DepartmentsFormRepository departmentsService;
+    private DepartmentRepository departmentsService;
 
     @Mock
     private SsasFormRepository ssasFormRepository;
@@ -61,10 +61,10 @@ public class DepartmentEditTest {
 
     @Test
     public void test() throws Exception {
-        final DepartmentsForm dept = new DepartmentsForm();
+        final Department dept = new Department();
         dept.setName("test123");
         when(departmentsService.save(dept)).thenReturn(dept);
-        List<DepartmentsForm> testList = new ArrayList<>();
+        List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
         when(ssasFormRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
@@ -80,7 +80,7 @@ public class DepartmentEditTest {
                 .andReturn();
 
        /* mockMvc.perform(get("/EditDepartment?departmentid=1"))
-                .andExpect(model().attribute("departmentForm", allOf(
+                .andExpect(model().attribute("department", allOf(
                         hasProperty("name", equalTo("test123")))
                 ));*/
 

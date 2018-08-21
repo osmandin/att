@@ -44,7 +44,7 @@ public class SsasForm {
     private boolean onlinesubmission = false;
 
     @Transient
-    private List<DepartmentsForm> dropdownDepartmentsForms;
+    private List<Department> dropdownDepartments;
 
 
     public void setCreationdate(String date) {
@@ -83,9 +83,9 @@ public class SsasForm {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "departmentid")
     @NotFound(action = NotFoundAction.IGNORE)
-    private DepartmentsForm departmentForm;
+    private Department department;
 
-    public int hashCode(DepartmentsForm df) {
+    public int hashCode(Department df) {
         return df.getId();
     }
 

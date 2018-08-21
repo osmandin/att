@@ -34,7 +34,7 @@
                             <th>Edit</th>
                             <!-- notify button -->
                         </tr>
-                        <tr th:each="item : ${departmentsForms}" style="cursor: pointer"
+                        <tr th:each="item : ${department}" style="cursor: pointer"
                             th:onclick="'javascript:rowClicked(\'' + ${item.id} + '\');'">
                             <td th:text="${item.name}"></td>
 

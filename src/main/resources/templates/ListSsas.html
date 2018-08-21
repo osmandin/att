@@ -46,8 +46,8 @@
                             <td align="center"><a th:href="@{/EditSsa(id=${ssa.id})}">Edit</a></td>
                             <td align="center" th:text="${ssa.id}"></td>
                             <td>
-                                <div th:if="${ssa.departmentForm != null}">
-                                    <span th:text="${ssa.departmentForm.name}"></span>
+                                <div th:if="${ssa.department != null}">
+                                    <span th:text="${ssa.department.name}"></span>
                                 </div>
                             </td>
                             <td th:text="${ssa.recordstitle}">ssa recordstitle</td>

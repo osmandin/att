@@ -1,6 +1,6 @@
 package edu.mit.att.service;
 
-import edu.mit.att.entity.DepartmentsForm;
+import edu.mit.att.entity.Department;
 import edu.mit.att.entity.User;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
  public interface UserService {
      User create(User user);
 
-     User create(User user, List<DepartmentsForm> departmentsForms);
+     User create(User user, List<Department> departments);
 
 
      List<User> findAllAdmin();

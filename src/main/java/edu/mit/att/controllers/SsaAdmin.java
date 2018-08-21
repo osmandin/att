@@ -6,7 +6,7 @@ package edu.mit.att.controllers;
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.*;
-import edu.mit.att.service.DepartmentsFormService;
+import edu.mit.att.service.DepartmentService;
 import edu.mit.att.service.SsasFormService;
 import edu.mit.att.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class SsaAdmin {
     }
 */
     @Autowired
-    private DepartmentsFormRepository departmentrepo;
+    private DepartmentRepository departmentrepo;
 
     @Autowired
     private SsasFormRepository ssarepo;
@@ -86,7 +86,7 @@ public class SsaAdmin {
     private SsasFormService ssaservice;
 
     @Autowired
-    private DepartmentsFormService departmentservice;
+    private DepartmentService departmentservice;
 
     @Autowired
     private UserService userService;
@@ -107,7 +107,7 @@ public class SsaAdmin {
 
         //List<SsasForm> ssas = ssarepo.findAll(); // TODO
 
-        List<DepartmentsForm> departmentsForms = Collections.emptyList();
+        List<Department> departments = Collections.emptyList();
 
         // authz logic:
 
@@ -115,10 +115,10 @@ public class SsaAdmin {
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (user.getRole().equals(Role.deptadmin.name())) {
-            final Set<DepartmentsForm> userDepartments = user.getDepartmentsForms();
-            departmentsForms = new ArrayList<>(userDepartments);
+            final Set<Department> userDepartments = user.getDepartments();
+            departments = new ArrayList<>(userDepartments);
         } else if (user.getRole().equals(Role.siteadmin.name())){
-            departmentsForms = departmentrepo.findAllOrderByNameAsc();
+            departments = departmentrepo.findAllOrderByNameAsc();
         } else {
             return "Permissions";
         }
@@ -128,7 +128,7 @@ public class SsaAdmin {
         List<SsasForm> ssas = new ArrayList<>();
 
 
-        for (DepartmentsForm d : departmentsForms) {
+        for (Department d : departments) {
             List<SsasForm> ssasForms = ssarepo.findAllForDepartmentId(d.getId()); //TODO does this include deleted ones?
             ssas.addAll(ssasForms);
         }
@@ -174,8 +174,8 @@ public class SsaAdmin {
 
         // access restrictions... None... not an entry
 
-        List<DepartmentsForm> dfs = departmentrepo.findAllOrderByNameAsc();
-        ssasForm.setDropdownDepartmentsForms(dfs);
+        List<Department> dfs = departmentrepo.findAllOrderByNameAsc();
+        ssasForm.setDropdownDepartments(dfs);
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
@@ -190,7 +190,7 @@ public class SsaAdmin {
     public ModelAndView CreateSsa(
             final SsasForm ssasForm,
             BindingResult result,
-            @RequestParam(value = "departmentid", required = false) DepartmentsForm selectedDepartmentsForm,
+            @RequestParam(value = "departmentid", required = false) Department selectedDepartment,
             final RedirectAttributes redirectAttributes,
             ModelMap model,
             HttpServletRequest request,
@@ -198,7 +198,7 @@ public class SsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "CreateSsa Post");
 
-        LOGGER.log(Level.INFO, "SSA for department:" + selectedDepartmentsForm);
+        LOGGER.log(Level.INFO, "SSA for department:" + selectedDepartment);
 
         if (result.hasErrors()) { //osm:?
             LOGGER.log(Level.SEVERE, "createSsaPost: has errors");
@@ -214,14 +214,14 @@ public class SsaAdmin {
 
         //session.setAttribute("name", "osman"); //FIXME. change to user logged in
 
-        LOGGER.log(Level.INFO, "Saving (pre1):" + selectedDepartmentsForm);
+        LOGGER.log(Level.INFO, "Saving (pre1):" + selectedDepartment);
 
         ssasForm.setSsaCopyrightsForms(Collections.emptyList());
 
-        LOGGER.log(Level.INFO, "Saving (pre2):" + selectedDepartmentsForm);
+        LOGGER.log(Level.INFO, "Saving (pre2):" + selectedDepartment);
 
 
-        DepartmentsForm d = departmentrepo.findById(selectedDepartmentsForm.getId());
+        Department d = departmentrepo.findById(selectedDepartment.getId());
 
         ssaservice.create(ssasForm, d, session, request);
 
@@ -233,7 +233,7 @@ public class SsaAdmin {
         List<User> u = userService.findAll();
 
         for (User user : u) {
-            LOGGER.info("User departments (post):" + user.getDepartmentsForms().toString());
+            LOGGER.info("User departments (post):" + user.getDepartments().toString());
         }
 
         final ModelAndView mav = new ModelAndView();
@@ -416,8 +416,8 @@ public class SsaAdmin {
             model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
         }
 
-        List<DepartmentsForm> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
-        ssasForm.setDropdownDepartmentsForms(df);
+        List<Department> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
+        ssasForm.setDropdownDepartments(df);
         model.addAttribute("ssasForm", ssasForm);
 
         model.addAttribute("action", "EditSsa");
@@ -430,7 +430,7 @@ public class SsaAdmin {
             ModelMap model,
             SsasForm ssasForm,
             @RequestParam("id") int ssaid,
-            @RequestParam(value = "departmentid", required = false) DepartmentsForm selectedDepartmentsForm,
+            @RequestParam(value = "departmentid", required = false) Department selectedDepartment,
             HttpServletRequest request,
             HttpSession session
     ) {
@@ -455,10 +455,10 @@ public class SsaAdmin {
             model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
         }
 
-        ssaservice.saveForm(ssasForm, selectedDepartmentsForm);
+        ssaservice.saveForm(ssasForm, selectedDepartment);
 
-        List<DepartmentsForm> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
-        ssasForm.setDropdownDepartmentsForms(df);
+        List<Department> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
+        ssasForm.setDropdownDepartments(df);
 
         model.addAttribute("ssasForm", ssasForm);
 
@@ -542,8 +542,8 @@ public class SsaAdmin {
         LOGGER.log(Level.INFO, "delete ssaContactsForms id={0} name={1}", new Object[]{con.getId(), con.getName()});
         contactrepo.delete(con);
 
-        List<DepartmentsForm> df = departmentrepo.findAllOrderByNameAsc();
-        ssasForm.setDropdownDepartmentsForms(df);
+        List<Department> df = departmentrepo.findAllOrderByNameAsc();
+        ssasForm.setDropdownDepartments(df);
 
         model.addAttribute("ssasForm", ssasForm);
 
@@ -588,8 +588,8 @@ public class SsaAdmin {
         }
         ssasForm.setSsaCopyrightsForms(newcrs);
 
-        List<DepartmentsForm> df = departmentrepo.findAllOrderByNameAsc();
-        ssasForm.setDropdownDepartmentsForms(df);
+        List<Department> df = departmentrepo.findAllOrderByNameAsc();
+        ssasForm.setDropdownDepartments(df);
         model.addAttribute("ssasForm", ssasForm);
 
 
@@ -868,7 +868,7 @@ public class SsaAdmin {
             }
         }
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
 
         List<User> users = df.getUsers();
         model.addAttribute("users", users);
@@ -903,7 +903,7 @@ public class SsaAdmin {
         }
         model.addAttribute("departmentid", departmentid);
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
 
         List<User> users = df.getUsers();
         model.addAttribute("users", users);

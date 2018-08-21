@@ -36,11 +36,11 @@
                 <div class="details"><h3 class="title-page">Add new department or donor</h3>
                 </div>
 
-                <form action="#" th:object="${departmentsForm}" th:action="@{/AddDepartment}" method="post">
+                <form action="#" th:object="${department}" th:action="@{/AddDepartment}" method="post">
                     <div class="field-wrap">
                         <label class="field-label" for="id">Name</label>
                         <input class="field field-text" id="departmentiname" placeholder=""
-                                   th:field= "${departmentForm.name}"/>
+                                   th:field= "${department.name}"/>
                     </div>
 
                     <!-- CSRF token

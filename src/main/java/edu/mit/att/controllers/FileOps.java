@@ -489,7 +489,7 @@ public class FileOps {
         }
 
         boolean departvalid = true;
-        if (rsa.getSsasForm().getDepartmentForm() == null) {
+        if (rsa.getSsasForm().getDepartment() == null) {
             departvalid = false;
         }
 

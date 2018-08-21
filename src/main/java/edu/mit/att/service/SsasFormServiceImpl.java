@@ -34,16 +34,16 @@ public class SsasFormServiceImpl implements SsasFormService {
     private SsaFormatTypesFormRepository formattyperepo;
 
     @Resource
-    private DepartmentsFormRepository departmentsFormRepository;
+    private DepartmentRepository departmentRepository;
 
     // ------------------------------------------------------------------------
     @Transactional
-    public void saveForm(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm) {
+    public void saveForm(SsasForm ssasForm, Department selectedDepartment) {
 
         int ssaid = ssasForm.getId();
 
 
-        ssasForm.setDepartmentForm(selectedDepartmentsForm);
+        ssasForm.setDepartment(selectedDepartment);
 
         // in form
         //ssasForm.setCreatedby(session.getAttribute("name").toString());
@@ -77,12 +77,12 @@ public class SsasFormServiceImpl implements SsasFormService {
     }
 
     @Transactional
-    public void saveFormTest(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm) {
+    public void saveFormTest(SsasForm ssasForm, Department selectedDepartment) {
 
         int ssaid = ssasForm.getId();
 
 
-        ssasForm.setDepartmentForm(departmentsFormRepository.findAll().get(0));
+        ssasForm.setDepartment(departmentRepository.findAll().get(0));
 
         // in form
         //ssasForm.setCreatedby(session.getAttribute("name").toString());
@@ -118,13 +118,13 @@ public class SsasFormServiceImpl implements SsasFormService {
 
     // ------------------------------------------------------------------------
     @Transactional
-    public void create(SsasForm ssasForm, DepartmentsForm selectedDepartmentsForm, HttpSession session, HttpServletRequest request) {
+    public void create(SsasForm ssasForm, Department selectedDepartment, HttpSession session, HttpServletRequest request) {
         ssasForm.setCreatedby("osman"); //TODO
 
         //ssasForm.setIP(request.getRemoteAddr());
         ssasForm.setEditdate(String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
 
-        ssasForm.setDepartmentForm(selectedDepartmentsForm);
+        ssasForm.setDepartment(selectedDepartment);
         List<SsaCopyrightsForm> crs = ssasForm.getSsaCopyrightsForms();
         List<SsaFormatTypesForm> fts = ssasForm.getSsaFormatTypesForms();
         List<SsaAccessRestrictionsForm> ars = ssasForm.getSsaAccessRestrictionsForms();
@@ -194,7 +194,7 @@ public class SsasFormServiceImpl implements SsasFormService {
         if (ssas.size() == 1) {
             SsasForm ssa = ssas.get(0);
             if (ssa.getDepartmenthead().equals(submitData.getDepartmenthead()) && ssa.getCreatedby().equals(submitData.getSignature())) {
-                DepartmentsForm df = ssa.getDepartmentForm();
+                Department df = ssa.getDepartment();
                 if (df.getName().equals(submitData.getDepartment())) {
                     List<SsaContactsForm> cfs = ssa.getSsaContactsForms();
                     SsaContactsForm matchcf = null;

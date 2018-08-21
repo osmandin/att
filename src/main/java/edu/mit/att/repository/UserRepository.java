@@ -23,5 +23,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByIdAfter(int id);
 
-    List<User> findByDepartmentsForms(Set depts);
+    List<User> findByDepartments(Set depts);
 }

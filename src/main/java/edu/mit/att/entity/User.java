@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@ToString(exclude = {"departmentsForms"})
+@ToString(exclude = {"departments"})
 @Table(name = "users")
 public class User {
 
@@ -34,7 +34,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "departmentid", referencedColumnName = "id")
 
     )
-    private Set<DepartmentsForm> departmentsForms;
+    private Set<Department> departments;
 
     @Transient
     private List<String> selectedDepartments;
@@ -96,13 +96,13 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Set<DepartmentsForm> getDepartmentsForms() {
-        return departmentsForms;
+    public Set<Department> getDepartments() {
+        return departments;
     }
 
-    public void setDepartmentsForms(Set<DepartmentsForm> departmentsForms) {
+    public void setDepartments(Set<Department> departments) {
 
-        this.departmentsForms = departmentsForms;
+        this.departments = departments;
     }
 
     public List<String> getSelectedDepartments() {

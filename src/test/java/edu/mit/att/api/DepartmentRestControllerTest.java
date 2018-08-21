@@ -1,8 +1,8 @@
 package edu.mit.att.api;
 
 
-import edu.mit.att.repository.DepartmentsFormRepository;
-import edu.mit.att.entity.DepartmentsForm;
+import edu.mit.att.repository.DepartmentRepository;
+import edu.mit.att.entity.Department;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class DepartmentRestControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private DepartmentsFormRepository repo;
+    private DepartmentRepository repo;
 
 
     @Autowired
@@ -69,9 +69,9 @@ public class DepartmentRestControllerTest {
 
         // create a test user object:
 
-        DepartmentsForm departmentsForm = new DepartmentsForm();
-        departmentsForm.setName(departmentName);
-        this.repo.save(departmentsForm);
+        Department department = new Department();
+        department.setName(departmentName);
+        this.repo.save(department);
     }
 
     @Ignore

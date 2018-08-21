@@ -1,9 +1,9 @@
 package edu.mit.att.service;
 
 
-import edu.mit.att.entity.DepartmentsForm;
+import edu.mit.att.entity.Department;
 import edu.mit.att.entity.User;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Resource
-    private DepartmentsFormRepository departmentsFormRepository;
+    private DepartmentRepository departmentRepository;
 
     @Transactional
     public User create(User user) {
@@ -30,9 +30,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Transactional
-    public User create(User user, List<DepartmentsForm> departmentsForm) {
+    public User create(User user, List<Department> department) {
         // FIXME - Check Is this legit?
-        user.setDepartmentsForms(new HashSet<>(departmentsFormRepository.findAll()));
+        user.setDepartments(new HashSet<>(departmentRepository.findAll()));
         return userRepository.save(user);
     }
 

@@ -3,10 +3,10 @@ package edu.mit.att.controllers;
 import edu.mit.att.Utils;
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.*;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.MapFormRepository;
 import edu.mit.att.repository.UserRepository;
-import edu.mit.att.service.DepartmentsFormService;
+import edu.mit.att.service.DepartmentService;
 import edu.mit.att.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class UserAdmin {
     private UserRepository userrepo;
 
     @Autowired
-    private DepartmentsFormRepository departmentrepo;
+    private DepartmentRepository departmentrepo;
 
     @Autowired
     MapFormRepository maprepo;
@@ -54,7 +54,7 @@ public class UserAdmin {
     private UserService userservice;
 
     @Autowired
-    DepartmentsFormService departmentservice;
+    DepartmentService departmentservice;
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/ListUsers", method = RequestMethod.GET)
@@ -80,10 +80,10 @@ public class UserAdmin {
         User currentUser = currentUsers.get(0);
 
         if (currentUser.getRole().equals(Role.deptadmin.name())) {
-            final Set dept = currentUser.getDepartmentsForms();
+            final Set dept = currentUser.getDepartments();
             // find only users who belong to the same department
             // Note that the user may belong to different departments
-            allUsers = userrepo.findByDepartmentsForms(dept);
+            allUsers = userrepo.findByDepartments(dept);
             logger.info("Corresponding users:" + allUsers);
         } else if (currentUser.getRole().equals(Role.siteadmin.name())){
             allUsers = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
@@ -95,14 +95,14 @@ public class UserAdmin {
 
 
         for (final User uf : allUsers) {
-            final Set<DepartmentsForm> departments = uf.getDepartmentsForms();
+            final Set<Department> departments = uf.getDepartments();
 
             logger.debug("Found departments for user:{}", departments);
 
 
             if (departments != null) {
                 Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
-                for (DepartmentsForm df : departments) {
+                for (Department df : departments) {
                     IdKey ik = new IdKey();
                     ik.userid = uf.getId();
                     ik.departmentid = df.getId();
@@ -121,10 +121,10 @@ public class UserAdmin {
        Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
         List<User> nonadminusersForms = userrepo.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
         for (User uf : nonadminusersForms) {
-            List<DepartmentsForm> dfs = uf.getDepartmentsForms();
+            List<Department> dfs = uf.getDepartments();
             if (dfs != null) {
                 Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
-                for (DepartmentsForm df : dfs) {
+                for (Department df : dfs) {
                     IdKey ik = new IdKey();
                     ik.userid = uf.getId();
                     ik.departmentid = df.getId();
@@ -162,10 +162,10 @@ public class UserAdmin {
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         // First find all departments user is not associated with
-        final Set<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
+        final Set<Department> otherDepartments = departmentservice.findSkipUserid(userid);
 
         // Now find the existing bindings:
-        final Set<DepartmentsForm> existing = usersForm.getDepartmentsForms();
+        final Set<Department> existing = usersForm.getDepartments();
 
         otherDepartments.addAll(existing);
 
@@ -219,14 +219,14 @@ public class UserAdmin {
 
         final User updatedUser = userrepo.findById(user.getId());
 
-        final Set<DepartmentsForm> updatedDepartments = new HashSet<>();
+        final Set<Department> updatedDepartments = new HashSet<>();
 
         for (final String s : user.getSelectedDepartments()) {
-            final DepartmentsForm d = departmentrepo.findById(Integer.parseInt(s));
+            final Department d = departmentrepo.findById(Integer.parseInt(s));
             updatedDepartments.add(d);
         }
 
-        updatedUser.setDepartmentsForms(updatedDepartments);
+        updatedUser.setDepartments(updatedDepartments);
         updatedUser.setRole(user.getRole());
         updatedUser.setFirstname(user.getFirstname());
         updatedUser.setLastname(user.getLastname());
@@ -253,15 +253,15 @@ public class UserAdmin {
 
 
         // populate any form elements here:
-        List<DepartmentsForm> dfsList =  departmentrepo.findAll();
-        Set<DepartmentsForm> dfs = new HashSet<>(dfsList);
+        List<Department> dfsList =  departmentrepo.findAll();
+        Set<Department> dfs = new HashSet<>(dfsList);
         //model.addAttribute("departmentsForm", dfs);
         logger.info("Found departments:{}", dfs.toString());
 
         List<DepartmentAdmin> selectedDepartments = new ArrayList<>();
 
         final User item = new UserBuilder().createUsersForm();
-        item.setDepartmentsForms(dfs);
+        item.setDepartments(dfs);
 
         final ModelAndView model = new ModelAndView("AddUser");
         model.addObject("user", item);
@@ -281,7 +281,7 @@ public class UserAdmin {
 
         // associated department logic:
 
-        final Set<DepartmentsForm> depts = new HashSet<>();
+        final Set<Department> depts = new HashSet<>();
 
         // Convert from string to department. this can be replaced by a spring converter in future.
 
@@ -291,7 +291,7 @@ public class UserAdmin {
             logger.info("Selected departments:{}", item.getSelectedDepartments());
             for (final String d : item.getSelectedDepartments()) {
                 //df.setActive(true); //TODO revisit is active/inactive logic necessary?
-                DepartmentsForm department = departmentrepo.findById(Integer.parseInt(d));
+                Department department = departmentrepo.findById(Integer.parseInt(d));
                 logger.info("Found department:{}", department);
                 depts.add(department);
             }
@@ -301,7 +301,7 @@ public class UserAdmin {
 
         try {
             logger.info("Saving item:{}", item);
-            item.setDepartmentsForms(depts);
+            item.setDepartments(depts);
             userservice.create(item);
         } catch (Exception e) {
             logger.error("Error saving item:{}", e);
@@ -325,7 +325,7 @@ public class UserAdmin {
 
         String username = user.getUsername();
 
-        user.setDepartmentsForms(null);
+        user.setDepartments(null);
         userrepo.delete(user);
         userrepo.delete(user);
 
@@ -354,17 +354,17 @@ public class UserAdmin {
         model.addAttribute("userid", userid);
 
         User uf = userrepo.findById(userid);
-        Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
+        Set<Department> dfs = uf.getDepartments();
 
         logger.info("delete departmentsForms id={0}", new Object[]{id});
 
-        final Set<DepartmentsForm> newdfs = new HashSet<>();
-        for (DepartmentsForm df : dfs) {
+        final Set<Department> newdfs = new HashSet<>();
+        for (Department df : dfs) {
             if (df.getId() != id) {
                 newdfs.add(df);
             }
         }
-        uf.setDepartmentsForms(newdfs);
+        uf.setDepartments(newdfs);
         userrepo.save(uf);
 
         dfs = departmentservice.findSkipUserid(userid);

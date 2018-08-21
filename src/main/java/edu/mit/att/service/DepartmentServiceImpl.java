@@ -1,9 +1,9 @@
 package edu.mit.att.service;
 
-import edu.mit.att.entity.DepartmentsForm;
+import edu.mit.att.entity.Department;
 import edu.mit.att.entity.SsasForm;
 import edu.mit.att.entity.User;
-import edu.mit.att.repository.DepartmentsFormRepository;
+import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.SsasFormRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,27 +18,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-public class DepartmentsFormServiceImpl implements DepartmentsFormService {
-    private final static Logger LOGGER = Logger.getLogger(DepartmentsFormServiceImpl.class.getCanonicalName());
+public class DepartmentServiceImpl implements DepartmentService {
+    private final static Logger LOGGER = Logger.getLogger(DepartmentServiceImpl.class.getCanonicalName());
 
     @Resource
-    private DepartmentsFormRepository departmentrepo;
+    private DepartmentRepository departmentrepo;
 
     @Resource
     private SsasFormRepository ssarepo;
 
     // ------------------------------------------------------------------------
     @Transactional
-    public Set<DepartmentsForm> findSkipUserid(int userid) {
+    public Set<Department> findSkipUserid(int userid) {
 
-        List<DepartmentsForm> dfs = departmentrepo.findAllOrderByNameAsc();
+        List<Department> dfs = departmentrepo.findAllOrderByNameAsc();
         if (dfs == null) {
             LOGGER.log(Level.SEVERE, "findAllOrderByNameAsc null");
             return null;
         }
 
-        Set<DepartmentsForm> newdfs = new HashSet<>();
-        for (DepartmentsForm df : dfs) {
+        Set<Department> newdfs = new HashSet<>();
+        for (Department df : dfs) {
             List<User> ufs = df.getUsers();
             boolean found = false;
             for (User uf : ufs) {
@@ -57,7 +57,7 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
 
     // ------------------------------------------------------------------------
     @Transactional
-    public List<DepartmentsForm> findAllOrderByName() {
+    public List<Department> findAllOrderByName() {
         return departmentrepo.findAll(sortByNameAsc());
     }
 
@@ -69,7 +69,7 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
     // ------------------------------------------------------------------------
     @Transactional
     public boolean isDuplicate(String departmentname) {
-        List<DepartmentsForm> ds = departmentrepo.findByName(departmentname);
+        List<Department> ds = departmentrepo.findByName(departmentname);
         return ds.size() > 0;
     }
 
@@ -79,9 +79,9 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
 
         LOGGER.log(Level.INFO, "initial departmentAssignedToUser: departmentid={0} userid={1}", new Object[]{departmentid, userid});
 
-        List<DepartmentsForm> ds = departmentrepo.findBasedOnIdAndUserid(departmentid, userid);
+        List<Department> ds = departmentrepo.findBasedOnIdAndUserid(departmentid, userid);
 
-        DepartmentsForm df = departmentrepo.findById(departmentid);
+        Department df = departmentrepo.findById(departmentid);
         if (df == null) {
             return false;
         }
@@ -104,9 +104,9 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
 
     // ------------------------------------------------------------------------
     @Transactional
-    public List<DepartmentsForm> findAllNotAssociatedWithOtherSsaOrderByName(int thisssaid) {
+    public List<Department> findAllNotAssociatedWithOtherSsaOrderByName(int thisssaid) {
 
-        List<DepartmentsForm> dfs = departmentrepo.findAllOrderByNameAsc();
+        List<Department> dfs = departmentrepo.findAllOrderByNameAsc();
 
         if (dfs == null) {
             LOGGER.log(Level.INFO, "no departments");
@@ -115,8 +115,8 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
 
         List<SsasForm> ssas = ssarepo.findAll();
 
-        List<DepartmentsForm> newdfs = new ArrayList<DepartmentsForm>();
-        for (DepartmentsForm df : dfs) {
+        List<Department> newdfs = new ArrayList<Department>();
+        for (Department df : dfs) {
             //LOGGER.log(Level.INFO, "checking: thisssaid={0} depart ssaid={1}", new Object[]{thisssaid, df.getSsasForm().getId()});
 
             if (df == null || df.getSsasForm() == null) {
@@ -127,7 +127,7 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
             } else {
                 boolean found = false;
                 for (SsasForm ssa : ssas) {
-                    if (ssa.getDepartmentForm().getId() == df.getId()) {
+                    if (ssa.getDepartment().getId() == df.getId()) {
                         //LOGGER.log(Level.INFO, "found for ssaid={0}", new Object[]{ssa.getId()});
                         found = true;
                         break;

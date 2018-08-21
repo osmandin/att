@@ -54,13 +54,13 @@ public class ApprovedRsasFormServiceImpl implements ApprovedRsasFormService {
     // ------------------------------------------------------------------------
     @Transactional
     public void recordDeletedRsa(RsasForm rsa, HttpSession session) {
-        if (rsa == null || rsa.getSsasForm() == null || rsa.getSsasForm().getDepartmentForm() == null || rsa.getSsasForm().getDepartmentForm().getName() == null) {
+        if (rsa == null || rsa.getSsasForm() == null || rsa.getSsasForm().getDepartment() == null || rsa.getSsasForm().getDepartment().getName() == null) {
             return;
         }
 
         String sqldatetimenow = String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance());
 
-        String departmentname = rsa.getSsasForm().getDepartmentForm().getName();
+        String departmentname = rsa.getSsasForm().getDepartment().getName();
 
         String sendername = "";
         if (rsa.getSsasForm() != null && rsa.getSsasForm().getDepartmenthead() != null) {

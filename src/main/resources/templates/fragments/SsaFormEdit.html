@@ -6,7 +6,7 @@
 
         <input type="hidden" th:field="*{id}"/>
 
-        <div th:switch="*{dropdownDepartmentsForms == null or dropdownDepartmentsForms.size() == 0}">
+        <div th:switch="*{dropdownDepartments == null or dropdownDepartments.size() == 0}">
             <div th:case="true">
                 <label for="depart_label">Department/Unit or Donor</label>
                 <h4>There are no departments defined. Please define one or more departments.</h4>
@@ -15,11 +15,11 @@
                 <label for="depart_label">Department/Unit or Donor</label>
                 <select id="departmentid" name="departmentid">
                     <option value="">Add a new department:</option>
-                    <option th:each="d, stat: *{dropdownDepartmentsForms}"
-                            th:if="*{dropdownDepartmentsForms[__${stat.index}__].id} != '0'"
-                            th:value="*{dropdownDepartmentsForms[__${stat.index}__].id}"
-                            th:text="*{dropdownDepartmentsForms[__${stat.index}__].name}"
-                            th:selected="*{departmentForm} != null and *{departmentForm.id} != null and *{dropdownDepartmentsForms[__${stat.index}__].id} != null and *{dropdownDepartmentsForms[__${stat.index}__].id} eq *{departmentForm.id}"></option>
+                    <option th:each="d, stat: *{dropdownDepartments}"
+                            th:if="*{dropdownDepartments[__${stat.index}__].id} != '0'"
+                            th:value="*{dropdownDepartments[__${stat.index}__].id}"
+                            th:text="*{dropdownDepartments[__${stat.index}__].name}"
+                            th:selected="*{department} != null and *{department.id} != null and *{dropdownDepartments[__${stat.index}__].id} != null and *{dropdownDepartments[__${stat.index}__].id} eq *{department.id}"></option>
                 </select>
             </div>
 
