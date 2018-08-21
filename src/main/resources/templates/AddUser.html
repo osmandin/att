@@ -36,31 +36,31 @@
                     <h3 class="title-page">Add new user</h3>
                 </div>
 
-                <form action="#" th:object="${usersForm}" method="post">
+                <form action="#" th:object="${user}" method="post">
                     <div class="field-wrap">
                         <label for="id" class="field-label">ID</label>
-                        <input class="field field-text" id="id" placeholder="" th:field= "${usersForm.id}" readonly="readonly"/>
+                        <input class="field field-text" id="id" placeholder="" th:field= "${user.id}" readonly="readonly"/>
                     </div>
 
                     <div class="field-wrap">
                         <label for="username" class="field-label">Username</label>
-                        <input class="field field-text" id="username" placeholder="" th:field="${usersForm.username}"/>
+                        <input class="field field-text" id="username" placeholder="" th:field="${user.username}"/>
                     </div>
 
 
                     <div class="field-wrap">
                         <label for="firstname" class="field-label">First name</label>
-                        <input class="field field-text" id="firstname" placeholder="" th:field="${usersForm.firstname}"/>
+                        <input class="field field-text" id="firstname" placeholder="" th:field="${user.firstname}"/>
                     </div>
 
                     <div class="field-wrap">
                         <label for="lastname" class="field-label">Last name</label>
-                        <input class="field field-text" id="lastname" placeholder="" th:field="${usersForm.lastname}"/>
+                        <input class="field field-text" id="lastname" placeholder="" th:field="${user.lastname}"/>
                     </div>
 
                     <div class="field-wrap">
                         <label for="email" class="field-label">Email</label>
-                        <input class="field field-text" id="email" placeholder="" th:field="${usersForm.email}"/>
+                        <input class="field field-text" id="email" placeholder="" th:field="${user.email}"/>
                     </div>
 
                     <!-- CSRF token

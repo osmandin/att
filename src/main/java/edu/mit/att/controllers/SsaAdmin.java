@@ -8,7 +8,7 @@ import edu.mit.att.entity.*;
 import edu.mit.att.repository.*;
 import edu.mit.att.service.DepartmentsFormService;
 import edu.mit.att.service.SsasFormService;
-import edu.mit.att.service.UsersFormService;
+import edu.mit.att.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 //import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -89,10 +89,10 @@ public class SsaAdmin {
     private DepartmentsFormService departmentservice;
 
     @Autowired
-    private UsersFormService usersFormService;
+    private UserService userService;
 
     @Autowired
-    private UsersFormRepository userrepo;
+    private UserRepository userrepo;
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/ListSsas", method = RequestMethod.GET)
@@ -112,7 +112,7 @@ public class SsaAdmin {
         // authz logic:
 
         final String userAttrib = (String) request.getAttribute("mail");
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (user.getRole().equals(Role.deptadmin.name())) {
             final Set<DepartmentsForm> userDepartments = user.getDepartmentsForms();
@@ -230,9 +230,9 @@ public class SsaAdmin {
         // TODO: workaround for user multiple department problem:
 
 
-        List<UsersForm> u = usersFormService.findAll();
+        List<User> u = userService.findAll();
 
-        for (UsersForm user : u) {
+        for (User user : u) {
             LOGGER.info("User departments (post):" + user.getDepartmentsForms().toString());
         }
 
@@ -870,7 +870,7 @@ public class SsaAdmin {
 
         DepartmentsForm df = departmentrepo.findById(departmentid);
 
-        List<UsersForm> users = df.getUsersForms();
+        List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
@@ -905,7 +905,7 @@ public class SsaAdmin {
 
         DepartmentsForm df = departmentrepo.findById(departmentid);
 
-        List<UsersForm> users = df.getUsersForms();
+        List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);

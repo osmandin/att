@@ -1,8 +1,8 @@
 package edu.mit.att.authz;
 
-import edu.mit.att.entity.UsersFormBuilder;
-import edu.mit.att.service.UsersFormService;
-import edu.mit.att.entity.UsersForm;
+import edu.mit.att.entity.UserBuilder;
+import edu.mit.att.service.UserService;
+import edu.mit.att.entity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ public class SubjectTest {
 
 
     @Mock
-    private UsersFormService usersFormService;
+    private UserService userService;
 
     @InjectMocks
     private Subject subjectTest;
@@ -33,18 +33,18 @@ public class SubjectTest {
     @Test
     public void shouldGetRole() throws Exception {
         final String user1Email = "test1@abc.edu";
-        final UsersForm user1= new UsersFormBuilder().setEmail(user1Email).setRole("siteadmin").createUsersForm();
+        final User user1= new UserBuilder().setEmail(user1Email).setRole("siteadmin").createUsersForm();
 
         final String user2Email = "test2@xyz.edu";
-        final UsersForm user2= new UsersFormBuilder().setEmail(user2Email).setRole("").createUsersForm();
+        final User user2= new UserBuilder().setEmail(user2Email).setRole("").createUsersForm();
 
-        final List<UsersForm> users1 = new ArrayList<>();
+        final List<User> users1 = new ArrayList<>();
         users1.add(user1);
-        when(usersFormService.findByEmail(user1Email)).thenReturn(users1);
+        when(userService.findByEmail(user1Email)).thenReturn(users1);
 
-        final List<UsersForm> users2 = new ArrayList<>();
+        final List<User> users2 = new ArrayList<>();
         users2.add(user2);
-        when(usersFormService.findByEmail(user2Email)).thenReturn(users2);
+        when(userService.findByEmail(user2Email)).thenReturn(users2);
 
         final Role role1 = subjectTest.getRole(user1Email);
         assertTrue(role1.equals(Role.siteadmin));

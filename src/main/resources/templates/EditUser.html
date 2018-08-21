@@ -35,7 +35,7 @@
                         <h3 class="title-page">Update user</h3>
                     </div>
 
-                    <form th:action="@{/EditUser(userid=*{id})}" th:object="${usersForm}" method="post">
+                    <form th:action="@{/EditUser(userid=*{id})}" th:object="${user}" method="post">
 
                         <input type="hidden" th:field="*{id}"/>
 

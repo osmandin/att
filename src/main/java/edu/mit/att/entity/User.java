@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @ToString(exclude = {"departmentsForms"})
 @Table(name = "users")
-public class UsersForm {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -127,9 +127,9 @@ public class UsersForm {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        UsersForm usersForm = (UsersForm) o;
+        User user = (User) o;
 
-        return id == usersForm.id;
+        return id == user.id;
     }
 
     @Override
@@ -139,7 +139,7 @@ public class UsersForm {
         return result;
     }
 
-    public UsersForm(String username, String firstname, String lastname, boolean isadmin, String email, String role) {
+    public User(String username, String firstname, String lastname, boolean isadmin, String email, String role) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -148,6 +148,6 @@ public class UsersForm {
         this.role = role;
     }
 
-    public UsersForm() {
+    public User() {
     }
 }

@@ -16,6 +16,6 @@ public interface DepartmentsFormRepository extends JpaRepository<DepartmentsForm
     @Query(value = "SELECT d FROM DepartmentsForm d order by name asc")
     List<DepartmentsForm> findAllOrderByNameAsc();
 
-    @Query(value = "SELECT d FROM DepartmentsForm d JOIN d.usersForms u where d.id=:departmentid and u.id=:userid order by d.name")
+    @Query(value = "SELECT d FROM DepartmentsForm d JOIN d.users u where d.id=:departmentid and u.id=:userid order by d.name")
     List<DepartmentsForm> findBasedOnIdAndUserid(@Param("departmentid") int departmentid, @Param("userid") int userid);
 }

@@ -2,9 +2,9 @@ package edu.mit.att.service;
 
 
 import edu.mit.att.entity.DepartmentsForm;
-import edu.mit.att.entity.UsersForm;
+import edu.mit.att.entity.User;
 import edu.mit.att.repository.DepartmentsFormRepository;
-import edu.mit.att.repository.UsersFormRepository;
+import edu.mit.att.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,56 +13,56 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @Service
-public class UsersFormServiceImpl implements UsersFormService {
+public class UserServiceImpl implements UserService {
 
-    private final static Logger LOGGER = Logger.getLogger(UsersFormServiceImpl.class.getCanonicalName());
+    private final static Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getCanonicalName());
 
     @Resource
-    private UsersFormRepository usersFormRepository;
+    private UserRepository userRepository;
 
     @Resource
     private DepartmentsFormRepository departmentsFormRepository;
 
     @Transactional
-    public UsersForm create(UsersForm usersForm) {
-        return usersFormRepository.save(usersForm);
+    public User create(User user) {
+        return userRepository.save(user);
     }
 
 
     @Transactional
-    public UsersForm create(UsersForm usersForm, List<DepartmentsForm> departmentsForm) {
+    public User create(User user, List<DepartmentsForm> departmentsForm) {
         // FIXME - Check Is this legit?
-        usersForm.setDepartmentsForms(new HashSet<>(departmentsFormRepository.findAll()));
-        return usersFormRepository.save(usersForm);
+        user.setDepartmentsForms(new HashSet<>(departmentsFormRepository.findAll()));
+        return userRepository.save(user);
     }
 
 
     @Transactional
-    public List<UsersForm> findAll() {
-        return usersFormRepository.findAll();
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Transactional
-    public List<UsersForm> findAllAdmin() {
-        List<UsersForm> adminForms = usersFormRepository.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
+    public List<User> findAllAdmin() {
+        List<User> adminForms = userRepository.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
         return adminForms;
     }
 
     @Transactional
-    public List<UsersForm> findAllNonadmin() {
-        List<UsersForm> nonadminForms = usersFormRepository.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
+    public List<User> findAllNonadmin() {
+        List<User> nonadminForms = userRepository.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
         return nonadminForms;
     }
 
     @Transactional
     public boolean duplicate(String username, String firstname, String lastname, String email) {
-        List<UsersForm> ufs = usersFormRepository.findByUsernameAndFirstnameAndLastnameAndEmail(username, firstname, lastname, email);
+        List<User> ufs = userRepository.findByUsernameAndFirstnameAndLastnameAndEmail(username, firstname, lastname, email);
         return ufs.size() > 0;
     }
 
     @Transactional
     public boolean duplicate(String username) {
-        List<UsersForm> ufs = usersFormRepository.findByUsername(username);
+        List<User> ufs = userRepository.findByUsername(username);
         return ufs.size() > 0;
     }
 
@@ -70,7 +70,7 @@ public class UsersFormServiceImpl implements UsersFormService {
     @Transactional
     public Map<String, Object> get(int id) {
         Map<String, Object> info = new HashMap<String, Object>();
-        UsersForm uf = usersFormRepository.findById(id);
+        User uf = userRepository.findById(id);
         if (uf == null) {
             return null;
         }
@@ -85,18 +85,18 @@ public class UsersFormServiceImpl implements UsersFormService {
     }
 
     @Transactional
-    public List<UsersForm> findByName(String name) {
-        List<UsersForm> newus = new ArrayList<UsersForm>();
+    public List<User> findByName(String name) {
+        List<User> newus = new ArrayList<User>();
         if (name == null) {
             return newus;
         }
         // assume name is "firstname lastname"
         String[] parts = name.split(" +");
-        List<UsersForm> us = usersFormRepository.findAll();
+        List<User> us = userRepository.findAll();
         if (parts.length != 2) {
             return newus;
         }
-        for (UsersForm u : us) {
+        for (User u : us) {
             if (parts[0].equals(u.getFirstname()) && parts[0].equals(u.getFirstname())) {
                 newus.add(u);
             }
@@ -105,8 +105,8 @@ public class UsersFormServiceImpl implements UsersFormService {
     }
 
     @Transactional
-    public List<UsersForm> findByEmail(String email) {
-        return usersFormRepository.findByEmail(email);
+    public List<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }

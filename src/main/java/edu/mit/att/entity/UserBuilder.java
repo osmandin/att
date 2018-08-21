@@ -1,6 +1,6 @@
 package edu.mit.att.entity;
 
-public class UsersFormBuilder {
+public class UserBuilder {
     private String username;
     private String firstname;
     private String lastname;
@@ -8,37 +8,37 @@ public class UsersFormBuilder {
     private String email;
     private String role;
 
-    public UsersFormBuilder setUsername(String username) {
+    public UserBuilder setUsername(String username) {
         this.username = username;
         return this;
     }
 
-    public UsersFormBuilder setFirstname(String firstname) {
+    public UserBuilder setFirstname(String firstname) {
         this.firstname = firstname;
         return this;
     }
 
-    public UsersFormBuilder setLastname(String lastname) {
+    public UserBuilder setLastname(String lastname) {
         this.lastname = lastname;
         return this;
     }
 
-    public UsersFormBuilder setIsadmin(boolean isadmin) {
+    public UserBuilder setIsadmin(boolean isadmin) {
         this.isadmin = isadmin;
         return this;
     }
 
-    public UsersFormBuilder setEmail(String email) {
+    public UserBuilder setEmail(String email) {
         this.email = email;
         return this;
     }
 
-    public UsersFormBuilder setRole(String role) {
+    public UserBuilder setRole(String role) {
         this.role = role;
         return this;
     }
 
-    public UsersForm createUsersForm() {
-        return new UsersForm(username, firstname, lastname, isadmin, email, role);
+    public User createUsersForm() {
+        return new User(username, firstname, lastname, isadmin, email, role);
     }
 }

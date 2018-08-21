@@ -2,7 +2,7 @@ package edu.mit.att.controllers;
 
 import edu.mit.att.authz.Role;
 import edu.mit.att.authz.Subject;
-import edu.mit.att.service.UsersFormService;
+import edu.mit.att.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -29,7 +29,7 @@ public class AdminController {
     private Environment env;
 
     @Autowired
-    private UsersFormService usersFormService;
+    private UserService userService;
 
     @Autowired
     private Subject subject;

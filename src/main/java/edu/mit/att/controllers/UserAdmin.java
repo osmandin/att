@@ -5,9 +5,9 @@ import edu.mit.att.authz.Role;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.DepartmentsFormRepository;
 import edu.mit.att.repository.MapFormRepository;
-import edu.mit.att.repository.UsersFormRepository;
+import edu.mit.att.repository.UserRepository;
 import edu.mit.att.service.DepartmentsFormService;
-import edu.mit.att.service.UsersFormService;
+import edu.mit.att.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -42,7 +42,7 @@ public class UserAdmin {
 
 
     @Autowired
-    private UsersFormRepository userrepo;
+    private UserRepository userrepo;
 
     @Autowired
     private DepartmentsFormRepository departmentrepo;
@@ -51,7 +51,7 @@ public class UserAdmin {
     MapFormRepository maprepo;
 
     @Autowired
-    private UsersFormService userservice;
+    private UserService userservice;
 
     @Autowired
     DepartmentsFormService departmentservice;
@@ -68,16 +68,16 @@ public class UserAdmin {
 
 
         Map<Integer, Map<Integer, Boolean>> adminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
-        // List<UsersForm> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
-        List<UsersForm> allUsers = new ArrayList<>();
+        // List<User> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
+        List<User> allUsers = new ArrayList<>();
 
 
         // TODO authz -- filter by what users the admin can see
 
         final String email = (String) request.getAttribute("mail");
         logger.info("User:{}"+ email);
-        List<UsersForm> currentUsers = userrepo.findByEmail(email);
-        UsersForm currentUser = currentUsers.get(0);
+        List<User> currentUsers = userrepo.findByEmail(email);
+        User currentUser = currentUsers.get(0);
 
         if (currentUser.getRole().equals(Role.deptadmin.name())) {
             final Set dept = currentUser.getDepartmentsForms();
@@ -94,7 +94,7 @@ public class UserAdmin {
         }
 
 
-        for (final UsersForm uf : allUsers) {
+        for (final User uf : allUsers) {
             final Set<DepartmentsForm> departments = uf.getDepartmentsForms();
 
             logger.debug("Found departments for user:{}", departments);
@@ -119,8 +119,8 @@ public class UserAdmin {
         // TODO remove
        /*
        Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
-        List<UsersForm> nonadminusersForms = userrepo.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
-        for (UsersForm uf : nonadminusersForms) {
+        List<User> nonadminusersForms = userrepo.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
+        for (User uf : nonadminusersForms) {
             List<DepartmentsForm> dfs = uf.getDepartmentsForms();
             if (dfs != null) {
                 Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
@@ -153,13 +153,13 @@ public class UserAdmin {
 
         model.addAttribute("userid", userid);
 
-        final UsersForm usersForm = userrepo.findById(userid);
+        final User usersForm = userrepo.findById(userid);
 
         // Authz: if the user is not a siteadmin or a department admin don't let him change the role;
 
         final String userAttrib = (String) request.getAttribute("mail");
 
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         // First find all departments user is not associated with
         final Set<DepartmentsForm> otherDepartments = departmentservice.findSkipUserid(userid);
@@ -199,14 +199,14 @@ public class UserAdmin {
             return "Permissions";
         }
 
-        model.addAttribute("usersForm", usersForm);
+        model.addAttribute("user", usersForm);
 
         return "EditUser";
     }
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditUser", method = RequestMethod.POST)
-    public ModelAndView EditUser(UsersForm user) {
+    public ModelAndView EditUser(User user) {
 
         logger.info("Editing user:{}", user.toString());
 
@@ -217,7 +217,7 @@ public class UserAdmin {
         // This is done to prevent a IllegalStateException from JPA.
         // Assign a new list TODO: check any side effects
 
-        final UsersForm updatedUser = userrepo.findById(user.getId());
+        final User updatedUser = userrepo.findById(user.getId());
 
         final Set<DepartmentsForm> updatedDepartments = new HashSet<>();
 
@@ -260,11 +260,11 @@ public class UserAdmin {
 
         List<DepartmentAdmin> selectedDepartments = new ArrayList<>();
 
-        final UsersForm item = new UsersFormBuilder().createUsersForm();
+        final User item = new UserBuilder().createUsersForm();
         item.setDepartmentsForms(dfs);
 
         final ModelAndView model = new ModelAndView("AddUser");
-        model.addObject("usersForm", item);
+        model.addObject("user", item);
         model.addObject("allDepartments", dfs);
         model.addObject("selectedDepartments", selectedDepartments);
         return model;
@@ -277,7 +277,7 @@ public class UserAdmin {
      * @return
      */
     @RequestMapping(value = {"/add", "AddUser", "/AddUser"}, method = RequestMethod.POST)
-    public ModelAndView greetingForm(final UsersForm item) {
+    public ModelAndView greetingForm(final User item) {
 
         // associated department logic:
 
@@ -321,13 +321,13 @@ public class UserAdmin {
     ) {
         logger.info("Post");
 
-        UsersForm usersForm = userrepo.findById(userid);
+        User user = userrepo.findById(userid);
 
-        String username = usersForm.getUsername();
+        String username = user.getUsername();
 
-        usersForm.setDepartmentsForms(null);
-        userrepo.delete(usersForm);
-        userrepo.delete(usersForm);
+        user.setDepartmentsForms(null);
+        userrepo.delete(user);
+        userrepo.delete(user);
 
         ModelAndView mav = new ModelAndView();
 
@@ -353,7 +353,7 @@ public class UserAdmin {
 
         model.addAttribute("userid", userid);
 
-        UsersForm uf = userrepo.findById(userid);
+        User uf = userrepo.findById(userid);
         Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
 
         logger.info("delete departmentsForms id={0}", new Object[]{id});
@@ -370,8 +370,8 @@ public class UserAdmin {
         dfs = departmentservice.findSkipUserid(userid);
         model.addAttribute("dropdowndepartments", dfs);
 
-        UsersForm usersForm = userrepo.findById(userid);
-        model.addAttribute("usersForm", usersForm);
+        User user = userrepo.findById(userid);
+        model.addAttribute("user", user);
 
         return "EditUser";
     }

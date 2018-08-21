@@ -1,7 +1,7 @@
 package edu.mit.att.authz;
 
-import edu.mit.att.service.UsersFormService;
-import edu.mit.att.entity.UsersForm;
+import edu.mit.att.entity.User;
+import edu.mit.att.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,12 +16,12 @@ public class Subject {
     private final Logger logger = getLogger(this.getClass());
 
     @Autowired
-    private UsersFormService usersFormService;
+    private UserService userService;
 
 
    public Role getRole(final String principal) {
 
-       final List<UsersForm> users = usersFormService.findByEmail(principal);
+       final List<User> users = userService.findByEmail(principal);
 
        if (users.isEmpty()) {
            return Role.visitor;

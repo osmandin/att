@@ -8,8 +8,8 @@ import lombok.*;
 @Data
 @Entity
 @Table(name = "departments")
-@EqualsAndHashCode(exclude = {"ssasForm", "usersForms"})
-@ToString(exclude = {"usersForms", "ssasForm"})
+@EqualsAndHashCode(exclude = {"ssasForm", "users"})
+@ToString(exclude = {"users", "ssasForm"})
 public class DepartmentsForm {
 
     @Id
@@ -34,7 +34,7 @@ public class DepartmentsForm {
             joinColumns = @JoinColumn(name = "departmentid", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "userid", referencedColumnName = "id")
     )
-    private List<UsersForm> usersForms;
+    private List<User> users;
 
     @Override
     public boolean equals(Object o) {

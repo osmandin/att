@@ -5,7 +5,7 @@ import edu.mit.att.Utils;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.*;
 import edu.mit.att.service.DepartmentsFormService;
-import edu.mit.att.service.UsersFormService;
+import edu.mit.att.service.UserService;
 import edu.mit.att.authz.Role;
 import edu.mit.att.authz.Subject;
 import org.apache.commons.io.FileUtils;
@@ -52,13 +52,13 @@ public class UserPages {
     ServletContext context;
 
     @Autowired
-    private UsersFormRepository userrepo;
+    private UserRepository userrepo;
 
     @Autowired
     private DepartmentsFormRepository departmentsFormRepository;
 
     @Autowired
-    private UsersFormService userFormService;
+    private UserService userFormService;
 
     @Autowired
     DepartmentsFormService departmentservice;
@@ -164,8 +164,8 @@ public class UserPages {
 
         // Not an admin:
 
-        final List<UsersForm> users = userrepo.findByEmail(principal);
-        final UsersForm user = users.get(0); //TODO Get current user
+        final List<User> users = userrepo.findByEmail(principal);
+        final User user = users.get(0); //TODO Get current user
 
         LOGGER.info("Retrieved user:" + user.toString());
 

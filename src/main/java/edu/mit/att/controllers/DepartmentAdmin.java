@@ -3,10 +3,10 @@ package edu.mit.att.controllers;
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.DepartmentsForm;
 import edu.mit.att.entity.SsasForm;
-import edu.mit.att.entity.UsersForm;
+import edu.mit.att.entity.User;
 import edu.mit.att.repository.DepartmentsFormRepository;
 import edu.mit.att.repository.SsasFormRepository;
-import edu.mit.att.repository.UsersFormRepository;
+import edu.mit.att.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,7 @@ public class DepartmentAdmin {
 
 
     @Autowired
-    private UsersFormRepository userrepo;
+    private UserRepository userrepo;
 
     @Autowired
     private DepartmentsFormRepository departmentrepo;
@@ -56,7 +56,7 @@ public class DepartmentAdmin {
         final DepartmentsForm item = new DepartmentsForm();
 
         final String userAttrib = (String) request.getAttribute("mail");
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
             return new ModelAndView("Permissions");
@@ -105,7 +105,7 @@ public class DepartmentAdmin {
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
 
         DepartmentsForm df = departmentrepo.findById(departmentid);
-        List<UsersForm> users = df.getUsersForms();
+        List<User> users = df.getUsers();
 
         if (ssas.size() > 0 || users.size() > 0) {
             String dependentssas = "";
@@ -125,7 +125,7 @@ public class DepartmentAdmin {
             int dependentusercnt = 0;
             sep = "";
             if (users.size() > 0) {
-                for (UsersForm user : users) {
+                for (User user : users) {
                     sb.append(sep + user.getFirstname() + " " + user.getLastname());
                     sep = ", ";
                     dependentusercnt++;
@@ -186,7 +186,7 @@ public class DepartmentAdmin {
         LOGGER.info( "EditDepartment Get");
 
         final String userAttrib = (String) request.getAttribute("mail");
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         final Set<DepartmentsForm> departmentsForms = user.getDepartmentsForms();
 
@@ -236,7 +236,7 @@ public class DepartmentAdmin {
         model.addAttribute("departmentsForm", departmentsForm);
         model.addAttribute("departmentid", departmentsForm.getId());
 
-        List<UsersForm> users = departmentsForm.getUsersForms();
+        List<User> users = departmentsForm.getUsers();
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentsForm.getId());
 
@@ -287,9 +287,9 @@ public class DepartmentAdmin {
         String departmentname = df.getName();
         model.addAttribute("departmentname", departmentname);
 
-        List<UsersForm> users = df.getUsersForms();
+        List<User> users = df.getUsers();
 
-        for (UsersForm uf : users) {
+        for (User uf : users) {
             LOGGER.info( "  userid={0}", new Object[]{uf.getId()});
             Set<DepartmentsForm> dfs = uf.getDepartmentsForms();
             for (DepartmentsForm dfi : dfs) {
@@ -343,7 +343,7 @@ public class DepartmentAdmin {
             String sep = "";
             int deletedcnt = 0;
             for (int userid : userids) {
-                UsersForm uf = userrepo.findById(userid);
+                User uf = userrepo.findById(userid);
                 if (uf != null) {
                     userrepo.delete(uf);
                     deletedusers = sep + userid;
@@ -358,7 +358,7 @@ public class DepartmentAdmin {
 
         DepartmentsForm df = departmentrepo.findById(departmentid);
 
-        List<UsersForm> users = df.getUsersForms();
+        List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);
@@ -398,7 +398,7 @@ public class DepartmentAdmin {
 
         DepartmentsForm df = departmentrepo.findById(departmentid);
 
-        List<UsersForm> users = df.getUsersForms();
+        List<User> users = df.getUsers();
         model.addAttribute("users", users);
 
         List<SsasForm> ssas = ssarepo.findAllForDepartmentId(departmentid);

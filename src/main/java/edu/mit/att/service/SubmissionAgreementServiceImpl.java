@@ -52,10 +52,10 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
     OnlineSubmissionRequestFormRepository onlinesubmissionrequestrepo;
 
     @Resource
-    private UsersFormRepository userrepo;
+    private UserRepository userrepo;
 
     @Resource
-    private UsersFormService userservice;
+    private UserService userservice;
 
     @Resource
     SsasFormService ssasservice;
@@ -144,10 +144,10 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         request.setAttribute("correct", "1");
 
         boolean duplicateuser = false;
-        UsersForm uf = null;
+        User uf = null;
 
         boolean duplicateusername = false;
-        List<UsersForm> matchingusers = userrepo.findByUsername(username);
+        List<User> matchingusers = userrepo.findByUsername(username);
         LOGGER.log(Level.INFO, "findByUsername: username={0} size={1}", new Object[]{username, matchingusers.size()});
         if (matchingusers.size() > 0) {
             duplicateusername = true;
@@ -158,7 +158,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         }
 
         if (!duplicateusername && !duplicateuser) {
-            uf = new UsersFormBuilder().setUsername(username).setFirstname(firstname).setLastname(lastname).
+            uf = new UserBuilder().setUsername(username).setFirstname(firstname).setLastname(lastname).
                     setEmail(submitData.getEmail()).createUsersForm();
             uf.setIsadmin(false);
             uf.setEnabled(false);
@@ -166,7 +166,7 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
         } else {
             if (duplicateuser) {
 
-                List<UsersForm> ufs = userrepo.findByUsernameAndFirstnameAndLastnameAndEmail(username, firstname, lastname, submitData.getEmail());
+                List<User> ufs = userrepo.findByUsernameAndFirstnameAndLastnameAndEmail(username, firstname, lastname, submitData.getEmail());
                 LOGGER.log(Level.SEVERE, "duplicateuser: username={0} size={1}", new Object[]{username, ufs.size()});
 
                 if (ufs.size() != 1) {
@@ -243,16 +243,16 @@ public class SubmissionAgreementServiceImpl implements SubmissionAgreementServic
             departmentalreadyassignedtothisuser = true;
         } else {
             if (depart != null) {
-                List<UsersForm> newufs = new ArrayList<UsersForm>();
-                List<UsersForm> ufs = depart.getUsersForms();
+                List<User> newufs = new ArrayList<User>();
+                List<User> ufs = depart.getUsers();
                 if (ufs != null && ufs.size() > 0) {
-                    for (UsersForm u : ufs) {
+                    for (User u : ufs) {
                         newufs.add(u);
                     }
                 }
                 newufs.add(uf);
 
-                depart.setUsersForms(newufs);
+                depart.setUsers(newufs);
                 depart = departmentrepo.save(depart);
             }
         }

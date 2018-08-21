@@ -2,7 +2,7 @@ package edu.mit.att.service;
 
 import edu.mit.att.entity.DepartmentsForm;
 import edu.mit.att.entity.SsasForm;
-import edu.mit.att.entity.UsersForm;
+import edu.mit.att.entity.User;
 import edu.mit.att.repository.DepartmentsFormRepository;
 import edu.mit.att.repository.SsasFormRepository;
 import org.springframework.data.domain.Sort;
@@ -39,9 +39,9 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
 
         Set<DepartmentsForm> newdfs = new HashSet<>();
         for (DepartmentsForm df : dfs) {
-            List<UsersForm> ufs = df.getUsersForms();
+            List<User> ufs = df.getUsers();
             boolean found = false;
-            for (UsersForm uf : ufs) {
+            for (User uf : ufs) {
                 if (uf.getId() == userid) {
                     found = true;
                     break;
@@ -86,13 +86,13 @@ public class DepartmentsFormServiceImpl implements DepartmentsFormService {
             return false;
         }
 
-        List<UsersForm> ufs = df.getUsersForms();
+        List<User> ufs = df.getUsers();
         if (ufs == null) {
             return false;
         }
 
         boolean found = false;
-        for (UsersForm uf : ufs) {
+        for (User uf : ufs) {
             if (uf.getId() == userid) {
                 found = true;
                 break;

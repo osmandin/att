@@ -1,9 +1,9 @@
 package edu.mit.att.test;
 
-import edu.mit.att.service.UsersFormService;
+import edu.mit.att.entity.User;
+import edu.mit.att.service.UserService;
 import edu.mit.att.entity.DepartmentsForm;
-import edu.mit.att.entity.UsersForm;
-import edu.mit.att.entity.UsersFormBuilder;
+import edu.mit.att.entity.UserBuilder;
 import edu.mit.att.repository.DepartmentsFormRepository;
 import edu.mit.att.service.SsasFormService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class TestDatabaseInitializer {
     private DepartmentsFormRepository departmentrepo;
 
     @Autowired
-    private UsersFormService usersFormService;
+    private UserService userService;
 
     @Autowired
     private SsasFormService ssasFormService;
@@ -72,7 +72,7 @@ public class TestDatabaseInitializer {
             dept.setName(department);
             departmentrepo.save(dept);
 
-            final UsersForm user = new UsersFormBuilder().
+            final User user = new UserBuilder().
                     setUsername(username).setEmail(email).setFirstname(firstName).setLastname(lastName).createUsersForm();
             user.setRole(role);
             user.setIsadmin(true); //FIXME CHECK -- WHAT DOES THIS DO?
@@ -83,8 +83,8 @@ public class TestDatabaseInitializer {
 
             final Set<DepartmentsForm> departmentsSet = new HashSet<>(departments);
             user.setDepartmentsForms(departmentsSet);
-            usersFormService.create(user, departments);
-            logger.debug("Saved user:{}", usersFormService.findAll());
+            userService.create(user, departments);
+            logger.debug("Saved user:{}", userService.findAll());
         } catch (Exception e) {
             logger.error("Error saving test item:{}", e);
         }

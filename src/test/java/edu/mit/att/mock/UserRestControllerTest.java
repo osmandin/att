@@ -1,9 +1,9 @@
 package edu.mit.att.mock;
 
 
-import edu.mit.att.entity.UsersFormBuilder;
-import edu.mit.att.entity.UsersForm;
-import edu.mit.att.repository.UsersFormRepository;
+import edu.mit.att.entity.User;
+import edu.mit.att.entity.UserBuilder;
+import edu.mit.att.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,7 @@ public class UserRestControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private UsersFormRepository usersFormRepository;
+    private UserRepository userRepository;
 
 
     @Autowired
@@ -73,9 +73,9 @@ public class UserRestControllerTest {
 
         // create a test user object:
 
-        UsersForm usersForm = new UsersFormBuilder().setUsername(userName).createUsersForm();
-        usersForm.setDepartmentsForms(Collections.emptySet());
-        this.usersFormRepository.save(usersForm);
+        User user = new UserBuilder().setUsername(userName).createUsersForm();
+        user.setDepartmentsForms(Collections.emptySet());
+        this.userRepository.save(user);
 
         // samples:
 

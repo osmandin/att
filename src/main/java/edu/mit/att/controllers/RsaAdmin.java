@@ -4,11 +4,11 @@ import edu.mit.att.authz.Role;
 import edu.mit.att.entity.ApprovedRsasForm;
 import edu.mit.att.entity.RsasForm;
 import edu.mit.att.entity.SsaContactsForm;
-import edu.mit.att.entity.UsersForm;
+import edu.mit.att.entity.User;
 import edu.mit.att.repository.*;
 import edu.mit.att.service.ApprovedRsasFormService;
 import edu.mit.att.service.RsasFormService;
-import edu.mit.att.service.UsersFormService;
+import edu.mit.att.service.UserService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -55,7 +55,7 @@ public class RsaAdmin {
     private RsasFormService rsaservice;
 
     @Autowired
-    private UsersFormService userservice;
+    private UserService userservice;
 
     @Autowired
     private SsaContactsFormRepository contactrepo;
@@ -64,7 +64,7 @@ public class RsaAdmin {
     ApprovedRsasFormService approvedrsaservice;
 
     @Autowired
-    UsersFormRepository userrepo;
+    UserRepository userrepo;
 
     // ------------------------------------------------------------------------
     @RequestMapping("/ListDraftRsas")
@@ -80,7 +80,7 @@ public class RsaAdmin {
         // authz logic:
 
         final String userAttrib = (String) request.getAttribute("mail");
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
             return "Permissions";
@@ -108,7 +108,7 @@ public class RsaAdmin {
         // authz logic:
 
         final String userAttrib = (String) request.getAttribute("mail");
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
             return "Permissions";
@@ -556,7 +556,7 @@ public class RsaAdmin {
         // authz logic:
 
         final String userAttrib = (String) request.getAttribute("mail");
-        final UsersForm user = userrepo.findByEmail(userAttrib).get(0);
+        final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
             return "Permissions";
