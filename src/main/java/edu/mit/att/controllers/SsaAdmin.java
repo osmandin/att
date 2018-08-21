@@ -63,7 +63,7 @@ public class SsaAdmin {
     private SubmissionAgreementRepository ssarepo;
 
     @Autowired
-    private RsasFormRepository rsarepo;
+    private TransferRequestRepository rsarepo;
 
     @Autowired
     private RsaFileDataFormRepository rsaFileDataFormRepository;
@@ -344,7 +344,7 @@ public class SsaAdmin {
         int rejectedcnt = 0;
         for (int ssaid : ssaids) {
 
-            List<RsasForm> rsas = rsarepo.findAllForSsaOrderByTransferdateAsc(ssaid);
+            List<TransferRequest> rsas = rsarepo.findAllForSsaOrderByTransferdateAsc(ssaid);
             if (rsas == null || rsas.size() == 0) {
                 SubmissionAgreement ssa = ssarepo.findById(ssaid);
                 ssa.setDeleted(true);
@@ -637,7 +637,7 @@ public class SsaAdmin {
                 sb.append(sep + rsaid);
                 sep = ", ";
 
-                RsasForm rsa = rsarepo.findById(rsaid);
+                TransferRequest rsa = rsarepo.findById(rsaid);
 
 		/*
 		List<RsaFileDataForm> fds =  rsa.getRsaFileDataForms();
@@ -668,7 +668,7 @@ public class SsaAdmin {
 
         SubmissionAgreement ssa = ssarepo.findById(ssaid);
         if (ssa != null) {
-            List<RsasForm> rsas = ssa.getRsasForms();
+            List<TransferRequest> rsas = ssa.getTransferRequests();
 
             model.addAttribute("rsas", rsas);
 
@@ -809,7 +809,7 @@ public class SsaAdmin {
 
                 SubmissionAgreement ssa = ssarepo.findById(ssaid);
                 if (ssa != null) {
-                    List<RsasForm> rsas = ssa.getRsasForms();
+                    List<TransferRequest> rsas = ssa.getTransferRequests();
 
                     if (rsas == null || rsas.isEmpty()) {
 

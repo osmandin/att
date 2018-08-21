@@ -1,7 +1,7 @@
 package edu.mit.att.service;
 
 import edu.mit.att.entity.ApprovedRsasForm;
-import edu.mit.att.entity.RsasForm;
+import edu.mit.att.entity.TransferRequest;
 import edu.mit.att.entity.SsaContactsForm;
 import edu.mit.att.repository.ApprovedRsasFormRepository;
 import edu.mit.att.repository.SsaContactsFormRepository;
@@ -53,7 +53,7 @@ public class ApprovedRsasFormServiceImpl implements ApprovedRsasFormService {
 
     // ------------------------------------------------------------------------
     @Transactional
-    public void recordDeletedRsa(RsasForm rsa, HttpSession session) {
+    public void recordDeletedRsa(TransferRequest rsa, HttpSession session) {
         if (rsa == null || rsa.getSubmissionAgreement() == null || rsa.getSubmissionAgreement().getDepartment() == null || rsa.getSubmissionAgreement().getDepartment().getName() == null) {
             return;
         }

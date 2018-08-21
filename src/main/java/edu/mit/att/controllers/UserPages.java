@@ -67,7 +67,7 @@ public class UserPages {
     private SubmissionAgreementRepository ssarepo;
 
     @Autowired
-    private RsasFormRepository rsarepo;
+    private TransferRequestRepository rsarepo;
 
     @Autowired
     private RsaFileDataFormRepository filedatarepo;
@@ -372,9 +372,9 @@ public class UserPages {
         String useremail = (String) session.getAttribute("email");
 
 
-        // Create RsasForm:
+        // Create TransferRequest:
 
-        RsasForm rsa = new RsasForm();
+        TransferRequest rsa = new TransferRequest();
         rsa.setStartyear(startYear);
         rsa.setEndyear(endYear);
         rsa.setDescription(description);
@@ -420,7 +420,7 @@ public class UserPages {
             fd.setSize(fileDetails.getSize());
             fd.setNicesize(format.displayBytes(fileDetails.getSize()));
             fd.setLastmoddatetime(fileDetails.getLastmoddatetime());
-            fd.setRsasForm(rsa);
+            fd.setTransferRequest(rsa);
 
             fd = filedatarepo.save(fd);
             fileDataForms.add(fd);
@@ -607,7 +607,7 @@ public class UserPages {
      * @param rsa
      * @return
      */
-    private String getDrop_off_dir(String DEPARTMENT_ID, RsasForm rsa) {
+    private String getDrop_off_dir(String DEPARTMENT_ID, TransferRequest rsa) {
         return env.getRequiredProperty("dropoff.dir") + "/" +
                 DEPARTMENT_ID + "/" + Integer.toString(rsa.getId());
     }

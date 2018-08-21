@@ -6,7 +6,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Data
-@ToString(exclude = {"rsasForm"})
+@ToString(exclude = {"transferRequest"})
 @Entity
 @Table(name = "rsaFileData")
 public class RsaFileDataForm {
@@ -33,5 +33,5 @@ public class RsaFileDataForm {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rsaid")
-    private RsasForm rsasForm;
+    private TransferRequest transferRequest;
 }

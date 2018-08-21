@@ -6,7 +6,7 @@
 
 <div th:fragment="RsaForm">
 
-    <form method="post" id="form" th:object="${rsasForm}" th:action="@{/} + ${action}">
+    <form method="post" id="form" th:object="${transferRequest}" th:action="@{/} + ${action}">
 
         <!-- TODO lot of hidden fields -->
 
@@ -89,7 +89,7 @@
                         <label for="hdu" class="col-sm-2 col-form-label">Head of Department/Unit</label>
                         <div class="col-sm-7">
                         <input name="departmenthead" type="text" class="form-control" id="departmenthead"
-                               th:field="${rsasForm.submissionAgreement.departmenthead}"/>
+                               th:field="${transferRequest.submissionAgreement.departmenthead}"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -115,7 +115,7 @@
                     <input type="hidden" value="0" id="contactcnt"/>
                     <input type="hidden" name="submissionAgreement.ssaContactsForms[0].idx" value="0"/>
                     <input type="hidden" name="submissionAgreement.ssaContactsForms[0].submissionAgreement.id"
-                           th:value="${rsasForm.submissionAgreement.id}"/>
+                           th:value="${transferRequest.submissionAgreement.id}"/>
                     <div class="form-group row">
                         <label for="ssacontactname" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-7">
@@ -248,7 +248,7 @@
                 <input type="hidden" id="copyrightcnt" value="0"/>
                 <div class="copyright">
                     <input type="hidden" name="submissionAgreement.ssaCopyrightsForms[0].submissionAgreement.id"
-                           th:value="${rsasForm.submissionAgreement.id}"/>
+                           th:value="${transferRequest.submissionAgreement.id}"/>
                     <div class="col-sm-7">
 
                     <input type="text" id="copyright" name="submissionAgreement.ssaCopyrightsForms[0].copyright"/>
@@ -289,7 +289,7 @@
                 <div class="restriction">
 	      <span>
 		<input type="hidden" name="submissionAgreement.ssaAccessRestrictionsForms[0].submissionAgreement.id"
-               th:value="${rsasForm.submissionAgreement.id}"/>
+               th:value="${transferRequest.submissionAgreement.id}"/>
 		<input type="hidden" name="submissionAgreement.ssaAccessRestrictionsForms[0].idx" value="0"/>
 
                                           <div class="col-sm-7">
@@ -479,7 +479,7 @@
                     <div th:each="item,stat: *{rsaFileDataForms}">
                         <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].id}"/>
                         <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].idx}"/>
-                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].rsasForm.id}"/>
+                        <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].transferRequest.id}"/>
                         <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].name}"/>
                         <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].nicesize}"/>
                         <input type="hidden" th:field="*{rsaFileDataForms[__${stat.index}__].lastmoddatetime}"/>

@@ -37,7 +37,7 @@
                     will be indicated. The delete option is only available when dependencies have been removed.
                 </p>
 
-                <div th:switch="*{submissionAgreement != null and submissionAgreement.rsasForms != null and submissionAgreement.rsasForms.size() > 0}">
+                <div th:switch="*{submissionAgreement != null and submissionAgreement.transferRequests != null and submissionAgreement.transferRequests.size() > 0}">
                     <div th:case="true">
                         <h4>This Agreement cannot be deleted due to dependencies.</h4>
 <!--

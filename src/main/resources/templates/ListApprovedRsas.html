@@ -76,7 +76,7 @@
 
                             <h3>Manage Approved Transfer Requests</h3>
 
-                            <div th:switch="*{rsasForms == null or rsasForms.size() == 0}">
+                            <div th:switch="*{transferRequests == null or transferRequests.size() == 0}">
 
                                 <div th:case="true">
                                     <p>There are currently no Approved Transfer Requests.</p>
@@ -108,46 +108,46 @@
                                                 <th>AT<br/>Import<br/>File</th>
 -->
                                             </tr>
-                                            <tr th:each="rsa,stat : *{rsasForms}">
+                                            <tr th:each="rsa,stat : *{transferRequests}">
                                                 <td><input name="rsa" type="checkbox"
-                                                           th:value="*{rsasForms[__${stat.index}__].id}"/>
+                                                           th:value="*{transferRequests[__${stat.index}__].id}"/>
                                                 </td>
                                                <!-- <td>
-                                                    <a th:href="@{/EditApprovedRsa(rsaid=*{rsasForms[__${stat.index}__].id})}">Edit</a>
+                                                    <a th:href="@{/EditApprovedRsa(rsaid=*{transferRequests[__${stat.index}__].id})}">Edit</a>
                                                 </td>-->
-                                                <td align="center" th:text="*{rsasForms[__${stat.index}__].id}"></td>
-                                                <td th:text="*{rsasForms[__${stat.index}__].submissionAgreement.creationdate}"></td>
-                                                <td th:text="*{rsasForms[__${stat.index}__].transferdate}"></td>
+                                                <td align="center" th:text="*{transferRequests[__${stat.index}__].id}"></td>
+                                                <td th:text="*{transferRequests[__${stat.index}__].submissionAgreement.creationdate}"></td>
+                                                <td th:text="*{transferRequests[__${stat.index}__].transferdate}"></td>
                                                 <td>
-                                                    <div th:each="contact,cstat : *{rsasForms[__${stat.index}__].submissionAgreement.ssaContactsForms}">
-                                                        <span th:text="*{rsasForms[__${stat.index}__].submissionAgreement.ssaContactsForms[__${cstat.index}__].name}"></span><br/>
+                                                    <div th:each="contact,cstat : *{transferRequests[__${stat.index}__].submissionAgreement.ssaContactsForms}">
+                                                        <span th:text="*{transferRequests[__${stat.index}__].submissionAgreement.ssaContactsForms[__${cstat.index}__].name}"></span><br/>
                                                     </div>
                                                 </td>
-                                                <td th:switch="*{rsasForms[__${stat.index}__].submissionAgreement.department == null}">
+                                                <td th:switch="*{transferRequests[__${stat.index}__].submissionAgreement.department == null}">
                                                     <div th:case="true">
                                                         &nbsp;
                                                     </div>
                                                     <div th:case="*">
-                                                        <span th:text="*{rsasForms[__${stat.index}__].submissionAgreement.department.name}"></span>
+                                                        <span th:text="*{transferRequests[__${stat.index}__].submissionAgreement.department.name}"></span>
                                                     </div>
                                                 </td>
-                                                <td th:switch="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}">
+                                                <td th:switch="*{transferRequests[__${stat.index}__].rsaFileDataForms.size()}">
                                                     <div th:case="'0'">
                                                         &nbsp;
                                                     </div>
                                                     <div th:case="*">
-                                                        <span th:text="*{rsasForms[__${stat.index}__].rsaFileDataForms.size()}"></span>
+                                                        <span th:text="*{transferRequests[__${stat.index}__].rsaFileDataForms.size()}"></span>
                                                         document<span
-                                                            th:if="*{rsasForms[__${stat.index}__].rsaFileDataForms.size() != 1}"></span>
+                                                            th:if="*{transferRequests[__${stat.index}__].rsaFileDataForms.size() != 1}"></span>
                                                         <br/>
-                                                        <a th:href="@{/DownloadZipFile(rsaid=*{rsasForms[__${stat.index}__].id}, redirect='ListApprovedRsas')}">Download</a>
-                                                      <!--  <a th:href="@{/ListApprovedFiles(rsaid=*{rsasForms[__${stat.index}__].id})}">&#9632;</a>&nbsp;&nbsp;<a
-                                                            th:onclick="*{'return confirm_delete_inventory(' + rsasForms[__${stat.index}__].rsaFileDataForms.size() + ')'}"
-                                                            th:href="@{/DeleteApprovedInventory(rsaid=*{rsasForms[__${stat.index}__].id})}">Delete</a>-->
+                                                        <a th:href="@{/DownloadZipFile(rsaid=*{transferRequests[__${stat.index}__].id}, redirect='ListApprovedRsas')}">Download</a>
+                                                      <!--  <a th:href="@{/ListApprovedFiles(rsaid=*{transferRequests[__${stat.index}__].id})}">&#9632;</a>&nbsp;&nbsp;<a
+                                                            th:onclick="*{'return confirm_delete_inventory(' + transferRequests[__${stat.index}__].rsaFileDataForms.size() + ')'}"
+                                                            th:href="@{/DeleteApprovedInventory(rsaid=*{transferRequests[__${stat.index}__].id})}">Delete</a>-->
                                                     </div>
                                                 </td>
                                                <!-- <td>
-                                                    <a th:href="@{/CreateATImportFile(rsaid=*{rsasForms[__${stat.index}__].id})}">Create</a>
+                                                    <a th:href="@{/CreateATImportFile(rsaid=*{transferRequests[__${stat.index}__].id})}">Create</a>
                                                 </td>-->
                                             </tr>
                                         </table>

@@ -1,9 +1,9 @@
 package edu.mit.att.service;
 
 import edu.mit.att.entity.RsaFileDataForm;
-import edu.mit.att.entity.RsasForm;
+import edu.mit.att.entity.TransferRequest;
 import edu.mit.att.repository.RsaFileDataFormRepository;
-import edu.mit.att.repository.RsasFormRepository;
+import edu.mit.att.repository.TransferRequestRepository;
 import edu.mit.att.repository.SubmissionAgreementRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class RsasFormServiceImpl implements RsasFormService {
-    private final static Logger LOGGER = Logger.getLogger(RsasFormServiceImpl.class.getCanonicalName());
+public class TransferRequestServiceImpl implements TransferRequestService {
+    private final static Logger LOGGER = Logger.getLogger(TransferRequestServiceImpl.class.getCanonicalName());
 
     @Resource
-    private RsasFormRepository repo;
+    private TransferRequestRepository repo;
 
     @Resource
     private SubmissionAgreementRepository ssarepo;
@@ -29,7 +29,7 @@ public class RsasFormServiceImpl implements RsasFormService {
     private RsaFileDataFormRepository filedatarepo;
 
     @Transactional
-    public void saveForm(RsasForm rsa) {
+    public void saveForm(TransferRequest rsa) {
 
         ssaservice.saveSsaFormForRsa(rsa.getSubmissionAgreement());
 

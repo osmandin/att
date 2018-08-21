@@ -2,12 +2,12 @@ package edu.mit.att.controllers;
 
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.ApprovedRsasForm;
-import edu.mit.att.entity.RsasForm;
+import edu.mit.att.entity.TransferRequest;
 import edu.mit.att.entity.SsaContactsForm;
 import edu.mit.att.entity.User;
 import edu.mit.att.repository.*;
 import edu.mit.att.service.ApprovedRsasFormService;
-import edu.mit.att.service.RsasFormService;
+import edu.mit.att.service.TransferRequestService;
 import edu.mit.att.service.UserService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,8 @@ import java.util.logging.Logger;
 public class RsaAdmin {
     private final static Logger LOGGER = Logger.getLogger(RsaAdmin.class.getCanonicalName());
 
+    public static final String RSAS_FORMS = "transferRequests";
+
     @Resource
     private Environment env;
 
@@ -43,7 +45,7 @@ public class RsaAdmin {
     ServletContext context;
 
     @Autowired
-    private RsasFormRepository rsarepo;
+    private TransferRequestRepository rsarepo;
 
     @Autowired
     private RsaFileDataFormRepository filedatarepo;
@@ -52,7 +54,7 @@ public class RsaAdmin {
     private ApprovedRsasFormRepository approvedrsarepo;
 
     @Autowired
-    private RsasFormService rsaservice;
+    private TransferRequestService rsaservice;
 
     @Autowired
     private UserService userservice;
@@ -89,8 +91,10 @@ public class RsaAdmin {
         model.addAttribute("rsaid", rsaid);
         model.addAttribute("downloadfailed", downloadfailed);
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+        LOGGER.info("Found requests:" + transferRequests);
+
+        model.addAttribute(RSAS_FORMS, transferRequests);
 
         return "ListDraftRsas";
     }
@@ -117,9 +121,8 @@ public class RsaAdmin {
         model.addAttribute("rsaid", rsaid);
         model.addAttribute("downloadfailed", downloadfailed);
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
-
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute("RSAS_FORMS", transferRequests);
         return "ListApprovedRsas";
     }
 
@@ -138,11 +141,10 @@ public class RsaAdmin {
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
-        RsasForm rsasForm = rsarepo.findById(rsaid);
+        TransferRequest transferRequest = rsarepo.findById(rsaid);
 
-        model.addAttribute("rsasForm", rsasForm);
-
-        LOGGER.info("File path (get):" + rsasForm.getPath());
+        model.addAttribute("RSAS_FORMS", transferRequest);
+        LOGGER.info("File path (get):" + transferRequest.getPath());
 
         model.addAttribute("action", "EditDraftRsa");
         return "EditDraftRsa";
@@ -152,7 +154,7 @@ public class RsaAdmin {
     @RequestMapping(value = "/EditDraftRsa", method = RequestMethod.POST)
     public String EditDraftRsa(
             ModelMap model,
-            RsasForm rsasForm,
+            TransferRequest transferRequest,
             HttpServletRequest request,
             HttpServletResponse response,
             HttpSession session
@@ -164,16 +166,16 @@ public class RsaAdmin {
             return "Home";
         }
 
-        if (rsasForm == null) {
-            LOGGER.log(Level.SEVERE, "rsasForm is null");
+        if (transferRequest == null) {
+            LOGGER.log(Level.SEVERE, "transferRequest is null");
             return "Home";
         }
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
 
-        LOGGER.info("File path (POST):" + rsasForm.getPath());
-        rsaservice.saveForm(rsasForm);
+        LOGGER.info("File path (POST):" + transferRequest.getPath());
+        rsaservice.saveForm(transferRequest);
 
         String name = (String) session.getAttribute("name");
         String emailaddr = (String) session.getAttribute("email");
@@ -187,17 +189,17 @@ public class RsaAdmin {
         emailsetup.setTo(useremailaddress);
 
         Email email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-        email.EditDraftRsaSendToUser(rsasForm);*/
+        email.EditDraftRsaSendToUser(transferRequest);*/
 
         model.addAttribute("name", name);
         model.addAttribute("emailsent", "1");
 
         model.addAttribute("success", "1");
 
-        if (rsasForm.isApproved()) {
+        if (transferRequest.isApproved()) {
             LOGGER.log(Level.INFO, "draft RSA approved");
 
-            List<SsaContactsForm> contactinfo = rsasForm.getSubmissionAgreement().getSsaContactsForms();
+            List<SsaContactsForm> contactinfo = transferRequest.getSubmissionAgreement().getSsaContactsForms();
 
             if (contactinfo != null && contactinfo.size() > 0) {
                 LOGGER.log(Level.INFO, "sending approved email");
@@ -219,19 +221,18 @@ public class RsaAdmin {
                 emailsetup.setUsername(session.getAttribute("username").toString());
 
                 email = new Email(emailsetup, sender, velocityEngine, env, context, session, model);
-                email.ApprovedDraftRsaSendToContacts(rsasForm);
+                email.ApprovedDraftRsaSendToContacts(transferRequest);
 */
             }
 
             model.addAttribute("edited", "1");
 
-            List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-            model.addAttribute("rsasForms", rsasForms);
-
+            List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+            model.addAttribute("RSAS_FORMS", transferRequests);
             return "ListApprovedRsas";
         }
 
-        model.addAttribute("rsasForm", rsasForm);
+        model.addAttribute(RSAS_FORMS, transferRequest);
 
         model.addAttribute("action", "EditDraftRsa");
         return "EditDraftRsa";
@@ -254,8 +255,8 @@ public class RsaAdmin {
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
-        RsasForm rsasForm = rsarepo.findById(rsaid);
-        model.addAttribute("rsasForm", rsasForm);
+        TransferRequest transferRequest = rsarepo.findById(rsaid);
+        model.addAttribute("RSAS_FORMS", transferRequest);
 
         model.addAttribute("action", "EditApprovedRsa");
         return "EditApprovedRsa";
@@ -265,31 +266,31 @@ public class RsaAdmin {
     @RequestMapping(value = "/EditApprovedRsa", method = RequestMethod.POST)
     public String EditApprovedRsa(
             ModelMap model,
-            RsasForm rsasForm,
+            TransferRequest transferRequest,
             HttpServletRequest request,
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "EditAppovedRsas Post");
 
-        if (rsasForm == null) {
-            LOGGER.log(Level.SEVERE, "rsasForm is null");
+        if (transferRequest == null) {
+            LOGGER.log(Level.SEVERE, "transferRequest is null");
             return "Home";
         }
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
-        rsaservice.saveForm(rsasForm);
+        rsaservice.saveForm(transferRequest);
 
-        if (!rsasForm.isApproved()) {
+        if (!transferRequest.isApproved()) {
             model.addAttribute("edited", "1");
 
-            List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-            model.addAttribute("rsasForms", rsasForms);
+            List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+            model.addAttribute(RSAS_FORMS, transferRequests);
 
             return "ListDraftRsas";
         }
 
-        model.addAttribute("rsasForm", rsasForm);
+        model.addAttribute(RSAS_FORMS, transferRequest);
 
         model.addAttribute("action", "EditApprovedRsa");
         return "EditApprovedRsa";
@@ -322,7 +323,7 @@ public class RsaAdmin {
             LOGGER.log(Level.SEVERE, "Error: ", ex);
         }
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
 
         String staffemails = env.getRequiredProperty("org.email");
         String[] emailrecipts = staffemails.split(",");
@@ -343,8 +344,8 @@ public class RsaAdmin {
         model.addAttribute("onedeleted", "1");
         model.addAttribute("onedeletedrsaid", rsaid);
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute("RSAS_FORMS", transferRequests);
 
         return "ListDraftRsas";
     }
@@ -369,7 +370,7 @@ public class RsaAdmin {
             return "Home";
         }
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
 
         approvedrsaservice.recordDeletedRsa(rsa, session);
 
@@ -385,8 +386,8 @@ public class RsaAdmin {
         model.addAttribute("onedeleted", "1");
         model.addAttribute("onedeletedrsaid", rsaid);
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute(RSAS_FORMS, transferRequests);
 
         return "ListApprovedRsas";
     }
@@ -404,22 +405,22 @@ public class RsaAdmin {
         String dropoff = env.getRequiredProperty("dropoff.dir");
         if (dropoff == null || dropoff.equals("")) {
             LOGGER.log(Level.SEVERE, "dropoff is null");
-            List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-            model.addAttribute("rsasForms", rsasForms);
+            List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+            model.addAttribute("RSAS_FORMS", transferRequests);
             return "ListDraftRsas";
         }
 
         if (rsas == null) {
             model.addAttribute("nodeletes", "1");
-            List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-            model.addAttribute("rsasForms", rsasForms);
+            List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+            model.addAttribute(RSAS_FORMS, transferRequests);
             return "ListDraftRsas";
         }
 
-        List<RsasForm> deletedrsas = new ArrayList<RsasForm>();
+        List<TransferRequest> deletedrsas = new ArrayList<TransferRequest>();
         for (int rsaid : rsas) {
             if (rsaid > 0) {
-                RsasForm rsa = rsarepo.findById(rsaid);
+                TransferRequest rsa = rsarepo.findById(rsaid);
                 deletedrsas.add(rsa);
             }
         }
@@ -437,7 +438,7 @@ public class RsaAdmin {
                 model.addAttribute("weredeletes", "1");
                 model.addAttribute("deletersaids", deletersaids);
 
-                RsasForm rsa = rsarepo.findById(rsaid);
+                TransferRequest rsa = rsarepo.findById(rsaid);
 
                 rsa.setDeleted(true);
                 rsarepo.save(rsa);
@@ -453,8 +454,8 @@ public class RsaAdmin {
         }
 
         if (numdeleted <= 0) {
-            List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-            model.addAttribute("rsasForms", rsasForms);
+            List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+            model.addAttribute(RSAS_FORMS, transferRequests);
 
             return "ListDraftRsas";
         }
@@ -472,8 +473,8 @@ public class RsaAdmin {
         email.DeleteDraftRsasSendToStaff(deletedrsas);*/
 
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute("RSAS_FORMS", transferRequests);
 
         return "ListDraftRsas";
     }
@@ -497,8 +498,8 @@ public class RsaAdmin {
         if (rsaids == null) {
             model.addAttribute("nodeletes", "1");
 
-            final List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-            model.addAttribute("rsasForms", rsasForms);
+            final List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+            model.addAttribute(RSAS_FORMS, transferRequests);
 
             return "ListApprovedRsas";
         }
@@ -518,7 +519,7 @@ public class RsaAdmin {
             model.addAttribute("weredeletes", "1");
             model.addAttribute("deletersaids", deletersaids);
 
-            final RsasForm rsa = rsarepo.findById(rsaid);
+            final TransferRequest rsa = rsarepo.findById(rsaid);
 
             LOGGER.info("About to update Rsas:" + rsa.toString());
 
@@ -538,8 +539,8 @@ public class RsaAdmin {
             }
         }
 
-        final List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        final List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute(RSAS_FORMS, transferRequests);
 
         return "ListApprovedRsas";
     }

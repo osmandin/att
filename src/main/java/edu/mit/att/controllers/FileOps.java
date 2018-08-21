@@ -7,7 +7,7 @@ package edu.mit.att.controllers;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.OnlineSubmissionRequestFormRepository;
 import edu.mit.att.repository.RsaFileDataFormRepository;
-import edu.mit.att.repository.RsasFormRepository;
+import edu.mit.att.repository.TransferRequestRepository;
 import edu.mit.att.service.ApprovedRsasFormService;
 import org.apache.commons.io.FileUtils;
 import org.apache.velocity.app.VelocityEngine;
@@ -58,7 +58,7 @@ public class FileOps {
     }*/
 
     @Autowired
-    private RsasFormRepository rsarepo;
+    private TransferRequestRepository rsarepo;
 
     @Autowired
     private RsaFileDataFormRepository filedatarepo;
@@ -87,7 +87,7 @@ public class FileOps {
 
         LOGGER.log(Level.INFO, "downloadfailed={0}", new Object[]{downloadfailed});
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
         List<RsaFileDataForm> rsaFileDataForms = rsa.getRsaFileDataForms();
         model.addAttribute("rsaFileDataForms", rsaFileDataForms);
 
@@ -110,7 +110,7 @@ public class FileOps {
 
         model.addAttribute("downloadfailed", downloadfailed);
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
         List<RsaFileDataForm> rsaFileDataForms = rsa.getRsaFileDataForms();
         model.addAttribute("rsaFileDataForms", rsaFileDataForms);
 
@@ -132,7 +132,7 @@ public class FileOps {
         if (rsaid != null) {
             MyFileUtils fileutils = new MyFileUtils();
 
-            RsasForm r = rsarepo.findById(Integer.parseInt(rsaid));
+            TransferRequest r = rsarepo.findById(Integer.parseInt(rsaid));
             String dropoffdirfull = r.getPath();
             String dropoffdirfull1 = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
             fileutils.downloadfile(dropoffdirfull, filename, response, context);
@@ -160,10 +160,10 @@ public class FileOps {
 
         if (rsaid != null) {
 
-            RsasForm r = rsarepo.findById(Integer.parseInt(rsaid));
+            TransferRequest r = rsarepo.findById(Integer.parseInt(rsaid));
 
-            LOGGER.info("Found RsasForm:" + r);
-            LOGGER.info("Found RsasForm:" + r.getPath());
+            LOGGER.info("Found TransferRequest:" + r);
+            LOGGER.info("Found TransferRequest:" + r.getPath());
 
             MyFileUtils fileutils = new MyFileUtils();
             //String dropoffdirfull = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
@@ -200,7 +200,7 @@ public class FileOps {
             LOGGER.log(Level.SEVERE, null, ex);
         }
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
         List<RsaFileDataForm> filedata = rsa.getRsaFileDataForms();
         for (RsaFileDataForm fd : filedata) {
             filedatarepo.delete(fd);
@@ -208,8 +208,8 @@ public class FileOps {
         rsa.setRsaFileDataForms(null);
         rsarepo.save(rsa);
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute("rsasForms", transferRequests);
 
         return "ListApprovedRsas";
     }
@@ -240,7 +240,7 @@ public class FileOps {
             LOGGER.log(Level.SEVERE, null, ex);
         }
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
         List<RsaFileDataForm> filedata = rsa.getRsaFileDataForms();
         for (RsaFileDataForm fd : filedata) {
             filedatarepo.delete(fd);
@@ -248,8 +248,8 @@ public class FileOps {
         rsa.setRsaFileDataForms(null);
         rsarepo.save(rsa);
 
-        List<RsasForm> rsasForms = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("rsasForms", rsasForms);
+        List<TransferRequest> transferRequests = rsarepo.findByApprovedFalseAndDeletedFalseOrderByTransferdateAsc();
+        model.addAttribute("rsasForms", transferRequests);
 
         return "ListDraftRsas";
     }
@@ -420,7 +420,7 @@ public class FileOps {
 
         model.addAttribute("rsaid", rsaid);
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
         model.addAttribute("rsa", rsa);
 
         return "CreateATImportFile";
@@ -448,7 +448,7 @@ public class FileOps {
             return;
         }
 
-        RsasForm rsa = rsarepo.findById(rsaid);
+        TransferRequest rsa = rsarepo.findById(rsaid);
         rsa.setAccessionnumber(accessionnumber);
         rsa = rsarepo.save(rsa);
 

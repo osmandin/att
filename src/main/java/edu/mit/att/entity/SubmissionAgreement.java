@@ -173,19 +173,19 @@ public class SubmissionAgreement {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "submissionAgreement", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
-    private List<RsasForm> rsasForms;
+    private List<TransferRequest> transferRequests;
 
-    public void setRsasForms(List<RsasForm> rsas) {
+    public void setTransferRequests(List<TransferRequest> rsas) {
         if (rsas != null) {
             int i = 0;
-            for (RsasForm rsa : rsas) {
+            for (TransferRequest rsa : rsas) {
                 rsa.setIdx(i++);
             }
         }
-        rsasForms = rsas;
+        transferRequests = rsas;
     }
 
-    public int hashCode(RsasForm rsa) {
+    public int hashCode(TransferRequest rsa) {
         return rsa.getId();
     }
 

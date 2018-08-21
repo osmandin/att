@@ -100,7 +100,7 @@
             <p>Use the form below to modify this Draft Transfer Requests. Select
                 <i>Approved</i> to highlight the required fields. When complete, select <i>Update</i> button.</p>
 
-            <p><a onclick="return confirm_delete()" th:href="@{/DeleteDraftRsa(rsaid=${rsasForm.id})}">Delete the
+            <p><a onclick="return confirm_delete()" th:href="@{/DeleteDraftRsa(rsaid=${transferRequest.id})}">Delete the
                 Transfer Request</a></p>
 
             <div th:replace="fragments/RsaForm :: RsaForm"></div>

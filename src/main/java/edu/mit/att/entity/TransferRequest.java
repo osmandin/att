@@ -12,7 +12,7 @@ import lombok.*;
 @Table(name = "rsas")
 @Data
 @EqualsAndHashCode(exclude = {"submissionAgreement", "rsaFileDataForms"})
-public class RsasForm {
+public class TransferRequest {
 
     @Transient
     private int numfiles = 0;
@@ -67,7 +67,7 @@ public class RsasForm {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "rsasForm", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "transferRequest", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @OrderColumn(name = "idx")
     @Setter(AccessLevel.NONE)
     private List<RsaFileDataForm> rsaFileDataForms;
