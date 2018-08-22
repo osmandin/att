@@ -47,17 +47,6 @@ public class Utils {
     }
 
     // ------------------------------------------------------------------------
-    public boolean isAcceptedAddress(HttpServletRequest request, String addressmatch) {
-        String remoteAddr = request.getRemoteAddr();
-        if (!remoteAddr.matches(addressmatch)) {
-            LOGGER.log(Level.SEVERE, "Error: Not an accepted address: {0}", new Object[]{remoteAddr});
-            return false;
-        }
-        return true;
-    }
-
-
-    // ------------------------------------------------------------------------
     public void redirectToRoot(
             ServletContext context,
             HttpServletResponse response
