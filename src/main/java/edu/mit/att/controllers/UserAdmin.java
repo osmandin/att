@@ -9,7 +9,6 @@ import edu.mit.att.service.DepartmentService;
 import edu.mit.att.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,12 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -32,13 +28,8 @@ public class UserAdmin {
 
     private final Logger logger = getLogger(this.getClass());
 
-
-    @Resource
-    private Environment env;
-
     @Autowired
     ServletContext context;
-
 
     @Autowired
     private UserRepository userrepo;
@@ -60,83 +51,64 @@ public class UserAdmin {
     @RequestMapping(value = "/ListUsers", method = RequestMethod.GET)
     public String ListUsers(
             ModelMap model,
-            HttpSession session,
             HttpServletRequest request
     ) {
 
         logger.info("ListUsers GET");
 
-
-        Map<Integer, Map<Integer, Boolean>> adminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
-        // List<User> adminusersForms = userrepo.findByIsadminTrueOrderByLastnameAscFirstnameAsc();
-        List<User> allUsers = new ArrayList<>();
-
+        final Map<Integer, Map<Integer, Boolean>> adminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
 
         // TODO authz -- filter by what users the admin can see
 
         final String email = (String) request.getAttribute("mail");
-        logger.info("User:{}"+ email);
-        List<User> currentUsers = userrepo.findByEmail(email);
-        User currentUser = currentUsers.get(0);
+        logger.debug("User:{}",  email);
+
+        final List<User> currentUsers = userrepo.findByEmail(email);
+
+        if (currentUsers.isEmpty()) {
+            logger.debug("No users found");
+            return ("Permissions"); // This shouldn't happen as we have at least one default user
+        }
+
+        final User currentUser = currentUsers.get(0);
+
+        List<User> users;
 
         if (currentUser.getRole().equals(Role.deptadmin.name())) {
             final Set dept = currentUser.getDepartments();
             // find only users who belong to the same department
             // Note that the user may belong to different departments
-            allUsers = userrepo.findByDepartments(dept);
-            logger.info("Corresponding users:" + allUsers);
+            users = userrepo.findByDepartments(dept);
+            logger.debug("Corresponding users:" + users);
         } else if (currentUser.getRole().equals(Role.siteadmin.name())){
-            allUsers = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
-            logger.info("Found users:{}", allUsers.toString());
+            users = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
+            logger.debug("Found users:{}", users.toString());
         } else {
-            logger.info("Improper access");
+            logger.debug("Improper access");
             return ("Permissions");
         }
 
 
-        for (final User uf : allUsers) {
-            final Set<Department> departments = uf.getDepartments();
+        for (final User u : users) {
+            final Set<Department> departments = u.getDepartments();
 
             logger.debug("Found departments for user:{}", departments);
-
 
             if (departments != null) {
                 Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
                 for (Department df : departments) {
                     IdKey ik = new IdKey();
-                    ik.userid = uf.getId();
+                    ik.userid = u.getId();
                     ik.departmentid = df.getId();
 
                     MapForm mf = maprepo.findByKey(ik);
                     //dmap.put(df.getId(), mf.isDepartmentactive());
                 }
-                adminactivemap.put(uf.getId(), dmap);
+                adminactivemap.put(u.getId(), dmap);
             }
         }
         model.addAttribute("adminactivemap", adminactivemap); //TODO ?
-        model.addAttribute("adminusersForms", allUsers);
-
-        // TODO remove
-       /*
-       Map<Integer, Map<Integer, Boolean>> nonadminactivemap = new HashMap<Integer, Map<Integer, Boolean>>();
-        List<User> nonadminusersForms = userrepo.findByIsadminFalseOrderByLastnameAscFirstnameAsc();
-        for (User uf : nonadminusersForms) {
-            List<Department> dfs = uf.getDepartments();
-            if (dfs != null) {
-                Map<Integer, Boolean> dmap = new HashMap<Integer, Boolean>();
-                for (Department df : dfs) {
-                    IdKey ik = new IdKey();
-                    ik.userid = uf.getId();
-                    ik.departmentid = df.getId();
-
-                    MapForm mf = maprepo.findByKey(ik);
-                    dmap.put(df.getId(), mf.isDepartmentactive());
-                }
-                nonadminactivemap.put(uf.getId(), dmap);
-            }
-        }
-        model.addAttribute("nonadminactivemap", nonadminactivemap);
-        model.addAttribute("nonadminusersForms", nonadminusersForms);*/
+        model.addAttribute("adminusersForms", users);
 
        return "ListUsers";
     }
@@ -146,7 +118,6 @@ public class UserAdmin {
     public String EditUser(
             ModelMap model,
             @RequestParam(value = "userid", required = false) int userid,
-            HttpSession session,
             HttpServletRequest request
     ) {
 
@@ -206,39 +177,32 @@ public class UserAdmin {
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/EditUser", method = RequestMethod.POST)
-    public ModelAndView EditUser(User user) {
+    public ModelAndView EditUser(final User userParam) {
 
-        logger.info("Editing user:{}", user.toString());
-
-        // Check role:
-
-
+        logger.info("Editing user:{}", userParam.toString());
 
         // This is done to prevent a IllegalStateException from JPA.
         // Assign a new list TODO: check any side effects
 
-        final User updatedUser = userrepo.findById(user.getId());
+        final User user = userrepo.findById(userParam.getId());
 
-        final Set<Department> updatedDepartments = new HashSet<>();
+        final Set<Department> dept = new HashSet<>();
 
-        for (final String s : user.getSelectedDepartments()) {
+        for (final String s : userParam.getSelectedDepartments()) {
             final Department d = departmentrepo.findById(Integer.parseInt(s));
-            updatedDepartments.add(d);
+            dept.add(d);
         }
 
-        updatedUser.setDepartments(updatedDepartments);
-        updatedUser.setRole(user.getRole());
-        updatedUser.setFirstname(user.getFirstname());
-        updatedUser.setLastname(user.getLastname());
-        updatedUser.setEmail(user.getEmail());
-
+        user.setDepartments(dept);
+        user.setRole(userParam.getRole());
+        user.setFirstname(userParam.getFirstname());
+        user.setLastname(userParam.getLastname());
+        user.setEmail(userParam.getEmail());
 
         // Save the object
-        userrepo.save(updatedUser);
+        userrepo.save(user);
 
-        final ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect:/ListUsers");
-        return mav;
+        return redirect();
     }
 
     /**
@@ -273,11 +237,11 @@ public class UserAdmin {
     /**
      * Add a user
      *
-     * @param item
-     * @return
+     * @param item User
+     * @return ModelAndView
      */
     @RequestMapping(value = {"/add", "AddUser", "/AddUser"}, method = RequestMethod.POST)
-    public ModelAndView greetingForm(final User item) {
+    public ModelAndView AddUserPOST(final User item) {
 
         // associated department logic:
 
@@ -307,19 +271,21 @@ public class UserAdmin {
             logger.error("Error saving item:{}", e);
         }
 
-        final ModelAndView modelAndView = new ModelAndView("redirect:/ListUsers"); //TODO
-        return modelAndView;
+        return redirect(); //TODO
+    }
+
+    private ModelAndView redirect() {
+        return new ModelAndView("redirect:/ListUsers");
     }
 
 
     private static Map<Integer, String> getRoles() {
         final Map<Integer, String> formats = new HashMap<>();
-
         final String[] formatsStr = new String[] {"siteadmin", "visitor", "deptadmin", "donor"};
-        //
+
         int i = 0;
 
-        for (String f : formatsStr) {
+        for (final String f : formatsStr) {
             formats.put(i, f);
             i++;
         }
