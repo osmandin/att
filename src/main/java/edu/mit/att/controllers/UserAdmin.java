@@ -1,6 +1,5 @@
 package edu.mit.att.controllers;
 
-import edu.mit.att.Utils;
 import edu.mit.att.authz.Role;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.DepartmentRepository;
@@ -55,6 +54,7 @@ public class UserAdmin {
 
     @Autowired
     DepartmentService departmentservice;
+
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/ListUsers", method = RequestMethod.GET)
@@ -175,7 +175,7 @@ public class UserAdmin {
 
         // add roles:
 
-        final Map<Integer, String> roles = Utils.getRoles();
+        final Map<Integer, String> roles = getRoles();
 
         final Map<Integer, String> rolesToDisplay = new HashMap<>();
 
@@ -376,5 +376,19 @@ public class UserAdmin {
         return "EditUser";
     }
 
+    private static Map<Integer, String> getRoles() {
+        final Map<Integer, String> formats = new HashMap<>();
+
+        final String[] formatsStr = new String[] {"siteadmin", "visitor", "deptadmin", "donor"};
+        //
+        int i = 0;
+
+        for (String f : formatsStr) {
+            formats.put(i, f);
+            i++;
+        }
+
+        return formats;
+    }
 
 }
