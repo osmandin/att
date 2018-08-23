@@ -3,8 +3,10 @@ package edu.mit.att;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.mit.att.controllers.DepartmentAdmin;
 import edu.mit.att.entity.Department;
+import edu.mit.att.entity.User;
 import edu.mit.att.repository.DepartmentRepository;
 import edu.mit.att.repository.SubmissionAgreementRepository;
+import edu.mit.att.repository.UserRepository;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -15,16 +17,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.View;
 
 import static org.hamcrest.Matchers.hasProperty;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Mockito.*;
@@ -49,6 +49,12 @@ public class DepartmentEditTest {
     @Mock
     private SubmissionAgreementRepository submissionAgreementRepository;
 
+    @Mock
+    private UserRepository userrepo;
+
+    @Mock
+    private DepartmentRepository departmentrepo;
+
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
@@ -60,10 +66,40 @@ public class DepartmentEditTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testGet() throws Exception {
         final Department dept = new Department();
         dept.setName("test123");
         when(departmentsService.save(dept)).thenReturn(dept);
+
+        List<Department> testList = new ArrayList<>();
+        testList.add(dept);
+
+        when(departmentsService.findAll()).thenReturn(testList);
+        when(submissionAgreementRepository.findAllForDepartmentId(1)).thenReturn(Collections.emptyList());
+
+        final Set<Department> set = new HashSet<>();
+        set.add(dept);
+        final User user = new User();
+        user.setDepartments(set);
+        user.setEmail("test@mit.edu");
+
+        final List<User> userList = new ArrayList<>();
+        userList.add(user);
+
+        when(userrepo.findByEmail("test@mit.edu")).thenReturn(userList);
+        when(departmentrepo.findById(1)).thenReturn(dept);
+
+        mockMvc.perform(get("/EditDepartment?departmentid=1").requestAttr("mail", "test@mit.edu"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    @Test
+    public void testPost() throws Exception {
+        final Department dept = new Department();
+        dept.setName("test123");
+        when(departmentrepo.save(dept)).thenReturn(dept);
         List<Department> testList = new ArrayList<>();
         testList.add(dept);
         when(departmentsService.findAll()).thenReturn(testList);
@@ -78,23 +114,6 @@ public class DepartmentEditTest {
                 ))))
                 .andExpect(status().isOk())
                 .andReturn();
-
-       /* mockMvc.perform(get("/EditDepartment?departmentid=1"))
-                .andExpect(model().attribute("department", allOf(
-                        hasProperty("name", equalTo("test123")))
-                ));*/
-
-
     }
 
-    /*
-     * converts a Java object into JSON representation
-     */
-    static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
