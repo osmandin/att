@@ -69,11 +69,4 @@ public class HomeController {
         return "Help";
     }
 
-    // ------------------------------------------------------------------------
-    @RequestMapping("/Logout")
-    public String Logout(ModelMap model, HttpSession session) {
-        session.invalidate();
-        return "Logout";
-    }
-
 }
