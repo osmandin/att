@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class HttpRequestTest {
+public class HomeRequestTest {
 
     @LocalServerPort
     private int port;
@@ -23,10 +23,11 @@ public class HttpRequestTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Ignore
     @Test
-    public void greetingShouldReturnDefaultMessage() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/att/results",
-                String.class)).contains("Archives Transfer Tool");
+    public void testHomePage() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/att/",
+                String.class)).contains("Transfer Tool");
     }
+
+
 }
