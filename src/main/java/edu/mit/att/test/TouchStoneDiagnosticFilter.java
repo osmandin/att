@@ -29,7 +29,8 @@ import java.io.IOException;
 public class TouchStoneDiagnosticFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(TouchStoneDiagnosticFilter.class);
 
-    // TODO: for testing only. Remove the annotation when using in production
+    //  NOTE - *** COMMENT OUT THIS ANNOTATION WHEN DEPLOYING TO PRODUCTION ***
+    // TODO: Remove reliance on this annotation, as not removing this will make the application not boot in prod.
     @Resource
     private Environment env;
 
@@ -54,9 +55,16 @@ public class TouchStoneDiagnosticFilter implements Filter {
         // other Attributes are displayName, mail, nickname
         logger.info("Touchstone Attribute {} :{}", "mail", httpServletRequest.getAttribute("mail"));
 
+        if (env == null) {
+            logger.info("Injected Environment annotation null.");
+        } else {
+            logger.info("Injected Environment:");
+            logger.info(env.getProperty("test.status"));
+        }
+
 
         if (env != null && env.getRequiredProperty("testing.status").equals("true")) {
-            logger.debug("Set mail value:{}", email);
+            logger.info("Setting mail value:{}", email);
             httpServletRequest.setAttribute("mail", email);
         }
 
