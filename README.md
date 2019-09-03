@@ -35,7 +35,7 @@ java -jar target/att-0.0.1-SNAPSHOT.war
 
 Visit `http://localhost:8080/att`.
 
-Installation (Docker)
+Testing with Docker
 -----------------------
 
 For convenience, the project can be launched with Docker
@@ -83,11 +83,28 @@ Build using Maven and copy the result .war file to the Tomcat instance.
 
 mvn clean package -P dev
 
-# scp target/att-0.0.1-SNAPSHOT.war user@server:/tomcat/webapps
+# scp target/att-0.0.1-SNAPSHOT.war user@server:/usr/share/tomcat/webapps
 
 ```
-Testing
----------
+
+Replace user, server, and tomcat webapp locations, as appropriate.
+
+Tomcat should load the web app after a few moments. Browse to the webapp (specified below)
+to confirm the application is working.
+
+To debug, you can tail the following files:
+
+``` sh
+tail -f /usr/share/tomcat/tmp/palmquist-logs/debug.log
+sudo tail -f /usr/share/tomcat/logs/localhost.yyyy-mm-dd.log
+```
+
+Change Tomcat location, as necessary.
+
+The application logs folder can be changed in application.properties.
+
+Unit Tests
+-----------
 
 To run a single test:
 
@@ -95,17 +112,17 @@ To run a single test:
 mvn surefire:test -Dtest=DepartmentHttpRequestTest#testAddPage -Pdev
 ```
 
-Server Architecture
+Production Server
 ---------------------
 
-Currently, the application is live on https:lib-arc-5 mit.edu/att.
+Currently, the application is running on https:lib-arc-5 mit.edu/att.
 
 Server set up: Apache httpd (for Shibboleth), Apache Tomcat, Embedded database (to be migrated)
 
 Documentation
 --------------
 
-The FAQ page provides background information on the submission process.
+The FAQ web page provides background information on the submission process.
 
 
 Contributors
