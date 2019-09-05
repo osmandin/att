@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
@@ -37,5 +38,7 @@ public class TransferRequestServiceImpl implements TransferRequestService {
         filedatarepo.save(fds);
 
         repo.save(rsa);
+
+        LOGGER.log(Level.INFO, "Saved:" + rsa);
     }
 }

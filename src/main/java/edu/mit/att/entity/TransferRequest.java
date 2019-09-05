@@ -29,7 +29,7 @@ public class TransferRequest {
     private String transferdate;
     private String accessionnumber;
     private String createdby;
-    private boolean approved;
+    private boolean approved = false;
     private boolean deleted = false;
     private int idx;
     private String path; // Osm added path to file
@@ -92,5 +92,25 @@ public class TransferRequest {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @Override
+    public String toString() {
+        return "TransferRequest{" +
+                "numfiles=" + numfiles +
+                ", id=" + id +
+                ", startyear='" + startyear + '\'' +
+                ", endyear='" + endyear + '\'' +
+                ", description='" + description + '\'' +
+                ", extent=" + extent +
+                ", extentstr='" + extentstr + '\'' +
+                ", transferdate='" + transferdate + '\'' +
+                ", accessionnumber='" + accessionnumber + '\'' +
+                ", createdby='" + createdby + '\'' +
+                ", approved=" + approved +
+                ", deleted=" + deleted +
+                ", idx=" + idx +
+                ", path='" + path + '\'' +
+                '}';
     }
 }

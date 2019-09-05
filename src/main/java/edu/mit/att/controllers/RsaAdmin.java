@@ -122,7 +122,11 @@ public class RsaAdmin {
         model.addAttribute("downloadfailed", downloadfailed);
 
         List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
-        model.addAttribute("RSAS_FORMS", transferRequests);
+
+        LOGGER.log(Level.INFO, "ListAppovedRsas" + transferRequests.toString());
+
+
+        model.addAttribute(RSAS_FORMS, transferRequests);
         return "ListApprovedRsas";
     }
 
@@ -141,10 +145,12 @@ public class RsaAdmin {
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
-        TransferRequest transferRequest = rsarepo.findById(rsaid);
+        final TransferRequest transferRequest = rsarepo.findById(rsaid);
 
         model.addAttribute("RSAS_FORMS", transferRequest);
         LOGGER.info("File path (get):" + transferRequest.getPath());
+        LOGGER.info("Transfer Request:" + transferRequest.toString());
+        model.addAttribute("transferRequest", transferRequest);
 
         model.addAttribute("action", "EditDraftRsa");
         return "EditDraftRsa";
@@ -174,8 +180,10 @@ public class RsaAdmin {
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
 
-        LOGGER.info("File path (POST):" + transferRequest.getPath());
+        LOGGER.info("Transfer Rquest:" + transferRequest.toString());
         rsaservice.saveForm(transferRequest);
+
+        LOGGER.log(Level.INFO, "All rsas" + rsarepo.findAll());
 
         String name = (String) session.getAttribute("name");
         String emailaddr = (String) session.getAttribute("email");
@@ -227,11 +235,14 @@ public class RsaAdmin {
 
             model.addAttribute("edited", "1");
 
-            List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+            final List<TransferRequest> transferRequests = rsarepo.findByApprovedTrueAndDeletedFalseOrderByTransferdateAsc();
+            LOGGER.log(Level.INFO, "Transfer requests (approved):" + transferRequests.toString());
             model.addAttribute("RSAS_FORMS", transferRequests);
-            return "ListApprovedRsas";
+            LOGGER.log(Level.INFO, "Returning to list of approved Rsas");
+            return "Admin";
         }
 
+        LOGGER.log(Level.INFO, "COntinuing");
         model.addAttribute(RSAS_FORMS, transferRequest);
 
         model.addAttribute("action", "EditDraftRsa");
