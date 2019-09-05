@@ -1,6 +1,7 @@
 package edu.mit.att;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,17 @@ public class InfoPageRequestTest {
                 String.class)).contains("About");
     }
 
+    @Ignore
     @Test
     public void testFaqPage() throws Exception {
         assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/att/Faq",
                 String.class)).contains("FAQ");
+    }
+
+    @Test
+    public void testSubmissionsInstructionsPage() throws Exception {
+        assertThat(this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/att/SubmissionInstructions",
+                String.class)).contains("Submission Instructions");
     }
 
 
