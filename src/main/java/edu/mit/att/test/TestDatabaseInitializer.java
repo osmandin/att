@@ -53,7 +53,7 @@ public class TestDatabaseInitializer {
     @Value("${testing.role:visitor}")
     private String role;
 
-    @Value("${testing.department:iasc}")
+    @Value("${testing.department:ddc}")
     private String department;
 
     /**

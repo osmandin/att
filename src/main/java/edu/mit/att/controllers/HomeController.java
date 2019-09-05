@@ -37,7 +37,7 @@ public class HomeController {
      * Handles all request
      * @return model and view
      */
-    @RequestMapping(value={"/Faq"}, method = RequestMethod.GET)
+    //@RequestMapping(value={"/Faq"}, method = RequestMethod.GET)
     public ModelAndView show() {
         final ModelAndView model = new ModelAndView("Faq");
         OrgInfo org = new OrgInfo();
@@ -48,6 +48,25 @@ public class HomeController {
         model.addObject("org", org);
         return model;
     }
+
+
+    /**
+     * Handles all request
+     * @return model and view
+     */
+    @RequestMapping(value={"/SubmissionInstructions"}, method = RequestMethod.GET)
+    public ModelAndView showSubmissionInstructions() {
+        final ModelAndView model = new ModelAndView("SubmissionInstructions");
+        OrgInfo org = new OrgInfo();
+        org.setEmail(env.getRequiredProperty("org.email"));
+        org.setPhone(env.getRequiredProperty("org.phone"));
+        org.setName(env.getRequiredProperty("org.name"));
+        org.setNamefull(env.getRequiredProperty("org.namefull"));
+        model.addObject("org", org);
+        return model;
+    }
+
+
 
     // ------------------------------------------------------------------------
     @RequestMapping("/About")

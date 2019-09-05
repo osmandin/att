@@ -31,7 +31,7 @@ public class TouchStoneDiagnosticFilter implements Filter {
 
     //  NOTE - *** COMMENT OUT THIS ANNOTATION WHEN DEPLOYING TO PRODUCTION ***
     // TODO: Remove reliance on this annotation, as not removing this will make the application not boot in prod.
-    @Resource
+    //@Resource
     private Environment env;
 
     @Value("${testing.mail:osmandin@mit.edu}")
