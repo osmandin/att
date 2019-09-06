@@ -35,47 +35,45 @@ public class TestDatabaseInitializer {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SsasFormService ssasFormService;
-
-    @Value("${testing.mail:johndoe@mail.com}")
+    @Value("${testing.mail:testuser@mail.com}")
     private String email;
 
-    @Value("${testing.username:johndoe}")
+    @Value("${testing.username:testuser}")
     private String username;
 
-    @Value("${testing.firstname:john}")
+    @Value("${testing.firstname:test}")
     private String firstName;
 
-    @Value("${testing.lastname:doe}")
+    @Value("${testing.lastname:test}")
     private String lastName;
 
     @Value("${testing.role:visitor}")
     private String role;
 
-    @Value("${testing.department:ddc}")
+    @Value("${testing.department:none}")
     private String department;
 
     /**
-     * Populates database with test record
+     * Populates database with an initial admin record
      */
     @PostConstruct
     public void populateDatabase() {
 
-        logger.info("INIT");
         logger.debug("INIT");
 
-        //FIXME this is only for testing purposes. remvoe later.
-
         try {
-            final Department dept = new Department();
-            dept.setName(department);
-            departmentrepo.save(dept);
+
+            if (departmentrepo.findAll().isEmpty()) {
+                final Department dept = new Department();
+                dept.setName(department);
+                departmentrepo.save(dept);
+            }
+
 
             final User user = new UserBuilder().
                     setUsername(username).setEmail(email).setFirstname(firstName).setLastname(lastName).createUsersForm();
             user.setRole(role);
-            user.setIsadmin(true); //FIXME CHECK -- WHAT DOES THIS DO?
+            user.setIsadmin(true); //TODO CHECK -- WHAT DOES THIS DO?
 
             final List<Department> departments = departmentrepo.findAll();
 
@@ -83,10 +81,14 @@ public class TestDatabaseInitializer {
 
             final Set<Department> departmentsSet = new HashSet<>(departments);
             user.setDepartments(departmentsSet);
-            userService.create(user, departments);
-            logger.debug("Saved user:{}", userService.findAll());
+
+            if (userService.findAll().isEmpty()) {
+                userService.create(user, departments);
+                logger.debug("Saved user:{}", userService.findAll());
+            }
+
         } catch (Exception e) {
-            logger.error("Error saving test item:{}", e);
+            logger.error("Error saving item:{}", e);
         }
     }
 

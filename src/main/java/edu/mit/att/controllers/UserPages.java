@@ -544,6 +544,7 @@ public class UserPages {
         }
 
         // Send mail
+        //FIXME this needs to be nonblocking
         notifyUser(rsa.getId(), ssa.getDepartment().getName(), fileList);
 
 
