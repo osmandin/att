@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class RsaFileDataForm {
 
     @Id
-    @GeneratedValue(strategy = Gen)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private String name;

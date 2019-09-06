@@ -8,6 +8,7 @@ import edu.mit.att.service.UserService;
 import edu.mit.att.authz.Role;
 import edu.mit.att.authz.Subject;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.logging.Level;
@@ -446,7 +448,6 @@ public class UserPages {
         boolean successful = dir.mkdirs();
         if (!successful) {
             LOGGER.log(Level.SEVERE, "dir={0} NOT created", new Object[]{DROP_OFF_DIR});
-
         }
 
         rsa.setPath(DROP_OFF_DIR);
@@ -607,9 +608,16 @@ public class UserPages {
      * @param rsa
      * @return
      */
-    private String getDrop_off_dir(String DEPARTMENT_ID, TransferRequest rsa) {
+    private synchronized String getDrop_off_dir(String DEPARTMENT_ID, TransferRequest rsa) {
+
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
+        String time = String.valueOf(System.currentTimeMillis());
+
+        String randomStr = String.format("%s.%s.%s", date, time, RandomStringUtils.randomAlphanumeric(6));
+
         return env.getRequiredProperty("dropoff.dir") + "/" +
-                DEPARTMENT_ID + "/" + Integer.toString(rsa.getId());
+                DEPARTMENT_ID + "/" + randomStr + "/" + rsa.getId();
     }
 
     // TODO Policy - what happens if the file is copied but the mail is never sent?

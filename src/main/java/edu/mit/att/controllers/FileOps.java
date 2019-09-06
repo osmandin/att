@@ -168,7 +168,14 @@ public class FileOps {
             MyFileUtils fileutils = new MyFileUtils();
             //String dropoffdirfull = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
             String dropoffdirfull = r.getPath();
-            fileutils.downloadzipfile(model, dropoffdirfull, response, context, redirect, rsaid);
+
+            File f = new File(dropoffdirfull);
+            if (f.exists() == false) { // check if the file was deleted for some external reason
+                LOGGER.info("File does not exist:" +  dropoffdirfull); // TODO hide the download button
+            } else {
+
+                fileutils.downloadzipfile(model, dropoffdirfull, response, context, redirect, rsaid);
+            }
         } else {
             LOGGER.log(Level.SEVERE, "rsaid is null");
         }
