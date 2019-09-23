@@ -470,14 +470,33 @@ public class UserPages {
 
             // Create metadata
 
-            final Map<String, String> metadata = new HashMap<>();
-            metadata.put("SSA Id:", String.valueOf(ssa.getId()));
-            metadata.put("Department Id:", String.valueOf(ssa.getDepartment().getId()));
-            metadata.put("Department Name:", ssa.getDepartment().getName());
-            metadata.put("RSA Id:", String.valueOf(rsa.getId()));
-            metadata.put("User Email:", (String) request.getAttribute("mail"));
-            metadata.put("Transfer Date:", Instant.now().toString());
-            metadata.put("Inventory Documents:", String.valueOf(uploadFileInfo.size()));
+            final Map<String, String> metadata = new LinkedHashMap<>();
+
+            try {
+                metadata.put("SSA Id: ", String.valueOf(ssa.getId()));
+                metadata.put("Department Id: ", String.valueOf(ssa.getDepartment().getId()));
+                metadata.put("Department Name: ", ssa.getDepartment().getName());
+                metadata.put("RSA Id: ", String.valueOf(rsa.getId()));
+                metadata.put("User Email: ", (String) request.getAttribute("mail"));
+                metadata.put("Transfer Date: ", Instant.now().toString());
+                metadata.put("Inventory Documents: ", String.valueOf(uploadFileInfo.size()));
+
+                metadata.put("Beginning Year: ", startYear);
+                metadata.put("Ending Year: ", endYear);
+                metadata.put("Records Description: ", description);
+
+                metadata.put("Effective date for submission agreement: ", ssa.getEffectivedate());
+                metadata.put("Release schedule: ", ssa.getRetentionschedule());
+                metadata.put("Creator(s) of the records: ", ssa.getCreatedby());
+                metadata.put("Person or group authorized to transfer the records to the archives: ", ssa.getSsaContactsForms().toString());
+                metadata.put("Type of records: ", ssa.getRecordstitle());
+                metadata.put("Copyright and licensing agreement: ", ssa.getSsaCopyrightsForms().toString());
+                metadata.put("Access restrictions: ", ssa.getSsaAccessRestrictionsForms().toString());
+                metadata.put("Retention period: ", ssa.getRetentionperiod());
+            } catch (Exception e) {
+                LOGGER.info("Error extracting value:" + e); // TODO remove exception
+            }
+
 
             final Map<String, String> checksums = new HashMap<>();
 

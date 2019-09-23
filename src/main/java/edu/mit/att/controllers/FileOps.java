@@ -134,7 +134,7 @@ public class FileOps {
 
             TransferRequest r = rsarepo.findById(Integer.parseInt(rsaid));
             String dropoffdirfull = r.getPath();
-            String dropoffdirfull1 = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
+            // String dropoffdirfull1 = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
             fileutils.downloadfile(dropoffdirfull, filename, response, context);
         } else {
             LOGGER.log(Level.SEVERE, "rsaid is null");
@@ -169,7 +169,7 @@ public class FileOps {
             //String dropoffdirfull = env.getRequiredProperty("dropoff.dir") + "/" + rsaid;
             String dropoffdirfull = r.getPath();
 
-            File f = new File(dropoffdirfull);
+            final File f = new File(dropoffdirfull);
             if (f.exists() == false) { // check if the file was deleted for some external reason
                 LOGGER.info("File does not exist:" +  dropoffdirfull); // TODO hide the download button
             } else {
