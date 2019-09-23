@@ -178,6 +178,17 @@
             </dependencies>
         </profile>
         <profile>
+            <id>test</id>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>8.0.17</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>prod</id>
             <dependencies>
                 <dependency>
