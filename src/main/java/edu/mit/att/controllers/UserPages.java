@@ -1,5 +1,7 @@
 package edu.mit.att.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.mit.att.EmailUtil;
 import edu.mit.att.entity.*;
 import edu.mit.att.repository.*;
@@ -12,6 +14,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -388,6 +391,7 @@ public class UserPages {
         if (ssa == null || ssaid == 0) {
             LOGGER.log(Level.SEVERE, "ssa is null or ssaid is zero: ssaid={0}", new Object[]{ssaid});
         } else {
+            LOGGER.log(Level.INFO, ssa.toString());
             rsa.setSubmissionAgreement(ssa);
         }
 
@@ -473,26 +477,56 @@ public class UserPages {
             final Map<String, String> metadata = new LinkedHashMap<>();
 
             try {
-                metadata.put("SSA Id: ", String.valueOf(ssa.getId()));
-                metadata.put("Department Id: ", String.valueOf(ssa.getDepartment().getId()));
-                metadata.put("Department Name: ", ssa.getDepartment().getName());
-                metadata.put("RSA Id: ", String.valueOf(rsa.getId()));
-                metadata.put("User Email: ", (String) request.getAttribute("mail"));
-                metadata.put("Transfer Date: ", Instant.now().toString());
-                metadata.put("Inventory Documents: ", String.valueOf(uploadFileInfo.size()));
+                metadata.put("SSA Id", String.valueOf(ssa.getId()));
+                metadata.put("Department Id", String.valueOf(ssa.getDepartment().getId()));
+                metadata.put("Department Name", ssa.getDepartment().getName());
+                metadata.put("RSA Id", String.valueOf(rsa.getId()));
+                metadata.put("User Email", (String) request.getAttribute("mail"));
+                metadata.put("Transfer Date", Instant.now().toString());
+                metadata.put("Inventory Documents", String.valueOf(uploadFileInfo.size()));
 
-                metadata.put("Beginning Year: ", startYear);
-                metadata.put("Ending Year: ", endYear);
-                metadata.put("Records Description: ", description);
+                metadata.put("Beginning Year", startYear);
+                metadata.put("Ending Year", endYear);
+                metadata.put("Description", description);
 
-                metadata.put("Effective date for submission agreement: ", ssa.getEffectivedate());
-                metadata.put("Release schedule: ", ssa.getRetentionschedule());
-                metadata.put("Creator(s) of the records: ", ssa.getCreatedby());
-                metadata.put("Person or group authorized to transfer the records to the archives: ", ssa.getSsaContactsForms().toString());
-                metadata.put("Type of records: ", ssa.getRecordstitle());
-                metadata.put("Copyright and licensing agreement: ", ssa.getSsaCopyrightsForms().toString());
-                metadata.put("Access restrictions: ", ssa.getSsaAccessRestrictionsForms().toString());
-                metadata.put("Retention period: ", ssa.getRetentionperiod());
+                metadata.put("Effective date for submission agreement ", ssa.getEffectivedate());
+                metadata.put("Retention schedule", ssa.getRetentionschedule());
+
+                // Creator(s) of the records:
+
+
+                final SubmissionAgreement sa = rsa.getSubmissionAgreement();
+                metadata.put("Head of Department/Unit", sa.getDepartmenthead());
+                metadata.put("Record or collection identifier", sa.getRecordid());
+
+
+
+                // metadata.put("Person or group authorized to transfer the records to the archives: ", ssa.getSsaContactsForms().toString());
+
+                for (int i = 0; i < ssa.getSsaContactsForms().size(); i++) {
+                    final SsaContactsForm sc = ssa.getSsaContactsForms().get(i);
+                    metadata.put("Person authorized to transfer the records to archives [" + i + "]", sc.getName());
+                    metadata.put("Phone Number [" + i + "]", sc.getPhone());
+                    metadata.put("Email [" + i + "]", sc.getEmail());
+                    metadata.put("Campus Address [" + i  + "]", sc.getAddress());
+                }
+
+
+
+                metadata.put("Type of records:", ssa.getRecordstitle());
+
+
+                for (int i = 0; i < ssa.getSsaCopyrightsForms().size(); i++) {
+                    metadata.put("Copyright and licensing agreement [" + i  +"]" ,ssa.getSsaCopyrightsForms().get(i).getCopyright());
+                }
+
+
+                for (int i = 0; i < ssa.getSsaAccessRestrictionsForms().size(); i++) {
+                    metadata.put("Access restrictions [" + i + "]" ,ssa.getSsaAccessRestrictionsForms().get(i).getRestriction());
+                }
+
+
+                metadata.put("Retention period:", ssa.getRetentionperiod());
             } catch (Exception e) {
                 LOGGER.info("Error extracting value:" + e); // TODO remove exception
             }
@@ -590,18 +624,8 @@ public class UserPages {
 
 
     private String formattedMetadata(Map<String, String> checksums) {
-        final StringBuffer sb = new StringBuffer();
-        Set<String> keys = checksums.keySet();
-
-        for (String k : keys) {
-            String v = checksums.get(k);
-            sb.append(k);
-            sb.append(" ");
-            sb.append(v);
-            sb.append("\n");
-        }
-
-        return sb.toString();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(checksums);
     }
 
     public String getMD5(final String path) {
@@ -641,6 +665,7 @@ public class UserPages {
 
     // TODO Policy - what happens if the file is copied but the mail is never sent?
     // TODO extract email builiding logic
+    @Async
     private void notifyUser(Integer rsaId, String department, List<String> fileList) {
 
         emailSubject += " #" + rsaId + " (" + department + ")";

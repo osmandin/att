@@ -44,9 +44,7 @@ public class AdminController {
     @RequestMapping(value = {"admin", "Admin"}, method = RequestMethod.GET)
     public ModelAndView showItemsPage(HttpSession httpSession, HttpServletRequest httpServletRequest) {
 
-        logger.info("IN ADMIN");
-
-        logger.info("TESTING:{}", env.getRequiredProperty("testing.status"));
+        logger.info("Test mode:{}", env.getRequiredProperty("testing.status"));
 
         // Get session information:
 
