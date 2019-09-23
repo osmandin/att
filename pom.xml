@@ -168,7 +168,7 @@
     </build>
     <profiles>
         <profile>
-            <id>inmemory</id>
+            <id>dev</id>
             <dependencies>
                 <dependency>
                     <groupId>com.h2database</groupId>
@@ -178,7 +178,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>database</id>
+            <id>prod</id>
             <dependencies>
                 <dependency>
                     <groupId>mysql</groupId>
