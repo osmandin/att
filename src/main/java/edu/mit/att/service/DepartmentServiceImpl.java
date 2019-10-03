@@ -127,6 +127,12 @@ public class DepartmentServiceImpl implements DepartmentService {
             } else {
                 boolean found = false;
                 for (SubmissionAgreement ssa : ssas) {
+
+                    if (ssa.getDepartment() == null) {
+                        LOGGER.log(Level.INFO, "Null department for SSA:{}" + ssa.getId());
+                        continue;
+                    }
+
                     if (ssa.getDepartment().getId() == df.getId()) {
                         //LOGGER.log(Level.INFO, "found for ssaid={0}", new Object[]{ssa.getId()});
                         found = true;

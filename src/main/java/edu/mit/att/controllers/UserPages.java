@@ -207,6 +207,11 @@ public class UserPages {
             final int departmentId = df.getId();
 
             for (final SubmissionAgreement ssa : ssas) {
+
+                if (ssa.getDepartment() == null) {
+                    continue;
+                }
+
                 final Department sd = ssa.getDepartment();
                 if (sd.getId() == departmentId) {
                     userSubmissionAgreements.add(ssa);
@@ -478,8 +483,13 @@ public class UserPages {
 
             try {
                 metadata.put("SSA Id", String.valueOf(ssa.getId()));
-                metadata.put("Department Id", String.valueOf(ssa.getDepartment().getId()));
-                metadata.put("Department Name", ssa.getDepartment().getName());
+
+                if (ssa.getDepartment() != null) {
+                    metadata.put("Department Id", String.valueOf(ssa.getDepartment().getId()));
+                    metadata.put("Department Name", ssa.getDepartment().getName());
+
+                }
+
                 metadata.put("RSA Id", String.valueOf(rsa.getId()));
                 metadata.put("User Email", (String) request.getAttribute("mail"));
                 metadata.put("Transfer Date", Instant.now().toString());
@@ -665,7 +675,7 @@ public class UserPages {
 
     // TODO Policy - what happens if the file is copied but the mail is never sent?
     // TODO extract email builiding logic
-    @Async
+
     private void notifyUser(Integer rsaId, String department, List<String> fileList) {
 
         emailSubject += " #" + rsaId + " (" + department + ")";
