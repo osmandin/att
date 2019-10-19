@@ -115,6 +115,9 @@ public class SsaAdmin {
         final String userAttrib = (String) request.getAttribute("mail");
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
+        LOGGER.log(Level.INFO, "User role:" + user.getRole());
+
+
         if (user.getRole().equals(Role.deptadmin.name())) {
             final Set<Department> userDepartments = user.getDepartments();
             departments = new ArrayList<>(userDepartments);
@@ -124,14 +127,19 @@ public class SsaAdmin {
             return "Permissions";
         }
 
+        LOGGER.log(Level.INFO, "Found departments:" + departments);
+
+
         //List<SubmissionAgreement> ssas = ssarepo.findByDeletedFalseOrderByCreationdateAsc();
 
         List<SubmissionAgreement> ssas = new ArrayList<>();
 
+        // Bug - doesn't work for edited SSAs, somehow they are missed.
 
-        for (Department d : departments) {
+        for (final Department d : departments) {
             List<SubmissionAgreement> submissionAgreements = ssarepo.findAllForDepartmentId(d.getId()); //TODO does this include deleted ones?
             ssas.addAll(submissionAgreements);
+            LOGGER.log(Level.INFO, "SSAs list:" + ssas);
         }
 
         LOGGER.info("Found SSAs:" + ssas.toString());
@@ -148,13 +156,6 @@ public class SsaAdmin {
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "CreateSsa Get");
-
-/*
-        Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }
-*/
 
         model.addAttribute("newssa", "1");
 
@@ -175,8 +176,23 @@ public class SsaAdmin {
 
         // access restrictions... None... not an entry
 
-        List<Department> dfs = departmentrepo.findAllOrderByNameAsc();
-        submissionAgreement.setDropdownDepartments(dfs);
+        final List<Department> dfs = departmentrepo.findAllOrderByNameAsc();
+
+        final List<Department> departmentsForDropDown = new ArrayList<>();
+
+        // Solution for EditSSA problem where multiple submission agreements get associated with the same department
+
+        for (final Department d : dfs) {
+            final List<SubmissionAgreement> ss = ssarepo.findAllForDepartmentId(d.getId());
+            if (ss.isEmpty() == true) {
+                departmentsForDropDown.add(d);
+            } else {
+                LOGGER.log(Level.INFO, "Filtered out, as it is already associated with a submission agreement:{}",
+                        d.getId());
+            }
+        }
+
+        submissionAgreement.setDropdownDepartments(departmentsForDropDown);
 
         model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
 
@@ -217,12 +233,30 @@ public class SsaAdmin {
 
         LOGGER.log(Level.INFO, "Saving (pre1):" + selectedDepartment);
 
-        submissionAgreement.setSsaCopyrightsForms(Collections.emptyList());
+        //submissionAgreement.setSsaCopyrightsForms(Collections.emptyList());
+
+        LOGGER.log(Level.INFO, "Copyrights form:" + submissionAgreement.getSsaCopyrightsForms());
+
+        submissionAgreement.setSsaCopyrightsForms(submissionAgreement.getSsaCopyrightsForms());
 
         LOGGER.log(Level.INFO, "Saving (pre2):" + selectedDepartment);
 
 
-        Department d = departmentrepo.findById(selectedDepartment.getId());
+        final Department d = departmentrepo.findById(selectedDepartment.getId());
+
+        // This is to prevent association of a submission agreement with multiple departments. This causes an error
+        // when editing a submission agreement.
+
+        if (ssarepo.findAllForDepartmentId(d.getId()).size() > 0) {
+            LOGGER.info("Warning - A submission agreement is already associated with this department:"
+                    + ssarepo.findAll().toString());
+            //redirectAttributes.addFlashAttribute("message", "Warning - A submission agreement is already associated with this department");
+            //final ModelAndView mav = new ModelAndView();
+            //mav.setViewName("ListSsas");
+            //return mav;
+        }
+
+
 
         ssaservice.create(submissionAgreement, d, session, request);
 
@@ -294,15 +328,15 @@ public class SsaAdmin {
         }*/
 
         if (ssaid == 0) {
-            LOGGER.log(Level.INFO, "ssaid = 0");
+            LOGGER.log(Level.INFO, "Cannot delete -- ssaid = 0");
             return "Home";
         }
 
         SubmissionAgreement ssaform = ssarepo.findById(ssaid);
         if (ssaform != null) {
             ssaform.setDeleted(true);
-            ssarepo.save(ssaform);
-            //ssarepo.delete(ssaform);
+            //ssarepo.save(ssaform);
+            ssarepo.delete(ssaform);
         }
 
         model.addAttribute("alldeleted", "0");
@@ -417,8 +451,17 @@ public class SsaAdmin {
         }
 
         List<Department> df = departmentservice.findAllNotAssociatedWithOtherSsaOrderByName(ssaid);
+        //TODO: this is what causes theproblem.
+        // if an SSA is already associated with a department, it throws things off.
+        // Each department has a unique submission agreement.
+
+        LOGGER.log(Level.INFO, "Departments for the submission agreement:" + df);
+
+
         submissionAgreement.setDropdownDepartments(df);
         model.addAttribute(SSAS_FORM, submissionAgreement);
+
+        model.addAttribute("dropdownDepartments", df);
 
         model.addAttribute("action", "EditSsa");
         return "EditSsa";
@@ -436,11 +479,6 @@ public class SsaAdmin {
     ) {
         LOGGER.log(Level.INFO, "EditSsa Post");
 
-       /* Utils utils = new Utils();
-        if (!utils.setupAdminHandler(model, session, env)) {
-            return "Home";
-        }*/
-
         if (submissionAgreement == null) {
             model.addAttribute("submssionAgreement", submissionAgreement);
             return "EditSsa";
@@ -454,6 +492,8 @@ public class SsaAdmin {
         if (env.getRequiredProperty("defaults.accessrestriction") != null) {
             model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
         }
+
+        LOGGER.log(Level.INFO, "Selected Department Id:{}" + selectedDepartment.getId());
 
         ssaservice.saveForm(submissionAgreement, selectedDepartment);
 
@@ -503,7 +543,7 @@ public class SsaAdmin {
         }*/
 
         model.addAttribute("action", "EditSsa");
-        return "ListSsas";
+        return "Home";
     }
 
     // ------------------------------------------------------------------------

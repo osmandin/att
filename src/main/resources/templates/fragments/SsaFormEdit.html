@@ -14,7 +14,9 @@
             <div th:case="*">
                 <label for="depart_label">Department/Unit or Donor</label>
                 <select id="departmentid" name="departmentid">
+<!--
                     <option value="">Add a new department:</option>
+-->
                     <option th:each="d, stat: *{dropdownDepartments}"
                             th:if="*{dropdownDepartments[__${stat.index}__].id} != '0'"
                             th:value="*{dropdownDepartments[__${stat.index}__].id}"
