@@ -89,7 +89,6 @@
                         <input type="text" class="field field-text" id="ssacontactaddress"
                                    name="ssaContactsForms[0].address"/>
                     </div>
-                    <input type="button" class="btn button-secondary warn" value="Remove this contact" onclick="removeit( this, 'contact' )"/>
                 </div>
             </div>
             <div id="contacts" th:case="*">
@@ -118,11 +117,9 @@
                         <input type="text" class="field field-text" id="address"
                                    th:field="*{ssaContactsForms[__${stat.index}__].address}"/>
                     </div>
-                        <input class="btn button-secondary warn" type="button" value="Remove this contact" onclick="removeit( this, 'contact'  )"/>
                 </div>
             </div>
             <div>
-                <input class="btn button-secondary button-add" type="button" value="Add another contact" onclick="createit( this, 'contact' )"/>
             </div>
         </fieldset>
 
@@ -137,7 +134,6 @@
                            th:value="${submissionAgreement.id}"/>
                         <label for="copyright" class="field-label" >Copyright statement</label>
                         <input class="field field-text" type="text" id="copyright" name="ssaCopyrightsForms[0].copyright" />
-                        <span><input class="btn button-secondary warn" type="button" value="Remove this statement" onclick="removeit( this, 'copyright' )"/></span>
                     </div>
                 </div>
             </div>
@@ -156,10 +152,8 @@
                                    th:field="*{ssaCopyrightsForms[__${stat.index}__].copyright}"/>
                     </div>
                 </div>
-                <span><input class="btn button-secondary warn" type="button" value="Remove this statement" onclick="removeit( this, 'copyright' )"/></span>
             </div>
             <div>
-                <input type="button" class="btn button-secondary button-add" value="Add another statement" onclick="createit( this, 'copyright' )"/>
             </div>
         </fieldset>
 
@@ -183,7 +177,6 @@
                     </div>
                 </div>
                 <span>
-                    <input class="btn button-secondary warn" type="button" value="Remove this restriction" onclick="removeit( this, 'restriction' )"/>
                 </span>
             </div>
             <div id="restrictions" th:case="*">
@@ -201,11 +194,9 @@
                     </div>
                 </div>
                 <span>
-                   <input class="btn button-secondary warn" type="button" value="Remove this restriction" onclick="removeit( this, 'restriction' )"/>
-                </span> 
+                </span>
             </div>
             <div>
-                <input class="btn button-secondary button-add" type="button" value="Add another restriction" onclick="createit( this, 'restriction' )"/>
             </div>
         </fieldset>
 
@@ -263,7 +254,6 @@
                 <div class="format">
         		  <span>
         		    <input type="text" class="field field-text" name="ssaFormatTypesForms[0].formattype"/>
-        		    <span><input class="btn button-secondary warn" type="button" value="Remove this format type" onclick="removeit( this, 'format' )"/></span>
         		  </span>
                 </div>
             </div>
@@ -276,10 +266,8 @@
                     <input type="text" class="field field-text"
                                th:field="*{ssaFormatTypesForms[__${stat.index}__].formattype}"/>
                 </div>
-                <span><input class="btn button-secondary warn" type="button" value="Remove this format type" onclick="removeit( this, 'format' )"/></span>
             </div>
             <div>
-                <input class="btn button-secondary button-add" type="button" value="Add another format type" onclick="createit( this, 'format' )"/>
             </div>
         </fieldset>
 
