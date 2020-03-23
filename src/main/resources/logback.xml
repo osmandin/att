@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="DEV_HOME" value="tmp/palmquist-logs/" />
+	<property name="DEV_HOME" value="/opt/tomcat/att-logs" />
 
 	<appender name="FILE-AUDIT"
 			  class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -16,6 +16,7 @@
 			<!-- rollover daily -->
 			<fileNamePattern>${DEV_HOME}/archived/debug.%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
+			<maxHistory>7</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy
 					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>10MB</maxFileSize>
@@ -43,7 +44,6 @@
 	<root level="error">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE-AUDIT" />
-
 	</root>
 
 

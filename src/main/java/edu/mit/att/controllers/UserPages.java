@@ -137,7 +137,7 @@ public class UserPages {
             throw new RuntimeException(); //TODO
         }
 
-        LOGGER.info("Mail attribute:" + principal);
+        // LOGGER.info("Mail attribute:" + principal);
 
         boolean isadmin = false;
 
@@ -171,7 +171,7 @@ public class UserPages {
         final List<User> users = userrepo.findByEmail(principal);
         final User user = users.get(0); //TODO Get current user
 
-        LOGGER.info("Retrieved user:" + user.toString());
+        // LOGGER.info("Retrieved user:" + user.toString());
 
         final List<SubmissionAgreement> userSubmissionAgreements = new ArrayList<>();
 
@@ -219,7 +219,7 @@ public class UserPages {
             }
         }
 
-        LOGGER.info("Retrieved SSAs for user:" + userSubmissionAgreements.toString());
+        // LOGGER.info("Retrieved SSAs for user:" + userSubmissionAgreements.toString());
 
 
         if (userSubmissionAgreements.size() > 0) {

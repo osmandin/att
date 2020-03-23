@@ -29,7 +29,7 @@ public class Subject {
 
        final String principal_role = users.get(0).getRole();
 
-       logger.debug("Found role:{} for:{}", principal_role, principal);
+       //logger.debug("Found role:{} for:{}", principal_role, principal);
 
         if (principal_role == null || principal_role.isEmpty()) {
             return Role.visitor;

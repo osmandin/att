@@ -31,7 +31,7 @@ public class TouchStoneDiagnosticFilter implements Filter {
 
     //  NOTE - *** COMMENT OUT THIS ANNOTATION WHEN DEPLOYING TO PRODUCTION ***
     // TODO: Remove reliance on this annotation, as not removing this will make the application not boot in prod.
-    @Resource
+    //@Resource
     private Environment env;
 
     @Value("${testing.mail:osmandin@mit.edu}")
@@ -53,7 +53,7 @@ public class TouchStoneDiagnosticFilter implements Filter {
 
         // Information from TouchStone:
         // other Attributes are displayName, mail, nickname
-        logger.info("Touchstone Attribute {}:{}", "mail", httpServletRequest.getAttribute("mail"));
+        //logger.info("Touchstone passed attribute {}:{}", "mail", httpServletRequest.getAttribute("mail"));
 
         if (env == null) {
             logger.info("Spring injected environment annotation null.");

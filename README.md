@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.org/osmandin/att.svg?branch=master)](https://travis-ci.org/osmandin/att)
 
-Transfer Tool
------------------------
+
 
 The application enables secure and reliable transfer of records, archives, research data, or other digital content to Libraries’
 Collections staff as a step in the digital curation workflow. There is currently no web-based tool available at MIT to 
@@ -115,7 +114,7 @@ mvn surefire:test -Dtest=DepartmentHttpRequestTest#testAddPage -Pdev
 Production Server
 ---------------------
 
-Currently, the application is running on https:lib-arc-5 mit.edu/att.
+Currently, the application is running on https:arcsubmit mit.edu/att.
 
 Server set up: Apache httpd (for Shibboleth), Apache Tomcat, Embedded database (to be migrated)
 

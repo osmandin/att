@@ -61,7 +61,7 @@ public class UserAdmin {
         // TODO authz -- filter by what users the admin can see
 
         final String email = (String) request.getAttribute("mail");
-        logger.debug("User:{}",  email);
+        // logger.debug("User:{}",  email);
 
         final List<User> currentUsers = userrepo.findByEmail(email);
 
@@ -79,10 +79,10 @@ public class UserAdmin {
             // find only users who belong to the same department
             // Note that the user may belong to different departments
             users = userrepo.findByDepartments(dept);
-            logger.debug("Corresponding users:" + users);
+            //logger.debug("Corresponding users:" + users);
         } else if (currentUser.getRole().equals(Role.siteadmin.name())){
             users = userrepo.findAllByIdAfter(0); //TODO implement proper findAll
-            logger.debug("Found users:{}", users.toString());
+            //logger.debug("Found users:{}", users.toString());
         } else {
             logger.debug("Improper access");
             return ("Permissions");
