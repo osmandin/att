@@ -24,6 +24,9 @@ public class TransferRequest {
     private String startyear;
     private String endyear;
     private String description;
+    private String department;
+    private String theses;
+    private String degrees;
     private long extent = 0;
     private String extentstr;
     private String transferdate;
@@ -92,6 +95,30 @@ public class TransferRequest {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getTheses() {
+        return theses;
+    }
+
+    public void setTheses(String theses) {
+        this.theses = theses;
+    }
+
+    public String getDegrees() {
+        return degrees;
+    }
+
+    public void setDegrees(String degrees) {
+        this.degrees = degrees;
     }
 
     @Override

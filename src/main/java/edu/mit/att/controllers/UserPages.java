@@ -270,6 +270,9 @@ public class UserPages {
             @RequestParam(value = "generalRecordsDescription", required = false) String generalRecordsDescription,
             @RequestParam(value = "startyear", required = false) String startyear,
             @RequestParam(value = "endyear", required = false) String endyear,
+            @RequestParam(value="department", required = false) String department,
+            @RequestParam(value="theses", required = false) String theses,
+            @RequestParam(value = "degrees", required = false) String degrees,
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "UploadFiles");
@@ -281,6 +284,9 @@ public class UserPages {
         session.setAttribute("generalRecordsDescription", generalRecordsDescription);
         session.setAttribute("startyear", startyear);
         session.setAttribute("endyear", endyear);
+        session.setAttribute("department", department);
+        session.setAttribute("theses", theses);
+        session.setAttribute("degrees", degrees);
 
         model.addAttribute("totalmax", env.getRequiredProperty("js.totalmax"));
         model.addAttribute("peruploadmax", env.getRequiredProperty("js.peruploadmax"));
@@ -380,6 +386,10 @@ public class UserPages {
         String username = (String) session.getAttribute("username");
         String useremail = (String) session.getAttribute("email");
 
+        final String degrees = (String) session.getAttribute("degrees");
+        final String theses = (String) session.getAttribute("theses");
+        final String department = (String) session.getAttribute("department");
+
 
         // Create TransferRequest:
 
@@ -387,6 +397,9 @@ public class UserPages {
         rsa.setStartyear(startYear);
         rsa.setEndyear(endYear);
         rsa.setDescription(description);
+        rsa.setDegrees(degrees);
+        rsa.setTheses(theses);
+        rsa.setDepartment(department);
         rsa.setApproved(false);
         rsa.setCreatedby(name); // name here... not username... change?
         final String sqlDate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
