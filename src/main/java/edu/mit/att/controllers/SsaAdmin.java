@@ -493,7 +493,7 @@ public class SsaAdmin {
             model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
         }
 
-        LOGGER.log(Level.INFO, "Selected Department Id:{}" + selectedDepartment.getId());
+        LOGGER.log(Level.INFO, "Selected Department:{}" + selectedDepartment);
 
         ssaservice.saveForm(submissionAgreement, selectedDepartment);
 

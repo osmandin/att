@@ -1,0 +1,8 @@
+language: java
+env:
+  SPRING_PROFILES_ACTIVE=dev
+  TESTING_STATUS=true
+script:
+  - mvn clean verify -Pdev
+jdk:
+  - openjdk8
