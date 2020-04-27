@@ -477,7 +477,7 @@ public class SsaAdmin {
             HttpServletRequest request,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "EditSsa Post");
+        LOGGER.log(Level.INFO, "EditSsa Post:{}", ssaid);
 
         if (submissionAgreement == null) {
             model.addAttribute("submssionAgreement", submissionAgreement);
@@ -492,8 +492,6 @@ public class SsaAdmin {
         if (env.getRequiredProperty("defaults.accessrestriction") != null) {
             model.addAttribute("defaultaccessrestriction", env.getRequiredProperty("defaults.accessrestriction"));
         }
-
-        LOGGER.log(Level.INFO, "Selected Department Id:{}" + selectedDepartment.getId());
 
         ssaservice.saveForm(submissionAgreement, selectedDepartment);
 
