@@ -34,7 +34,7 @@ public class TouchStoneDiagnosticFilter implements Filter {
     @Resource
     private Environment env;
 
-    @Value("${testing.mail:osmandin@mit.edu}")
+    @Value("${testing.mail:test}")
     private String email;
 
 
