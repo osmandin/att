@@ -50,15 +50,18 @@ public class AdminController {
 
         String principal = (String) httpServletRequest.getAttribute("mail");
 
+        if (principal == null || principal.isEmpty()) {
+            principal = httpServletRequest.getHeader("mail");
+        }
+
         // logger.info("Mail attribute:{}", principal);
 
         if (env.getRequiredProperty("testing.status").equals("true")) {
-            principal = "osmandin@mit.edu"; //FIXME: remove
+            principal = env.getRequiredProperty("testing.mail");
         }
 
 
-        Role role = null;
-        role = subject.getRole(principal);
+        final Role role = subject.getRole(principal);
 
         if ((!role.equals(Role.siteadmin)) && !role.equals(Role.deptadmin)) { //TODO restrict further dept admin
             logger.debug("User does not have permissions to access the admin page");
@@ -68,6 +71,4 @@ public class AdminController {
 
         return new ModelAndView("Admin");
     }
-
-
 }

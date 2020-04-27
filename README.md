@@ -14,7 +14,19 @@ Docker or Apache Maven
 Installation (Maven)
 ----------------------
 
-This is a Maven based project:
+This is a Maven based project.
+
+First change the application.properties file or set the right environment variables 
+for these values.
+
+
+```sh
+spring.profiles.active=dev
+testing.status=true
+testing.mail=youremail@mit.edu
+```
+
+And then:
 
 ```sh
 
@@ -112,7 +124,7 @@ Production Server
 
 Currently, the application is running on https:arcsubmit mit.edu/att.
 
-Server set up: Apache httpd (for Shibboleth), Apache Tomcat, Embedded database (to be migrated)
+Server set up: Apache httpd (for Shibboleth), Apache Tomcat, MySql
 
 Documentation
 --------------
