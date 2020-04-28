@@ -53,7 +53,7 @@ public class AdminController {
         // logger.info("Mail attribute:{}", principal);
 
         if (env.getRequiredProperty("testing.status").equals("true")) {
-            principal = "osmandin@mit.edu"; //FIXME: remove
+            principal = env.getRequiredProperty("testing.mail");
         }
 
 
