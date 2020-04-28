@@ -51,96 +51,32 @@
                                         </div>
                                     </div>
 
-                                    <h4>Records description</h4>
+                                    <h4>Description (All fields are required)</h4>
                                     <div class="field-wrap">
-                                        <p id="comment-tip">
-                                            You may provide additional information about the history of the records, the person or office that created the records, or any special considerations regarding the records such as comments on copyright or access restrictions.
-                                        </p>
+                                        <label class="field-label" for="department">Department:</label>
+                                        <textarea class="field field-text field-textarea" name="department" cols="40" rows="1"
+                                                  th:text="${department}" aria-describedby="comment-tip"></textarea>
+                                    </div>
 
+                                    <div class="field-wrap">
+                                        <label class="field-label" for="degrees">Degree(s):</label>
+                                        <textarea class="field field-text field-textarea" name="degrees" cols="40" rows="1"
+                                                  th:text="${degrees}" aria-describedby="comment-tip"></textarea>
+                                    </div>
+
+                                    <div class="field-wrap">
+                                        <label class="field-label" for="theses">Number of Theses:</label>
+                                        <textarea class="field field-text field-textarea" name="theses" cols="40" rows="1"
+                                                  th:text="${theses}" aria-describedby="comment-tip"></textarea>
+                                    </div>
+
+
+
+                                    <div class="field-wrap">
                                         <label class="field-label" for="comments">Description or comments (optional):</label>
-
                                         <textarea class="field field-text field-textarea" name="generalRecordsDescription" cols="40" rows="5"
                                             th:text="${generalRecordsDescription}" aria-describedby="comment-tip"></textarea>
                                     </div>
-
-                                    <h4>Submission Agreement information for DLC or Donor</h4>
-
-                                    <p>This is a submission agreement we have on file for your DLC or Donor name that will be automatically added to your submission. If this is not correct, please <a href="#contact-iasc">contact us</a> before submitting your files.</p>
-
-                                    <table class="table copy-sup">
-                                        <tr>
-                                            <th id="ssainfo" valign="top">Effective date for the Submission Agreement</th>
-                                            <td valign="top" th:text="*{ssa.effectivedate}"></td>
-                                        </tr>
-                                        <tr>
-                                            <th valign="top">Retention Schedule</th>
-                                            <td valign="top" th:text="*{ssa.retentionschedule}"></td>
-                                        </tr>
-                                        <tr>
-                                            <th valign="top">Creator(s) of the records</th>
-                                            <td valign="top"><span
-                                                    th:text="'Head of Department/Unit: ' + *{ssa.departmenthead}"></span><br/><span
-                                                    th:text="'Record or Collection Identifier: ' + *{ssa.recordid}"></span>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th valign="top">Person or group authorized to transfer the records to the archives</th>
-                                            <td valign="top">
-                                                <div th:each="item,stat : *{ssa.ssaContactsForms}">
-                                                    <div th:if="${stat.index ne 0}">
-                                                        <hr/>
-                                                    </div>
-                                                    <span th:text="'Name: ' + *{ssa.ssaContactsForms[__${stat.index}__].name}"></span><br/>
-                                                    <span th:text="'Phone Number: ' +  *{ssa.ssaContactsForms[__${stat.index}__].phone}"></span><br/>
-                                                    <span th:text="'Email: ' +  *{ssa.ssaContactsForms[__${stat.index}__].email}"></span><br/>
-                                                    <span th:text="'Campus Address: ' +  *{ssa.ssaContactsForms[__${stat.index}__].address}"></span>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th valign="top">Type of records</th>
-                                            <td valign="top" th:text="*{ssa.recordstitle}"></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th valign="top">Copyright and licensing agreement(s)</th>
-                                            <td valign="top">
-                                                <div th:each="item,stat : *{ssa.ssaCopyrightsForms}">
-                                                    <div th:if="${stat.index ne 0}">
-                                                        <hr/>
-                                                    </div>
-                                                    <span th:text="*{ssa.ssaCopyrightsForms[__${stat.index}__].copyright}"></span>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th valign="top">Access restrictions</th>
-                                            <td valign="top">
-                                                <div th:switch="*{ssa.ssaAccessRestrictionsForms == null or ssa.ssaAccessRestrictionsForms.size() == 0}">
-                                                    <div th:case="true">
-                                                        None
-                                                    </div>
-                                                    <div th:case="*">
-                                                        <div th:each="item,stat : *{ssa.ssaAccessRestrictionsForms}">
-                                                            <div th:if="${stat.index ne 0}">
-                                                                <hr/>
-                                                            </div>
-                                                            <span th:text="*{ssa.ssaAccessRestrictionsForms[__${stat.index}__].restriction}"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <th valign="top">Retention period(s)</th>
-                                            <td valign="top" th:text="*{ssa.retentionperiod}"></td>
-                                        </tr>
-
-                                    </table>
 
                                 <!--      <div class="alert_box" id="alert_box_bottom">
                                           <p>Please enter the missing values above.</p>
@@ -156,8 +92,8 @@
                             <aside class="content-sup col1q-r" role="complementary">
                                 <div id="contact-iasc" class="bit">
                                     <h3 class="title">Questions? Contact us.</h3>
-                                    <p><a href="mailto:ddc-offers@mit.edu">ddc-offers@mit.edu</a><br />
-                                    617.253.5136</p>
+                                    <p>Theses: <a href="mailto:mit-theses@mit.edu">mit-theses@mit.edu</a></p>
+                                    <p>Other MIT Records: <a href="mailto:ddc-offers@mit.edu">ddc-offers@mit.edu</a></p>
                                 </div>
                             </aside>
                         </div>

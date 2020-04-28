@@ -270,6 +270,9 @@ public class UserPages {
             @RequestParam(value = "generalRecordsDescription", required = false) String generalRecordsDescription,
             @RequestParam(value = "startyear", required = false) String startyear,
             @RequestParam(value = "endyear", required = false) String endyear,
+            @RequestParam(value="department", required = false) String department,
+            @RequestParam(value="theses", required = false) String theses,
+            @RequestParam(value = "degrees", required = false) String degrees,
             HttpSession session
     ) {
         LOGGER.log(Level.INFO, "UploadFiles");
@@ -281,6 +284,9 @@ public class UserPages {
         session.setAttribute("generalRecordsDescription", generalRecordsDescription);
         session.setAttribute("startyear", startyear);
         session.setAttribute("endyear", endyear);
+        session.setAttribute("department", department);
+        session.setAttribute("theses", theses);
+        session.setAttribute("degrees", degrees);
 
         model.addAttribute("totalmax", env.getRequiredProperty("js.totalmax"));
         model.addAttribute("peruploadmax", env.getRequiredProperty("js.peruploadmax"));
@@ -312,9 +318,18 @@ public class UserPages {
         //LOGGER.log(Level.INFO, "UploadComplete GET");
 
         String ssaid = (String) session.getAttribute("ssaid");
+        String degrees = (String) session.getAttribute("degrees");
+        String theses = (String) session.getAttribute("theses");
+        String department = (String) session.getAttribute("department");
         //LOGGER.log(Level.INFO, "SSAID: {0}", ssaid);
 
         model.addAttribute("ssaid", ssaid);
+        model.addAttribute("degrees", degrees);
+        model.addAttribute("theses", theses);
+        model.addAttribute("department", department);
+
+
+        LOGGER.log( Level.INFO, "Session var:" + session.getAttribute("degrees") );
 
         return "UploadComplete";
     }
@@ -380,13 +395,18 @@ public class UserPages {
         String username = (String) session.getAttribute("username");
         String useremail = (String) session.getAttribute("email");
 
-
+        final String degrees = (String) session.getAttribute("degrees");
+        final String theses = (String) session.getAttribute("theses");
+        final String department = (String) session.getAttribute("department");
         // Create TransferRequest:
 
         TransferRequest rsa = new TransferRequest();
         rsa.setStartyear(startYear);
         rsa.setEndyear(endYear);
         rsa.setDescription(description);
+        rsa.setDegrees(degrees);
+        rsa.setTheses(theses);
+        rsa.setDepartment(department);
         rsa.setApproved(false);
         rsa.setCreatedby(name); // name here... not username... change?
         final String sqlDate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
@@ -501,6 +521,12 @@ public class UserPages {
 
                 metadata.put("Effective date for submission agreement ", ssa.getEffectivedate());
                 metadata.put("Retention schedule", ssa.getRetentionschedule());
+
+                // Add theses information
+
+                metadata.put("Degrees (Theses Submission)", degrees);
+                metadata.put("Theses (Theses Submission)", theses);
+                metadata.put("Department (Theses Submission)", department);
 
                 // Creator(s) of the records:
 
