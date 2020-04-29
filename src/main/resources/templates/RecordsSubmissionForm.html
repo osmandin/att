@@ -45,7 +45,7 @@
                                     <h4>Description (All fields are required)</h4>
                                     <div class="field-wrap">
                                         <label name="department" class="field-label" for="department">Department:</label>
-                                        <textarea class="field field-text field-textarea" name="department" cols="40" rows="1"
+                                        <textarea class="field field-text field-textarea" id="department" cols="40" rows="1"
                                                   th:field="*{department}" aria-describedby="comment-tip"></textarea>
                                         <p th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
 
@@ -53,14 +53,14 @@
 
                                     <div class="field-wrap">
                                         <label name="degrees" class="field-label" for="degrees">Degree(s):</label>
-                                        <textarea class="field field-text field-textarea" name="degrees" cols="40" rows="1"
+                                        <textarea class="field field-text field-textarea" id="degrees" cols="40" rows="1"
                                                   th:field="*{degrees}" aria-describedby="comment-tip"></textarea>
                                         <p th:if="${#fields.hasErrors('degrees')}" th:errors="*{degrees}"></p>
                                     </div>
 
                                     <div class="field-wrap">
                                         <label class="field-label" for="theses">Number of Theses:</label>
-                                        <textarea class="field field-text field-textarea" name="theses" cols="40" rows="1"
+                                        <textarea class="field field-text field-textarea" id="theses" cols="40" rows="1"
                                                   th:field="*{theses}" aria-describedby="comment-tip"></textarea>
                                         <p th:if="${#fields.hasErrors('theses')}" th:errors="*{theses}"></p>
 
@@ -68,7 +68,7 @@
 
                                     <div class="field-wrap">
                                         <label class="field-label" for="comments">Description or comments (optional):</label>
-                                        <textarea class="field field-text field-textarea" name="generalRecordsDescription" cols="40" rows="5"
+                                        <textarea class="field field-text field-textarea" id="generalRecordsDescription" cols="40" rows="5"
                                             th:field="*{description}" aria-describedby="comment-tip"></textarea>
                                     </div>
 
