@@ -50,6 +50,10 @@ public class AdminController {
 
         String principal = (String) httpServletRequest.getAttribute("mail");
 
+        if (principal == null || principal.isEmpty()) {
+            principal = httpServletRequest.getHeader("mail");
+        }
+
         // logger.info("Mail attribute:{}", principal);
 
         if (env.getRequiredProperty("testing.status").equals("true")) {

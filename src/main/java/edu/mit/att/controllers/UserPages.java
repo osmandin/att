@@ -130,7 +130,11 @@ public class UserPages {
 
         model.addAttribute("departments", 0);
 
-        final String principal = (String) httpServletRequest.getAttribute("mail");
+        String principal = (String) httpServletRequest.getAttribute("mail");
+
+        if (principal == null || principal.isEmpty()) {
+            principal = httpServletRequest.getHeader("mail");
+        }
 
         if (principal == null) {
             LOGGER.severe("Error getting current user");
@@ -515,7 +519,7 @@ public class UserPages {
                 }
 
                 metadata.put("RSA Id", String.valueOf(rsa.getId()));
-                metadata.put("User Email", (String) request.getAttribute("mail"));
+                metadata.put("User Email", (String) request.getHeader("mail"));
                 metadata.put("Transfer Date", Instant.now().toString());
                 metadata.put("Inventory Documents", String.valueOf(uploadFileInfo.size()));
 

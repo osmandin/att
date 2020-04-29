@@ -112,7 +112,12 @@ public class SsaAdmin {
 
         // authz logic:
 
-        final String userAttrib = (String) request.getAttribute("mail");
+        String userAttrib = (String) request.getHeader("mail");
+
+        if (userAttrib == null) {
+            userAttrib = request.getHeader("mail");
+        }
+
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         LOGGER.log(Level.INFO, "User role:" + user.getRole());
