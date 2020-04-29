@@ -16,11 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -31,6 +30,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -260,27 +260,37 @@ public class UserPages {
             model.addAttribute("ssasForm", submissionAgreement);
         }
 
+        model.addAttribute("transferRequest", new TransferRequest());
+
         return "RecordsSubmissionForm";
     }
 
     // ------------------------------------------------------------------------
-    @RequestMapping("/UploadFiles")
+    @RequestMapping(value = "/UploadFiles", method =  RequestMethod.POST)
     public String UploadFiles(
             ModelMap model,
-            @RequestParam(value = "generalRecordsDescription", required = false) String generalRecordsDescription,
-            @RequestParam(value = "startyear", required = false) String startyear,
-            @RequestParam(value = "endyear", required = false) String endyear,
+            @Valid TransferRequest transferRequest,
+            BindingResult bindingResult,
             HttpSession session
     ) {
+
         LOGGER.log(Level.INFO, "UploadFiles");
+
+        if (bindingResult.hasErrors()) {
+            LOGGER.log(Level.INFO, "Error validating fields for RecordsSubmissionForm Post");
+            return "RecordsSubmissionForm";
+        }
 
         Format format = new Format();
         String avail = format.showavailbytes(env.getRequiredProperty("dropoff.dir"));
         model.addAttribute("avail_bytes", avail);
 
-        session.setAttribute("generalRecordsDescription", generalRecordsDescription);
-        session.setAttribute("startyear", startyear);
-        session.setAttribute("endyear", endyear);
+        session.setAttribute("generalRecordsDescription", transferRequest.getDescription());
+        session.setAttribute("startyear", transferRequest.getStartyear());
+        session.setAttribute("endyear", transferRequest.getEndyear());
+        session.setAttribute("department", transferRequest.getDepartment());
+        session.setAttribute("theses", transferRequest.getTheses());
+        session.setAttribute("degrees", transferRequest.getDegrees());
 
         model.addAttribute("totalmax", env.getRequiredProperty("js.totalmax"));
         model.addAttribute("peruploadmax", env.getRequiredProperty("js.peruploadmax"));
@@ -312,9 +322,18 @@ public class UserPages {
         //LOGGER.log(Level.INFO, "UploadComplete GET");
 
         String ssaid = (String) session.getAttribute("ssaid");
+        String degrees = (String) session.getAttribute("degrees");
+        String theses = (String) session.getAttribute("theses");
+        String department = (String) session.getAttribute("department");
         //LOGGER.log(Level.INFO, "SSAID: {0}", ssaid);
 
         model.addAttribute("ssaid", ssaid);
+        model.addAttribute("degrees", degrees);
+        model.addAttribute("theses", theses);
+        model.addAttribute("department", department);
+
+
+        LOGGER.log( Level.INFO, "Session var:" + session.getAttribute("degrees") );
 
         return "UploadComplete";
     }
@@ -380,13 +399,18 @@ public class UserPages {
         String username = (String) session.getAttribute("username");
         String useremail = (String) session.getAttribute("email");
 
-
+        final String degrees = (String) session.getAttribute("degrees");
+        final String theses = (String) session.getAttribute("theses");
+        final String department = (String) session.getAttribute("department");
         // Create TransferRequest:
 
         TransferRequest rsa = new TransferRequest();
         rsa.setStartyear(startYear);
         rsa.setEndyear(endYear);
         rsa.setDescription(description);
+        rsa.setDegrees(degrees);
+        rsa.setTheses(theses);
+        rsa.setDepartment(department);
         rsa.setApproved(false);
         rsa.setCreatedby(name); // name here... not username... change?
         final String sqlDate = String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
@@ -501,6 +525,12 @@ public class UserPages {
 
                 metadata.put("Effective date for submission agreement ", ssa.getEffectivedate());
                 metadata.put("Retention schedule", ssa.getRetentionschedule());
+
+                // Add theses information
+
+                metadata.put("Degrees (Theses Submission)", degrees);
+                metadata.put("Theses (Theses Submission)", theses);
+                metadata.put("Department (Theses Submission)", department);
 
                 // Creator(s) of the records:
 
