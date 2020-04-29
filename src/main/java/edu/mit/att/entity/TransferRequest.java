@@ -4,9 +4,11 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import lombok.*;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "rsas")
@@ -24,9 +26,19 @@ public class TransferRequest {
     private String startyear;
     private String endyear;
     private String description;
+
+    @NotNull
+    @NotBlank
     private String department;
+
+    @NotNull
+    @NotBlank
     private String theses;
+
+    @NotNull
+    @NotBlank
     private String degrees;
+
     private long extent = 0;
     private String extentstr;
     private String transferdate;
@@ -119,6 +131,14 @@ public class TransferRequest {
 
     public void setDegrees(String degrees) {
         this.degrees = degrees;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

@@ -83,6 +83,9 @@ public class TransferRequestTest {
 
         final TransferRequest transferRequest = new TransferRequest();
         transferRequest.setSubmissionAgreement(submissionAgreement);
+        transferRequest.setDepartment("CSAIL");
+        transferRequest.setTheses("1");
+        transferRequest.setDegrees("BS");
 
         // TODO just use TemporaryFolder
         final Path rootDirectory = FileSystems.getDefault().getPath(temporaryFolder.newFolder().getAbsolutePath());

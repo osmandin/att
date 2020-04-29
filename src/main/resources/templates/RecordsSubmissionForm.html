@@ -28,26 +28,17 @@
 
                                 <h3 class="title-page">Submit Records to the DDC</h3>
 
-                                <div class="alert alert-banner warning" id="alert_box_top">
-                                    <p>The form was not submitted - please correct the fields below:</p>
-                                    <ul>
-                                        <li class="hiddenerror2" id="startyear_error">Beginning Year</li>
-                                        <li class="hiddenerror2" id="endyear_error">Ending Year - enter a valid year or leave blank
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <form th:action="@{/UploadFiles}" id="form" name="submission" method="post">
+                                <form th:action="@{/UploadFiles}" id="form" name="submission" method="post" th:object="${transferRequest}">
 
                                     <h4>Date span of the records</h4>
                                     <div class="group-inline">
                                         <div class="field-wrap">
                                             <label for="startyear" class="field-label">Beginning year</label> 
-                                            <input class="field field-text" id="startyear" name="startyear" type="text" maxlength="4" size="4" th:value="${startyear}"/>
+                                            <input class="field field-text" id="startyear" name="startyear" type="text" maxlength="4" size="4" th:field="*{startyear}"/>
                                         </div>
                                         <div class="field-wrap">
                                             <label for="endyear" class="field-label">Ending year</label> 
-                                            <input class="field field-text" name="endyear" id="endyear" type="text" maxlength="4" size="4" th:value="${endyear}"/>
+                                            <input class="field field-text" name="endyear" id="endyear" type="text" maxlength="4" size="4" th:field="*{endyear}"/>
                                         </div>
                                     </div>
 
@@ -55,27 +46,30 @@
                                     <div class="field-wrap">
                                         <label name="department" class="field-label" for="department">Department:</label>
                                         <textarea class="field field-text field-textarea" name="department" cols="40" rows="1"
-                                                  th:text="${department}" aria-describedby="comment-tip"></textarea>
+                                                  th:field="*{department}" aria-describedby="comment-tip"></textarea>
+                                        <p th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+
                                     </div>
 
                                     <div class="field-wrap">
                                         <label name="degrees" class="field-label" for="degrees">Degree(s):</label>
                                         <textarea class="field field-text field-textarea" name="degrees" cols="40" rows="1"
-                                                  th:text="${degrees}" aria-describedby="comment-tip"></textarea>
+                                                  th:field="*{degrees}" aria-describedby="comment-tip"></textarea>
+                                        <p th:if="${#fields.hasErrors('degrees')}" th:errors="*{degrees}"></p>
                                     </div>
 
                                     <div class="field-wrap">
                                         <label class="field-label" for="theses">Number of Theses:</label>
                                         <textarea class="field field-text field-textarea" name="theses" cols="40" rows="1"
-                                                  th:text="${theses}" aria-describedby="comment-tip"></textarea>
+                                                  th:field="*{theses}" aria-describedby="comment-tip"></textarea>
+                                        <p th:if="${#fields.hasErrors('theses')}" th:errors="*{theses}"></p>
+
                                     </div>
-
-
 
                                     <div class="field-wrap">
                                         <label class="field-label" for="comments">Description or comments (optional):</label>
                                         <textarea class="field field-text field-textarea" name="generalRecordsDescription" cols="40" rows="5"
-                                            th:text="${generalRecordsDescription}" aria-describedby="comment-tip"></textarea>
+                                            th:field="*{description}" aria-describedby="comment-tip"></textarea>
                                     </div>
 
                                 <!--      <div class="alert_box" id="alert_box_bottom">
