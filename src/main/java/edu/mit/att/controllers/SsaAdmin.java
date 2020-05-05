@@ -112,7 +112,7 @@ public class SsaAdmin {
 
         // authz logic:
 
-        String userAttrib = (String) request.getHeader("mail");
+        String userAttrib = (String) request.getAttribute("mail");
 
         if (userAttrib == null) {
             userAttrib = request.getHeader("mail");

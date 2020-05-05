@@ -10,13 +10,13 @@ import edu.mit.att.service.UserService;
 import edu.mit.att.authz.Role;
 import edu.mit.att.authz.Subject;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +28,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
@@ -42,9 +39,18 @@ import java.util.logging.Logger;
 
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 @Controller
 public class UserPages {
-    private final static Logger LOGGER = Logger.getLogger(UserPages.class.getCanonicalName());
+    private final static Logger logger = Logger.getLogger(UserPages.class.getCanonicalName());
 
     @Resource
     private Environment env;
@@ -96,7 +102,7 @@ public class UserPages {
             HttpServletRequest httpServletRequest,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "SubmitRecords");
+        logger.log(Level.INFO, "SubmitRecords");
 
         model.addAttribute("page", "SubmitRecords");
 
@@ -113,7 +119,7 @@ public class UserPages {
         if (session.getAttribute("loggedin") == null || session.getAttribute("loggedin").toString().equals("0")) {
             LoginData logindata = new LoginData();
             model.addAttribute("loginData", logindata);
-            LOGGER.log(Level.INFO, "user related data null");
+            logger.log(Level.INFO, "user related data null");
             // return "Auth";
         }
 
@@ -137,7 +143,7 @@ public class UserPages {
         }
 
         if (principal == null) {
-            LOGGER.severe("Error getting current user");
+            logger.severe("Error getting current user");
             throw new RuntimeException(); //TODO
         }
 
@@ -148,7 +154,7 @@ public class UserPages {
         final Role role = subject.getRole(principal);
 
         if ((role.equals(Role.siteadmin))) {
-            LOGGER.info("Is site admin");
+            logger.info("Is site admin");
             isadmin = true;
         }
 
@@ -196,17 +202,17 @@ public class UserPages {
         }*/
 
 
-        LOGGER.info("User departments:" + departments.toString());
+        logger.info("User departments:" + departments.toString());
 
         final List<SubmissionAgreement> ssas = ssarepo.findAll();
 
-        LOGGER.info("SSAS:" + ssas.toString());
+        logger.info("SSAS:" + ssas.toString());
 
         // Buggy:
 
         for (final Department df : departments) {
 
-            LOGGER.info("Considering department (in the loop):" + df.toString());
+            logger.info("Considering department (in the loop):" + df.toString());
 
             final int departmentId = df.getId();
 
@@ -241,7 +247,7 @@ public class UserPages {
             @RequestParam(value = "ssaid", required = false) int ssaid,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "RecordsSubmissionForm Post");
+        logger.log(Level.INFO, "RecordsSubmissionForm Post");
 
         try {
             if (ssaid <= 0 && session.getAttribute("ssaid") != null && !session.getAttribute("ssaid").equals("")) {
@@ -254,12 +260,12 @@ public class UserPages {
         }
 
         if (ssaid != 0) {
-            LOGGER.log(Level.INFO, "ssaid={0}", new Object[]{ssaid});
+            logger.log(Level.INFO, "ssaid={0}", new Object[]{ssaid});
             SubmissionAgreement ssaform = ssarepo.findById(ssaid);
 
             model.addAttribute("ssa", ssaform);
         } else {
-            LOGGER.log(Level.INFO, "ssaid is zero!!!");
+            logger.log(Level.INFO, "ssaid is zero!!!");
             SubmissionAgreement submissionAgreement = new SubmissionAgreement();
             model.addAttribute("ssasForm", submissionAgreement);
         }
@@ -270,7 +276,7 @@ public class UserPages {
     }
 
     // ------------------------------------------------------------------------
-    @RequestMapping(value = "/UploadFiles", method =  RequestMethod.POST)
+    @RequestMapping(value = "/UploadFiles", method = RequestMethod.POST)
     public String UploadFiles(
             ModelMap model,
             @Valid TransferRequest transferRequest,
@@ -278,10 +284,10 @@ public class UserPages {
             HttpSession session
     ) {
 
-        LOGGER.log(Level.INFO, "UploadFiles");
+        logger.log(Level.INFO, "UploadFiles POST");
 
         if (bindingResult.hasErrors()) {
-            LOGGER.log(Level.INFO, "Error validating fields for RecordsSubmissionForm Post");
+            logger.log(Level.INFO, "Error validating fields for RecordsSubmissionForm Post");
             return "RecordsSubmissionForm";
         }
 
@@ -309,11 +315,11 @@ public class UserPages {
             ModelMap model,
             HttpSession session
     ) {
-        LOGGER.log(Level.INFO, "Checking space...");
+        logger.log(Level.INFO, "Checking space...");
         final File f = new File(env.getRequiredProperty("dropoff.dir"));
         final Long bytes = f.getUsableSpace();
         final String strbytes = Long.toString(bytes);
-        LOGGER.log(Level.INFO, "Available bytes: {0}", new Object[]{strbytes});
+        logger.log(Level.INFO, "Available bytes: {0}", new Object[]{strbytes});
         return strbytes;
     }
 
@@ -323,13 +329,19 @@ public class UserPages {
             ModelMap model,
             HttpSession session
     ) {
-        //LOGGER.log(Level.INFO, "UploadComplete GET");
+        logger.log(Level.INFO, "UploadComplete GET");
 
         String ssaid = (String) session.getAttribute("ssaid");
         String degrees = (String) session.getAttribute("degrees");
         String theses = (String) session.getAttribute("theses");
         String department = (String) session.getAttribute("department");
-        //LOGGER.log(Level.INFO, "SSAID: {0}", ssaid);
+
+        if (session.getAttribute("ssaid") == null) {
+            logger.log(Level.INFO, "Session null for upload");
+            return "error";
+        }
+
+        logger.log(Level.INFO, "Upload request for SSAID: {0}", ssaid);
 
         model.addAttribute("ssaid", ssaid);
         model.addAttribute("degrees", degrees);
@@ -337,57 +349,74 @@ public class UserPages {
         model.addAttribute("department", department);
 
 
-        LOGGER.log( Level.INFO, "Session var:" + session.getAttribute("degrees") );
+        logger.log(Level.INFO, "Session var:" + session.getAttribute("degrees"));
 
         return "UploadComplete";
     }
 
+
+    @RequestMapping(value = "/UploadCompleteReference", method = RequestMethod.POST)
+    public String handleUpload(HttpServletRequest request) {
+        ServletFileUpload upload;
+        try {
+            // Parse the request with Streaming API
+            upload = new ServletFileUpload();
+            FileItemIterator iterStream = upload.getItemIterator(request);
+
+            long currentTime = System.currentTimeMillis();
+
+            while (iterStream.hasNext()) {
+                FileItemStream item = iterStream.next();
+                String name = item.getFieldName();
+                logger.info("Field name" + name);
+                InputStream stream = item.openStream();
+                if (!item.isFormField()) {
+                    logger.info("Field name:" + item.getName());
+                    //Process the InputStream
+                    try (InputStream uploadedStream = item.openStream();
+                         OutputStream out = new FileOutputStream(currentTime + item.getName());) {
+                        logger.info("Copying file");
+                        IOUtils.copy(uploadedStream, out);
+                        logger.info("File copied!");
+                    }
+                } else {
+                    //process form fields
+                    String formFieldValue = Streams.asString(stream);
+                    logger.info("Form value" + formFieldValue);
+                }
+            }
+
+            logger.info("Upload complete");
+
+            return "UploadComplete";
+        } catch (IOException | FileUploadException ex) {
+            logger.info("Error processing form fields" +  ex.getMessage());
+            ex.printStackTrace();
+            return "error";
+        }
+    }
+
+
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/UploadComplete", method = RequestMethod.POST)
     public String UploadComplete(
-            @RequestParam("file") MultipartFile[] files,
             ModelMap model,
             HttpServletRequest request,
-            @RequestParam(value = "filedata", required = false) String myfiledatastring,
-            MultipartFile  file,
-            HttpSession session,
-            MultipartHttpServletRequest mrequest) {
+            HttpSession session) {
 
-        LOGGER.log(Level.INFO, "UploadComplete POST");
+        logger.log(Level.INFO, "=====================");
+        logger.log(Level.INFO, "UploadComplete POST");
 
-        LOGGER.log(Level.INFO, "File uploaded:" + file.getOriginalFilename());
-
-        LOGGER.log(Level.INFO, "FileDataString:", myfiledatastring); // TODO remove
-
-        LOGGER.log(Level.INFO, "Number of files uploaded: "+ files.length);
-        LOGGER.log(Level.INFO, "fileinfodata param: " + myfiledatastring);
-
-        if (file == null || file.getOriginalFilename().isEmpty()) {
-            return "FileError";
+        if (session.getAttribute("ssaid") == null) {
+            logger.info("Session null");
+            return "error";
         }
-
-
-        if (myfiledatastring == null || myfiledatastring.isEmpty()) {
-            // Not doing this results in files getting submitted again and again.
-
-            LOGGER.info("EMPTY");
-
-
-            LOGGER.info("Hidden value null");
-            String v = mrequest.getParameter("filedata");
-            LOGGER.info("Multipart value:" + v);
-
-            //return "UploadComplete";
-        } else {
-            LOGGER.info("NOT EMPTY. NOT EMPTY. NOT EMPTY");
-        }
-
 
         final int ssaid = (Integer) session.getAttribute("ssaid");
         model.addAttribute("ssaid", ssaid);
 
         SubmissionAgreement submissionAgreement = ssarepo.findById(ssaid);
-        LOGGER.log(Level.INFO, "Associated Department form:" + submissionAgreement.getDepartment());
+        logger.log(Level.INFO, "Associated Department:" + submissionAgreement.getDepartment().getName());
         final String DEPARTMENT_ID = submissionAgreement.getDepartment().getName();
 
 
@@ -400,12 +429,12 @@ public class UserPages {
 
 
         final String name = (String) session.getAttribute("name");
-        String username = (String) session.getAttribute("username");
-        String useremail = (String) session.getAttribute("email");
-
         final String degrees = (String) session.getAttribute("degrees");
         final String theses = (String) session.getAttribute("theses");
         final String department = (String) session.getAttribute("department");
+        String userName = (String) session.getAttribute("username");
+        String userEmail = (String) session.getAttribute("email");
+
         // Create TransferRequest:
 
         TransferRequest rsa = new TransferRequest();
@@ -422,229 +451,250 @@ public class UserPages {
 
         final SubmissionAgreement ssa = ssarepo.findById(ssaid);
         if (ssa == null || ssaid == 0) {
-            LOGGER.log(Level.SEVERE, "ssa is null or ssaid is zero: ssaid={0}", new Object[]{ssaid});
+            logger.log(Level.SEVERE, "ssa is null or ssaid is zero: ssaid={0}", new Object[]{ssaid});
         } else {
-            LOGGER.log(Level.INFO, ssa.toString());
             rsa.setSubmissionAgreement(ssa);
         }
 
+        // Save RSA:
         rsa = rsarepo.save(rsa);
+
+        // Create drop off directory:
+
+        final String DROP_OFF_DIRECTORY = getDrop_off_dir(DEPARTMENT_ID, rsa);
+        logger.log(Level.INFO, "Drop off directory:" + DROP_OFF_DIRECTORY);
+
+        final File dir = new File(DROP_OFF_DIRECTORY);
+
+        boolean successful = dir.mkdirs();
+
+        if (!successful) {
+            logger.log(Level.SEVERE, "dir={0} NOT created", new Object[]{DROP_OFF_DIRECTORY});
+        }
+
+        // process input request:
+
+        ServletFileUpload upload;
+
+        String fileName = "";
+
+        long fileSize = 0;
+
+        File depositedFile = null;
+
+        try {
+            // Parse the request with Streaming API
+            upload = new ServletFileUpload();
+            FileItemIterator iterStream = upload.getItemIterator(request);
+
+            logger.info("Processing request parameters");
+
+            while (iterStream.hasNext()) {
+                FileItemStream item = iterStream.next();
+                String fieldName = item.getFieldName();
+                //logger.info("Field name" + fieldName);
+                InputStream stream = item.openStream();
+                if (!item.isFormField()) {
+                    // logger.info("Field name (not form field):" + item.getName());
+                    fileName = item.getName();
+                    //Process the InputStream
+                    try (InputStream uploadedStream = item.openStream()) {
+                        //logger.info("Copying file to share:" + dir.getPath());
+                        depositedFile = new File(dir + "/" + item.getName());
+                        logger.info("Copying input stream to disk. . .");
+                        FileUtils.copyInputStreamToFile(uploadedStream, depositedFile);
+                        fileSize = depositedFile.length();
+                        logger.info("File copied with length:" + fileSize);
+                    }
+                } else { // ignore
+                    String formFieldValue = Streams.asString(stream);
+                    // logger.info("Regular form value: " + formFieldValue);
+                }
+            }
+            logger.info("Upload copying complete");
+        } catch (IOException | FileUploadException ex) {
+            logger.info("Error processing request:" +  ex);
+            return "error";
+        }
 
         // Add info for file size (for web side):
 
-        final Format format = new Format();
+        final List<FileData> fileDataList = new ArrayList<>();
 
-        final List<FileData> fileData = new ArrayList<>(); //format.parseFileInfo(myfiledatastring);
-        //final List<FileData> fileData = format.parseFileInfo(file.getOriginalFilename());
+        FileData fileMetadata = new FileData();
+        fileMetadata.setName(fileName);
+        fileMetadata.setSize(fileSize);
+        fileMetadata.setNicesize(FileUtils.byteCountToDisplaySize(fileSize));
+        fileMetadata.setLastmoddatetime("122");
+        fileDataList.add(fileMetadata);
 
-
-        FileData fileData1 = new FileData();
-        fileData1.setName(file.getOriginalFilename());
-        fileData1.setSize(file.getSize());
-        fileData1.setNicesize(FileUtils.byteCountToDisplaySize(file.getSize()));
-        fileData1.setLastmoddatetime("122");
-        fileData.add(fileData1);
-
-        model.addAttribute("filedata", fileData);
-        model.addAttribute("totalfilesize", FileUtils.byteCountToDisplaySize(file.getSize()));
+        model.addAttribute("filedata", fileDataList);
+        model.addAttribute("totalfilesize", FileUtils.byteCountToDisplaySize(fileSize));
 
         // Details for each file ?
 
         List<RsaFileDataForm> fileDataForms = new ArrayList<RsaFileDataForm>();
 
-        for (final FileData fileDetails : fileData) {
-            RsaFileDataForm fd = new RsaFileDataForm();
-            fd.setName(fileDetails.getName());
-            fd.setSize(fileDetails.getSize());
-            fd.setNicesize(format.displayBytes(fileDetails.getSize()));
-            fd.setLastmoddatetime(fileDetails.getLastmoddatetime());
-            fd.setTransferRequest(rsa);
+        final Format format = new Format();
 
-            fd = filedatarepo.save(fd);
-            fileDataForms.add(fd);
+        for (final FileData fileDetails : fileDataList) {
+            RsaFileDataForm rsaFileData = new RsaFileDataForm();
+            rsaFileData.setName(fileDetails.getName());
+            rsaFileData.setSize(fileDetails.getSize());
+            rsaFileData.setNicesize(format.displayBytes(fileDetails.getSize()));
+            rsaFileData.setLastmoddatetime(fileDetails.getLastmoddatetime());
+            rsaFileData.setTransferRequest(rsa);
+            rsaFileData = filedatarepo.save(rsaFileData);
+            fileDataForms.add(rsaFileData);
         }
 
         rsa.setRsaFileDataForms(fileDataForms);
         rsa.setExtent(format.getTotalfilesize());
         rsa.setExtentstr(format.getTotalfilesizestr());
 
-
         rsa = rsarepo.save(rsa); // Saved!
 
-        LOGGER.log(Level.INFO, "Saved form:", rsa.getId());
-
+        logger.log(Level.INFO, "Saved form:"+ rsa.getId());
 
         model.addAttribute("rsaid", rsa.getId());
 
-        // Create drop off directory:
+        rsa.setPath(DROP_OFF_DIRECTORY);
 
-        final String DROP_OFF_DIR = getDrop_off_dir(DEPARTMENT_ID, rsa);
-        LOGGER.log(Level.INFO, "Drop off directory:" +  DROP_OFF_DIR);
+        fileDataForms = new ArrayList<>();
 
-        final File dir = new File(DROP_OFF_DIR);
-        boolean successful = dir.mkdirs();
-        if (!successful) {
-            LOGGER.log(Level.SEVERE, "dir={0} NOT created", new Object[]{DROP_OFF_DIR});
+        // Copy files:
+
+        //logger.info("Copying file locally to drop off directory");
+
+        //final List<FileData> uploadFileInfo = utils.uploadFiles(files, DROP_OFF_DIRECTORY, fileData);
+
+        final List<FileData> uploadFileInfo = new ArrayList<>();
+        final FileData filedata = new FileData();
+        filedata.setName(fileName);
+        filedata.setSize(fileSize);
+
+        if (depositedFile.getPath() != null) {
+            filedata.setPath(depositedFile.getPath());
         }
 
-        rsa.setPath(DROP_OFF_DIR);
+        uploadFileInfo.add(filedata);
 
-        final List<String> fileList = new ArrayList<>(); // this will be emailed to the user
-        final MyFileUtils fileutils = new MyFileUtils();
+        // Create metadata
 
+        final Map<String, String> metadata = new LinkedHashMap<>();
 
-        if (files != null) {
-            fileDataForms = new ArrayList<>();
+        try {
+            metadata.put("SSA Id", String.valueOf(ssa.getId()));
 
-            // Copy files:
-
-            final List<FileData> uploadFileInfo = fileutils.uploadFiles(files, DROP_OFF_DIR, fileData);
-
-            // Create a bag:
-
-            // fileutils.bagit(uploadfileinfo, DROP_OFF_DIR);
-
-
-            // Create metadata
-
-            final Map<String, String> metadata = new LinkedHashMap<>();
-
-            try {
-                metadata.put("SSA Id", String.valueOf(ssa.getId()));
-
-                if (ssa.getDepartment() != null) {
-                    metadata.put("Department Id", String.valueOf(ssa.getDepartment().getId()));
-                    metadata.put("Department Name", ssa.getDepartment().getName());
-
-                }
-
-                metadata.put("RSA Id", String.valueOf(rsa.getId()));
-                metadata.put("User Email", (String) request.getHeader("mail"));
-                metadata.put("Transfer Date", Instant.now().toString());
-                metadata.put("Inventory Documents", String.valueOf(uploadFileInfo.size()));
-
-                metadata.put("Beginning Year", startYear);
-                metadata.put("Ending Year", endYear);
-                metadata.put("Description", description);
-
-                metadata.put("Effective date for submission agreement ", ssa.getEffectivedate());
-                metadata.put("Retention schedule", ssa.getRetentionschedule());
-
-                // Add theses information
-
-                metadata.put("Degrees (Theses Submission)", degrees);
-                metadata.put("Theses (Theses Submission)", theses);
-                metadata.put("Department (Theses Submission)", department);
-
-                // Creator(s) of the records:
-
-
-                final SubmissionAgreement sa = rsa.getSubmissionAgreement();
-                metadata.put("Head of Department/Unit", sa.getDepartmenthead());
-                metadata.put("Record or collection identifier", sa.getRecordid());
-
-
-
-                // metadata.put("Person or group authorized to transfer the records to the archives: ", ssa.getSsaContactsForms().toString());
-
-                for (int i = 0; i < ssa.getSsaContactsForms().size(); i++) {
-                    final SsaContactsForm sc = ssa.getSsaContactsForms().get(i);
-                    metadata.put("Person authorized to transfer the records to archives [" + i + "]", sc.getName());
-                    metadata.put("Phone Number [" + i + "]", sc.getPhone());
-                    metadata.put("Email [" + i + "]", sc.getEmail());
-                    metadata.put("Campus Address [" + i  + "]", sc.getAddress());
-                }
-
-
-
-                metadata.put("Type of records:", ssa.getRecordstitle());
-
-
-                for (int i = 0; i < ssa.getSsaCopyrightsForms().size(); i++) {
-                    metadata.put("Copyright and licensing agreement [" + i  +"]" ,ssa.getSsaCopyrightsForms().get(i).getCopyright());
-                }
-
-
-                for (int i = 0; i < ssa.getSsaAccessRestrictionsForms().size(); i++) {
-                    metadata.put("Access restrictions [" + i + "]" ,ssa.getSsaAccessRestrictionsForms().get(i).getRestriction());
-                }
-
-
-                metadata.put("Retention period:", ssa.getRetentionperiod());
-            } catch (Exception e) {
-                LOGGER.info("Error extracting value:" + e); // TODO remove exception
+            if (ssa.getDepartment() != null) {
+                metadata.put("Department Id", String.valueOf(ssa.getDepartment().getId()));
+                metadata.put("Department Name", ssa.getDepartment().getName());
             }
 
+            metadata.put("RSA Id", String.valueOf(rsa.getId()));
+            metadata.put("User Email", (String) request.getHeader("mail"));
+            metadata.put("Transfer Date", Instant.now().toString());
+            metadata.put("Inventory Documents", "1");
 
-            final Map<String, String> checksums = new HashMap<>();
+            metadata.put("Beginning Year", startYear);
+            metadata.put("Ending Year", endYear);
+            metadata.put("Description", description);
 
-            for (final FileData fileinfo : uploadFileInfo) {
+            metadata.put("Effective date for submission agreement ", ssa.getEffectivedate());
+            metadata.put("Retention schedule", ssa.getRetentionschedule());
 
-                LOGGER.log(Level.INFO, "Processing file:" + fileinfo.getName());
-                fileList.add(fileinfo.getName()); //TODO we need more than file name!
+            // Add theses information
 
+            metadata.put("Degrees (Theses Submission)", degrees);
+            metadata.put("Theses (Theses Submission)", theses);
+            metadata.put("Department (Theses Submission)", department);
 
-                final String md5 = getMD5(fileinfo.getPath());
-                checksums.put(fileinfo.getPath(), md5);
+            // Creator(s) of the records:
 
+            final SubmissionAgreement sa = rsa.getSubmissionAgreement();
+            metadata.put("Head of Department/Unit", sa.getDepartmenthead());
+            metadata.put("Record or collection identifier", sa.getRecordid());
 
-                if (fileinfo.getName().equals("")) { // ignore cases where filename is empty... happens when file tag is created in page but not populated
-                    LOGGER.log(Level.INFO, "for rsa={0} filename is blank as happens when file tag used but not populated", new Object[]{rsa.getId()});
-                    continue;
-                }
-
-                final List<RsaFileDataForm> fds = filedatarepo.findBasedOnIdAndFilename(rsa.getId(), fileinfo.getName());
-
-                if (fds.size() != 1) {
-                    LOGGER.log(Level.SEVERE, "Error: incorrect number of matches ({0}) for rsa={1} filename={2} myfiledatastring={3}", new Object[]{fds.size(), rsa.getId(), fileinfo.getName(), myfiledatastring});
-                    continue;
-                }
-
-                if (!fileinfo.getSetmoddatetimestatus().equals("success")) {
-                    LOGGER.log(Level.SEVERE, "Error: setmoddatetimestatus={0} for rsa={1} filename={2}", new Object[]{fileinfo.getSetmoddatetimestatus(), rsa.getId(), fileinfo.getName()});
-                }
-
-                // update with extra info
-                RsaFileDataForm fd = fds.get(0);
-                fd.setStatus(fileinfo.getStatus());
-                fd.setSize(fileinfo.getSize());
-                fd.setNicesize(format.displayBytes(fileinfo.getSize()));
-                fd.setStatus(fileinfo.getStatus());
-                fd = filedatarepo.save(fd);
-                fileDataForms.add(fd);
+            for (int i = 0; i < ssa.getSsaContactsForms().size(); i++) {
+                final SsaContactsForm sc = ssa.getSsaContactsForms().get(i);
+                metadata.put("Person authorized to transfer the records to archives [" + i + "]", sc.getName());
+                metadata.put("Phone Number [" + i + "]", sc.getPhone());
+                metadata.put("Email [" + i + "]", sc.getEmail());
+                metadata.put("Campus Address [" + i + "]", sc.getAddress());
             }
+
+            metadata.put("Type of records:", ssa.getRecordstitle());
+
+            for (int i = 0; i < ssa.getSsaCopyrightsForms().size(); i++) {
+                metadata.put("Copyright and licensing agreement [" + i + "]", ssa.getSsaCopyrightsForms().get(i).getCopyright());
+            }
+
+            for (int i = 0; i < ssa.getSsaAccessRestrictionsForms().size(); i++) {
+                metadata.put("Access restrictions [" + i + "]", ssa.getSsaAccessRestrictionsForms().get(i).getRestriction());
+            }
+
+            metadata.put("Retention period:", ssa.getRetentionperiod());
+        } catch (Exception e) {
+            logger.info("Error extracting value:" + e); // TODO remove exception
+        }
+
+
+        final Map<String, String> checksums = new HashMap<>();
+
+        for (final FileData fileInfo : uploadFileInfo) {
+
+            logger.log(Level.INFO, "Processing file:" + fileInfo.getName());
+
+            final String md5 = getMD5(fileInfo.getPath());
+            checksums.put(fileInfo.getName(), md5);
+
+            if (fileInfo.getName().equals("")) { // ignore cases where filename is empty... happens when file tag is created in page but not populated
+                logger.log(Level.INFO, "for rsa={0} filename is blank as happens when file tag used " +
+                        "but not populated", new Object[]{rsa.getId()});
+                continue;
+            }
+
+            final List<RsaFileDataForm> fds = filedatarepo.findBasedOnIdAndFilename(rsa.getId(), fileInfo.getName());
+
+           /* if (!fileInfo.getSetmoddatetimestatus().equals("success")) {
+                logger.log(Level.SEVERE, "Error: setmoddatetimestatus={0} for " +
+                        "rsa={1} filename={2}", new Object[]{fileInfo.getSetmoddatetimestatus(), rsa.getId(),
+                        fileInfo.getName()});
+            }*/
+
+            // update with extra info
+            RsaFileDataForm rsaFileDataForm = fds.get(0);
+            rsaFileDataForm.setStatus(fileInfo.getStatus());
+            rsaFileDataForm.setSize(fileInfo.getSize());
+            rsaFileDataForm.setNicesize(format.displayBytes(fileInfo.getSize()));
+            rsaFileDataForm.setStatus(fileInfo.getStatus());
+            rsaFileDataForm = filedatarepo.save(rsaFileDataForm);
+            fileDataForms.add(rsaFileDataForm);
 
             // write the checksums to file:
 
-            try {
-                LOGGER.info("Checksums:" + checksums);
-                FileUtils.writeStringToFile(new File(DROP_OFF_DIR + "/" + "att-manifest-md5.txt"), formattedChecksum(checksums) );
-            } catch (IOException e) {
-                LOGGER.info("Error writing checksum file" + e);
-            }
-
-            // write other metadata to file:
-
+            logger.info("Creating metadata and checksum files");
 
             try {
-                LOGGER.info("Metadata:" + metadata);
-                FileUtils.writeStringToFile(new File(DROP_OFF_DIR + "/" + "att-metadata.txt"), formattedMetadata(metadata) );
+                logger.info("Checksums:" + checksums);
+                FileUtils.writeStringToFile(new File(DROP_OFF_DIRECTORY + "/" + "att-manifest-md5.txt"), formattedChecksum(checksums));
+                logger.info("Metadata:" + metadata);
+                FileUtils.writeStringToFile(new File(DROP_OFF_DIRECTORY + "/" + "att-metadata.txt"), formattedMetadata(metadata));
             } catch (IOException e) {
-                LOGGER.info("Error writing checksum file" + e);
+                logger.info("Error writing checksum file" + e);
             }
 
             rsa.setRsaFileDataForms(fileDataForms);
             rsa = rsarepo.saveAndFlush(rsa);
-            LOGGER.log(Level.INFO, "Saved RSA:" + rsa.getId());
-
-        } else if (files == null){
-            LOGGER.log(Level.SEVERE, "files null");
+            logger.log(Level.INFO, "Saved RSA:" + rsa.getId());
         }
 
         // Send mail
-        //FIXME this needs to be nonblocking
-        notifyUser(rsa.getId(), ssa.getDepartment().getName(), fileList);
 
+        // notifyUser(rsa.getId(), ssa.getDepartment().getName(), fileList);
+
+        logger.log(Level.INFO, "UploadComplete done!");
+        logger.log(Level.INFO, "=====================");
 
         return "UploadComplete";
     }
@@ -658,7 +708,7 @@ public class UserPages {
         for (String k : keys) {
             String v = checksums.get(k);
             sb.append(v);
-            sb.append(" ");
+            sb.append("  ");
             sb.append(k);
             sb.append("\n");
         }
@@ -691,6 +741,7 @@ public class UserPages {
 
     /**
      * Returns where the file must be stored
+     *
      * @param DEPARTMENT_ID
      * @param rsa
      * @return
@@ -719,7 +770,7 @@ public class UserPages {
         try {
             emailUtil.notify(adminEmail, emailSubject, emailPrefix);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error sending mail:{}", e);
+            logger.log(Level.SEVERE, "Error sending mail:{}", e);
         }
     }
 }

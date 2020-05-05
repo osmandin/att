@@ -46,8 +46,7 @@ public class TouchStoneDiagnosticFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        logger.debug("Request to page: {}",  ((HttpServletRequest) servletRequest).getRequestURL());
-
+        // logger.debug("Request to page: {}",  ((HttpServletRequest) servletRequest).getRequestURL());
 
         final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 
@@ -55,11 +54,11 @@ public class TouchStoneDiagnosticFilter implements Filter {
         // other Attributes are displayName, mail, nickname
         //logger.info("Touchstone passed attribute {}:{}", "mail", httpServletRequest.getAttribute("mail"));
 
-        if (env == null) {
+        /* if (env == null) {
             logger.info("Spring injected environment annotation null.");
         } else {
             logger.info("Injected injected annotation: {}",  env.getProperty("test.status"));
-        }
+        }*/
 
 
         if (env != null && env.getRequiredProperty("testing.status").equals("true")) {
