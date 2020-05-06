@@ -206,7 +206,7 @@ public class UserPages {
 
         final List<SubmissionAgreement> ssas = ssarepo.findAll();
 
-        logger.info("SSAS:" + ssas.toString());
+        // logger.info("SSAS:" + ssas.toString());
 
         // Buggy:
 
