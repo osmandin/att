@@ -60,7 +60,7 @@ public class UserAdmin {
 
         // TODO authz -- filter by what users the admin can see
 
-        final String email = (String) request.getHeader("mail");
+        final String email = getString(request);
         // logger.debug("User:{}",  email);
 
         final List<User> currentUsers = userrepo.findByEmail(email);
@@ -113,6 +113,13 @@ public class UserAdmin {
        return "ListUsers";
     }
 
+    public String getString(HttpServletRequest request) {
+        if (request.getAttribute("mail") != null) {
+            return (String) request.getAttribute("mail");
+        }
+        else return request.getHeader("mail");
+    }
+
     // ------------------------------------------------------------------------    
     @RequestMapping(value = "/EditUser", method = RequestMethod.GET)
     public String EditUser(
@@ -128,7 +135,7 @@ public class UserAdmin {
 
         // Authz: if the user is not a siteadmin or a department admin don't let him change the role;
 
-        final String userAttrib = (String) request.getHeader("mail");
+        final String userAttrib = getString(request);
 
         final User user = userrepo.findByEmail(userAttrib).get(0);
 

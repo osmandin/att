@@ -54,7 +54,7 @@ public class DepartmentAdmin {
 
         final Department item = new Department();
 
-        final String userAttrib = (String) request.getHeader("mail");
+        final String userAttrib = getString(request);
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
@@ -118,7 +118,7 @@ public class DepartmentAdmin {
     ) {
         LOGGER.info( "EditDepartment Get");
 
-        final String userAttrib = (String) request.getHeader("mail");
+        final String userAttrib = getString(request);
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         final Set<Department> departments = user.getDepartments();
@@ -139,6 +139,13 @@ public class DepartmentAdmin {
         model.addAttribute("department", departmentToEdit);
 
         return "EditDepartment";
+    }
+
+    public String getString(HttpServletRequest request) {
+        if (request.getAttribute("mail") != null) {
+            return (String) request.getAttribute("mail");
+        }
+        else return request.getHeader("mail");
     }
 
     // ------------------------------------------------------------------------

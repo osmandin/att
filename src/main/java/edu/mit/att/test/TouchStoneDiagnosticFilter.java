@@ -53,7 +53,13 @@ public class TouchStoneDiagnosticFilter implements Filter {
         // Information from TouchStone:
         // other Attributes are displayName, mail, nickname
         try {
-            logger.info("Touchstone passed attribute {}:{}", "mail", httpServletRequest.getHeader("mail"));
+            if (httpServletRequest.getAttribute("mail") != null) {
+                logger.info("User:{}", httpServletRequest.getAttribute("mail"));
+            }
+
+            if (httpServletRequest.getHeader("mail") != null) {
+                logger.info("User:{}", httpServletRequest.getHeader("mail"));
+            }
         } catch (Exception e) {
             logger.error("Error getting user attribute from request header.");
         }

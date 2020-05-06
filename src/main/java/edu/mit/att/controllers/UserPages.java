@@ -545,7 +545,15 @@ public class UserPages {
             }
 
             metadata.put("RSA Id", String.valueOf(rsa.getId()));
-            metadata.put("User Email", (String) request.getHeader("mail"));
+
+            if (request.getHeader("mail") != null) {
+                metadata.put("User Email", (String) request.getHeader("mail"));
+            } else if (request.getAttribute("mail")!= null) {
+                metadata.put("User Email", (String) request.getAttribute("mail"));
+            } else {
+                logger.log(Level.INFO, "Unknown user email");
+            }
+
             metadata.put("Transfer Date", Instant.now().toString());
             metadata.put("Inventory Documents", "1");
 

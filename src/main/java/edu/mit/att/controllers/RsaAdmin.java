@@ -81,7 +81,7 @@ public class RsaAdmin {
 
         // authz logic:
 
-        final String userAttrib = (String) request.getHeader("mail");
+        final String userAttrib = getString(request);
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
@@ -99,6 +99,13 @@ public class RsaAdmin {
         return "ListDraftRsas";
     }
 
+    public String getString(HttpServletRequest request) {
+        if (request.getAttribute("mail") != null) {
+            return (String) request.getAttribute("mail");
+        }
+        else return request.getHeader("mail");
+    }
+
     // ------------------------------------------------------------------------
     @RequestMapping("/ListApprovedRsas")
     public String ListApprovedRsas(
@@ -111,7 +118,12 @@ public class RsaAdmin {
 
         // authz logic:
 
-        final String userAttrib = (String) request.getHeader("mail");
+        final String userAttrib = getString(request);
+
+        if (userAttrib == null) {
+            return "Permissions";
+        }
+
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
@@ -567,7 +579,12 @@ public class RsaAdmin {
 
         // authz logic:
 
-        final String userAttrib = (String) request.getHeader("mail");
+        final String userAttrib = getString(request);
+
+        if (userAttrib == null) {
+            return "Permissions";
+        }
+
         final User user = userrepo.findByEmail(userAttrib).get(0);
 
         if (!user.getRole().equals(Role.siteadmin.name())) {
