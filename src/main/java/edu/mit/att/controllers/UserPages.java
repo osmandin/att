@@ -331,71 +331,25 @@ public class UserPages {
     ) {
         logger.log(Level.INFO, "UploadComplete GET");
 
-        String ssaid = (String) session.getAttribute("ssaid");
-        String degrees = (String) session.getAttribute("degrees");
-        String theses = (String) session.getAttribute("theses");
-        String department = (String) session.getAttribute("department");
-
         if (session.getAttribute("ssaid") == null) {
-            logger.log(Level.INFO, "Session null for upload");
+            logger.log(Level.INFO, "User session variable ssaid null. Returning.");
             return "error";
         }
 
+        final String ssaid = (String) session.getAttribute("ssaid");
         logger.log(Level.INFO, "Upload request for SSAID: {0}", ssaid);
+
+        final String degrees = (String) session.getAttribute("degrees");
+        final String theses = (String) session.getAttribute("theses");
+        final String department = (String) session.getAttribute("department");
 
         model.addAttribute("ssaid", ssaid);
         model.addAttribute("degrees", degrees);
         model.addAttribute("theses", theses);
         model.addAttribute("department", department);
 
-
-        logger.log(Level.INFO, "Session var:" + session.getAttribute("degrees"));
-
         return "UploadComplete";
     }
-
-
-    @RequestMapping(value = "/UploadCompleteReference", method = RequestMethod.POST)
-    public String handleUpload(HttpServletRequest request) {
-        ServletFileUpload upload;
-        try {
-            // Parse the request with Streaming API
-            upload = new ServletFileUpload();
-            FileItemIterator iterStream = upload.getItemIterator(request);
-
-            long currentTime = System.currentTimeMillis();
-
-            while (iterStream.hasNext()) {
-                FileItemStream item = iterStream.next();
-                String name = item.getFieldName();
-                logger.info("Field name" + name);
-                InputStream stream = item.openStream();
-                if (!item.isFormField()) {
-                    logger.info("Field name:" + item.getName());
-                    //Process the InputStream
-                    try (InputStream uploadedStream = item.openStream();
-                         OutputStream out = new FileOutputStream(currentTime + item.getName());) {
-                        logger.info("Copying file");
-                        IOUtils.copy(uploadedStream, out);
-                        logger.info("File copied!");
-                    }
-                } else {
-                    //process form fields
-                    String formFieldValue = Streams.asString(stream);
-                    logger.info("Form value" + formFieldValue);
-                }
-            }
-
-            logger.info("Upload complete");
-
-            return "UploadComplete";
-        } catch (IOException | FileUploadException ex) {
-            logger.info("Error processing form fields" +  ex.getMessage());
-            ex.printStackTrace();
-            return "error";
-        }
-    }
-
 
     // ------------------------------------------------------------------------
     @RequestMapping(value = "/UploadComplete", method = RequestMethod.POST)
@@ -408,7 +362,7 @@ public class UserPages {
         logger.log(Level.INFO, "UploadComplete POST");
 
         if (session.getAttribute("ssaid") == null) {
-            logger.info("Session null");
+            logger.info("Session null for ssaid");
             return "error";
         }
 
@@ -418,15 +372,13 @@ public class UserPages {
         SubmissionAgreement submissionAgreement = ssarepo.findById(ssaid);
         logger.log(Level.INFO, "Associated Department:" + submissionAgreement.getDepartment().getName());
         final String DEPARTMENT_ID = submissionAgreement.getDepartment().getName();
-
-
         final String description = (String) session.getAttribute("generalRecordsDescription");
         final String startYear = (String) session.getAttribute("startyear");
         String endYear = (String) session.getAttribute("endyear");
+
         if (endYear == null || endYear.equals("") || endYear.matches("^\\s*$")) {
             endYear = startYear;
         }
-
 
         final String name = (String) session.getAttribute("name");
         final String degrees = (String) session.getAttribute("degrees");
@@ -525,7 +477,8 @@ public class UserPages {
         fileMetadata.setName(fileName);
         fileMetadata.setSize(fileSize);
         fileMetadata.setNicesize(FileUtils.byteCountToDisplaySize(fileSize));
-        fileMetadata.setLastmoddatetime("122");
+        final Date date = new Date();
+        fileMetadata.setLastmoddatetime(date.toString());
         fileDataList.add(fileMetadata);
 
         model.addAttribute("filedata", fileDataList);

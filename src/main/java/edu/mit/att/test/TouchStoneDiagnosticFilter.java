@@ -52,7 +52,11 @@ public class TouchStoneDiagnosticFilter implements Filter {
 
         // Information from TouchStone:
         // other Attributes are displayName, mail, nickname
-        //logger.info("Touchstone passed attribute {}:{}", "mail", httpServletRequest.getAttribute("mail"));
+        try {
+            logger.info("Touchstone passed attribute {}:{}", "mail", httpServletRequest.getHeader("mail"));
+        } catch (Exception e) {
+            logger.error("Error getting user attribute from request header.");
+        }
 
         /* if (env == null) {
             logger.info("Spring injected environment annotation null.");
