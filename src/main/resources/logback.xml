@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="DEV_HOME" value="/opt/tomcat/att-logs" />
+	<property name="DEV_HOME" value="/tmp/att-logs" />
+
+	<!-- <property name="DEV_HOME" value="/opt/tomcat/att-logs" /> -->
 
 	<appender name="FILE-AUDIT"
 			  class="ch.qos.logback.core.rolling.RollingFileAppender">

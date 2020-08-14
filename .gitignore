@@ -42,3 +42,5 @@ tmp/
 out/
 .gradle/
 build/
+
+src/main/resources/sentry.properties
